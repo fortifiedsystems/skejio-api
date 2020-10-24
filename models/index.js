@@ -22,4 +22,5 @@ module.exports = {
     Tour: require('./Tour'),
     TourDate: require('./TourDate'),
     Thread: require('./Thread'),
+    Comment: require('./Comment'),
 }
