@@ -111,6 +111,7 @@ dist
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
+.vscode
 .vscode-test
 
 # End of https://www.toptal.com/developers/gitignore/api/node
