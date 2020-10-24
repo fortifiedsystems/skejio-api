@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const verify = require('./constants');
+const validate = require('./constants');
 
 const Schema = mongoose.Schema;
 
-const ArtistSchema = new Schema({
+const ManagerSchema = new Schema({
     firstName: {
         type: String,
         required: true,
@@ -16,7 +16,7 @@ const ArtistSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        match: verify.EMAIL,
+        match: validate.EMAIL,
     },
     username: {
         type: String,
@@ -26,30 +26,20 @@ const ArtistSchema = new Schema({
     password: {
         type: String,
         required: true,
-        match: verify.PASSWORD,
+        match: validate.PASSWORD,
     },
-    artistName: String,
+    isAdmin: {
+        type: Boolean,
+        default: true,
+    },
     profileImg: String,
-    isAdmin: Boolean,
-    managerRate: {
-        type: Number,
-        default: 0,
-    },
-    agentRate: {
-        type: Number,
-        default: 0,
-    },
-    paidToDate: {
-        type: Number,
-        default: 0,
-    },
-    manager: {
+    teammates: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Manager',
-    },
-    tours: [{
+        ref: 'Teammate',
+    }],
+    artists: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tour',
+        ref: 'Artist',
     }],
     threads: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -62,9 +52,10 @@ const ArtistSchema = new Schema({
     todos: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo',
-    }],
-})
+    }]
+});
 
-const Artist = mongoose.model('Artist', ArtistSchema);
+const Manager = mongoose.model('Manager', ManagerSchema);
 
-module.exports = Artist;
+module.exports = Manager;
+

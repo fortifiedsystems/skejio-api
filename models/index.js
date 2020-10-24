@@ -16,5 +16,7 @@ mongoose
 
 
 module.exports = {
-    Artist: require("./Artist"),
+    Artist: require('./users/Artist'),
+    Manager: require('./users/Manager'),
+    Teammate: require('./users/Teammate'),
 }
