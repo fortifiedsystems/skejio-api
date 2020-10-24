@@ -15,6 +15,8 @@ const TourSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
     }
+}, {
+    timestamps: true,
 });
 
 const Tour = mongoose.model('Tour', TourSchema);

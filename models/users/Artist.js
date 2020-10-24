@@ -63,6 +63,8 @@ const ArtistSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo',
     }],
+}, {
+    timestamps: true,
 });
 
 const Artist = mongoose.model('Artist', ArtistSchema);

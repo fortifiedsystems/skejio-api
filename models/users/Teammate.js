@@ -53,6 +53,8 @@ const TeammateSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo',
     }],
+}, {
+    timestamps: true,
 });
 
 const Teammate = mongoose.model('Teammate', TeammateSchema);

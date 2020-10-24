@@ -36,6 +36,8 @@ const TourDateSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tour',
     },
+}, {
+    timestamps: true,
 });
 
 const TourDate = mongoose.model('TourDate', TourDateSchema);

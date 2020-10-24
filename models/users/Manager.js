@@ -53,6 +53,8 @@ const ManagerSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo',
     }]
+}, {
+    timestamps: true,
 });
 
 const Manager = mongoose.model('Manager', ManagerSchema);
