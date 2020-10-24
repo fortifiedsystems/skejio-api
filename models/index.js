@@ -23,4 +23,5 @@ module.exports = {
     TourDate: require('./TourDate'),
     Thread: require('./Thread'),
     Comment: require('./Comment'),
+    Todo: require('./Todo'),
 }

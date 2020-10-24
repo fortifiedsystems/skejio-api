@@ -10,7 +10,10 @@ const CommentSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist' || 'Manager' || 'Teammate',
     },
-    content: String,
+    content: {
+        type: String,
+        required: true,
+    }
 }, {
     timestamps: true,
 })
