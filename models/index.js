@@ -24,4 +24,5 @@ module.exports = {
     Thread: require('./Thread'),
     Comment: require('./Comment'),
     Todo: require('./Todo'),
+    Promoter: require('./Promoter'),
 }
