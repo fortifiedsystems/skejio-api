@@ -19,4 +19,6 @@ module.exports = {
     Artist: require('./users/Artist'),
     Manager: require('./users/Manager'),
     Teammate: require('./users/Teammate'),
+    Tour: require('./Tour'),
+    TourDate: require('./TourDate'),
 }
