@@ -21,4 +21,5 @@ module.exports = {
     Teammate: require('./users/Teammate'),
     Tour: require('./Tour'),
     TourDate: require('./TourDate'),
+    Thread: require('./Thread'),
 }
