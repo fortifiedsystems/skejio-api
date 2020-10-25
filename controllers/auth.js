@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs');
 const db = require('../models');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+
+const UNIQUE_ERR = 'Account with this email or username is already registered.'
+const INVALID_LOGIN = 'Email or password incorrect';
+const TRY_AGAIN = 'Something went wrong. Please try again.';
 
 // POST Register Route
 const register = async (req, res) => {
@@ -9,7 +13,7 @@ const register = async (req, res) => {
 
         if (foundUser) {
             return res.send({
-                message: 'Account is already registered',
+                message: UNIQUE_ERR,
             });
         }
 
@@ -35,11 +39,51 @@ const register = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             status: 500,
-            message: 'Something went wrong: ' + err,
+            message: `${TRY_AGAIN}: ${err}`,
+        });
+    }
+}
+
+const login = async (req, res) => {
+    try {
+        const foundUser = await db.User.findOne({ email: req.body.email });
+        if (!foundUser) return res.send({ message: INVALID_LOGIN });
+
+        const match = await bcrypt.compare(req.body.password, foundUser.password);
+        if (!match) return res.send({ message: INVALID_LOGIN });
+
+        if (match) {
+            const signedJwt = await jwt.sign(
+                {
+                    _id: foundUser._id,
+                },
+                "super_secret_key",
+                {
+                    expiresIn: '1h',
+                }
+            )
+            return res.status(200).json({
+                status: 200,
+                message: 'Successfully logged in.',
+                id: foundUser._id,
+                signedJwt,
+            });
+        } else {
+            return res.status(400).json({
+                status: 400,
+                message: INVALID_LOGIN,
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: 500,
+            message: "Something went wrong. Please try again",
         });
     }
 }
 
 module.exports = {
     register,
+    login,
 }
