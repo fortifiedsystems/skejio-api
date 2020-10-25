@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 
-const Schema = mongoose.Schema;
-
-const ArtistSchema = new Schema({
+const ArtistSchema = new mongoose.Schema({
+    isAdmin: {
+        type: Boolean,
+        default: true,
+    },
     artistName: String,
     managerRate: {
         type: Number,

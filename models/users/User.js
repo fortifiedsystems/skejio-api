@@ -27,10 +27,6 @@ const UserSchema = new mongoose.Schema({
         required: true,
         match: validate.PASSWORD,
     },
-    isAdmin: {
-        type: Boolean,
-        default: true,
-    },
     profileImg: {
         type: String,
         default: '',

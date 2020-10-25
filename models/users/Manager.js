@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 
-const Schema = mongoose.Schema;
-
-const ManagerSchema = new Schema({
+const ManagerSchema = new mongoose.Schema({
+    isAdmin: {
+        type: Boolean,
+        default: true,
+    },
     teammates: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teammate',
