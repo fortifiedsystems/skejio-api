@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const CommentSchema = new Schema({
+const CommentSchema = new mongoose.Schema({
     thread: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Thread',

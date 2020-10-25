@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const TourSchema = new Schema({
+const TourSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
     },
-    region: String,
     tourDates: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'TourDate',

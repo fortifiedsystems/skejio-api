@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const validate = require('./users/constants');
 
-const TourDateSchema = new Schema({
+const TourDateSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
@@ -20,6 +20,18 @@ const TourDateSchema = new Schema({
     contract: String,
     contractSigned: Boolean,
     paidInFull: Boolean,
+    promoterName: {
+        type: String,
+        default: '',
+    },
+    promoterEmail: {
+        type: String,
+        match: validate.EMAIL,
+    },
+    // TODO validate this field.
+    promoterPhone: {
+        type: String,
+    },
     threads: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Thread',
@@ -28,10 +40,6 @@ const TourDateSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo',
     }],
-    promoter: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Promoter',
-    },
     tour: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tour',
