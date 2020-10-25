@@ -10,6 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/v1/auth', routes.auth);
+app.use('/api/v1/tour', routes.tour);
 
 // connection
 app.listen(PORT, () => {
