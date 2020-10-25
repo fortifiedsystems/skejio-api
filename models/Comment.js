@@ -8,7 +8,7 @@ const CommentSchema = new Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Artist' || 'Manager' || 'Teammate',
+        ref: 'User',
     },
     content: {
         type: String,
@@ -16,7 +16,7 @@ const CommentSchema = new Schema({
     }
 }, {
     timestamps: true,
-})
+});
 
 const Comment = mongoose.model('Comment', CommentSchema);
 

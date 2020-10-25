@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const TodoSchema = new Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Artist' || 'Manager' || 'Teammate',
+        ref: 'User',
     },
     tourDate: {
         type: mongoose.Schema.Types.ObjectId,
