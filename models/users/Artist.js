@@ -1,36 +1,10 @@
 const mongoose = require('mongoose');
-const validate = require('./constants');
+const User = require('./User');
 
 const Schema = mongoose.Schema;
 
 const ArtistSchema = new Schema({
-    firstName: {
-        type: String,
-        required: true,
-    },
-    lastName: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        match: validate.EMAIL,
-    },
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-        match: validate.PASSWORD,
-    },
     artistName: String,
-    profileImg: String,
-    isAdmin: Boolean,
     managerRate: {
         type: Number,
         default: 0,
@@ -51,22 +25,8 @@ const ArtistSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tour',
     }],
-    threads: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Thread',
-    }],
-    comments: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comment',
-    }],
-    todos: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Todo',
-    }],
-}, {
-    timestamps: true,
 });
 
-const Artist = mongoose.model('Artist', ArtistSchema);
+const Artist = User.discriminator('Artist', ArtistSchema);
 
 module.exports = Artist;
