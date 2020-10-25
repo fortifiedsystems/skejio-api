@@ -17,7 +17,7 @@ const register = async (req, res) => {
         const hash = await bcrypt.hash(req.body.password, salt);
         req.body.password = hash;
 
-        const account;
+        const account = db.Artist;
 
         if (req.body.accountType === 'Artist') {
             account = db.Artist;

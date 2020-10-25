@@ -44,13 +44,13 @@ const UserSchema = new mongoose.Schema({
         ref: 'Todo',
     }]
 }, {
-    timestamps: true,
-});
-
-
-const User = mongoose.model('User', UserSchema, {
+    timestamps: true
+}, {
     discriminatorKey: 'itemtype',
     collection: 'items',
 });
 
+const User = mongoose.model('User', UserSchema);
+
+mongoose.model('adf', UserSchema, 'items',)
 module.exports = User;
