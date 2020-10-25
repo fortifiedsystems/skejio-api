@@ -1,10 +1,15 @@
 const bcrypt = require('bcryptjs');
-const db = require('../models');
 const jwt = require('jsonwebtoken');
 
+const db = require('../models');
+
+
 const UNIQUE_ERR = 'Account with this email or username is already registered.'
-const INVALID_LOGIN = 'Email or password incorrect';
+const INVALID_LOGIN = 'Email or password is incorrect';
 const TRY_AGAIN = 'Something went wrong. Please try again.';
+
+
+
 
 // POST Register Route
 const register = async (req, res) => {
@@ -44,6 +49,10 @@ const register = async (req, res) => {
     }
 }
 
+
+
+
+// POST Login Route
 const login = async (req, res) => {
     try {
         const foundUser = await db.User.findOne({ email: req.body.email });
@@ -53,7 +62,7 @@ const login = async (req, res) => {
         if (!match) return res.send({ message: INVALID_LOGIN });
 
         if (match) {
-            const signedJwt = await jwt.sign(
+            const signedJwt = jwt.sign(
                 {
                     _id: foundUser._id,
                 },
@@ -83,6 +92,9 @@ const login = async (req, res) => {
     }
 }
 
+
+
+// Exports
 module.exports = {
     register,
     login,
