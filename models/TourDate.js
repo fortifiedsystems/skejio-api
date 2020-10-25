@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validate = require('./users/constants');
+const validate = require('./constants');
 
 const TourDateSchema = new mongoose.Schema({
     date: {

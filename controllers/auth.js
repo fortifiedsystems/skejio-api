@@ -17,7 +17,7 @@ const register = async (req, res) => {
         const hash = await bcrypt.hash(req.body.password, salt);
         req.body.password = hash;
 
-        const account = db.Artist;
+        let account;
 
         if (req.body.accountType === 'Artist') {
             account = db.Artist;
@@ -35,7 +35,7 @@ const register = async (req, res) => {
     } catch (err) {
         return res.status(500).json({
             status: 500,
-            message: 'Something went wrong. Please try again.',
+            message: 'Something went wrong: ' + err,
         });
     }
 }

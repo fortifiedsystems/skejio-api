@@ -25,7 +25,11 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        match: validate.PASSWORD,
+        // match: validate.PASSWORD,
+    },
+    accountType: {
+        type: String,
+        default: '',
     },
     profileImg: {
         type: String,
