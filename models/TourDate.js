@@ -28,9 +28,9 @@ const TourDateSchema = new mongoose.Schema({
         type: String,
         match: validate.EMAIL,
     },
-    // TODO validate this field.
     promoterPhone: {
         type: String,
+        match: validate.PHONE,
     },
     threads: [{
         type: mongoose.Schema.Types.ObjectId,
