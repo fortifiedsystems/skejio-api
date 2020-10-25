@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-// const routes = require('./routes');
+const routes = require('./routes');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// app.use('api/v1/users', routes.user);
+app.use('/api/v1/auth', routes.auth);
 
 // connection
 app.listen(PORT, () => {
