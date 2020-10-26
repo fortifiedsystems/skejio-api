@@ -51,6 +51,10 @@ const TourDateSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    postShowFormSubmitted: {
+        type: Boolean,
+        default: false,
+    },
     threads: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Thread',
