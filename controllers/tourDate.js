@@ -1,6 +1,22 @@
 const db = require('../models');
 
+// INDEX
 const index = (req, res) => {
+    db.TourDate.find({}, (err, foundTourDates) => {
+        if (err) console.log('Error at tourDate#index:', err);
+        if (!foundTourDates) res.status(200).json({
+            'message': 'No tour dates assigned to this tour.'
+        });
+
+        res.status(200).json({
+            'tourDates': foundTourDates,
+        });
+    });
+}
+
+
+// TOUR INDEX
+const tourIndex = (req, res) => {
     db.TourDate.find({ 'tour': req.params.tourId }, (err, foundTourDates) => {
         if (err) console.log('Error at tourDate#index:', err);
         if (!foundTourDates) res.status(200).json({
@@ -13,8 +29,10 @@ const index = (req, res) => {
     });
 }
 
+
+// SHOW
 const show = (req, res) => {
-    db.TourDate.findById(req.params.showId, (err, foundTourDate) => {
+    db.TourDate.findById(req.params.id, (err, foundTourDate) => {
         if (err) console.log('Error at tourDate#show', err);
         if (!foundTourDate) res.status(200).json({
             'message': 'Tour date not found.',
@@ -26,6 +44,8 @@ const show = (req, res) => {
     });
 }
 
+
+// CREATE
 const create = async (req, res) => {
     try {
         const tour = await db.Tour.findById(req.params.tourId);
@@ -42,8 +62,10 @@ const create = async (req, res) => {
     }
 }
 
+
+// UPDATE
 const update = (req, res) => {
-    db.TourDate.findByIdAndUpdate(req.params.showId, req.body, { new: true }, (err, updatedTourDate) => {
+    db.TourDate.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedTourDate) => {
         if (err) console.log('Error at tourDate#update:', err);
         if (!updatedTourDate) res.status(200).json({
             "message": "Tour date does not exist."
@@ -53,8 +75,10 @@ const update = (req, res) => {
     });
 }
 
+
+// DELETE
 const destroy = (req, res) => {
-    db.TourDate.findByIdAndDelete(req.params.showId, (err, deletedTourDate) => {
+    db.TourDate.findByIdAndDelete(req.params.id, (err, deletedTourDate) => {
         if (err) console.log('Error at tourDate#delete:', err);
         if (!deletedTourDate) return res.status(200).json({
             "message": "Cannot delete a tour date that doesn't exist.",
@@ -69,6 +93,7 @@ const destroy = (req, res) => {
 module.exports = {
     create,
     index,
+    tourIndex,
     show,
     update,
     destroy,
