@@ -1,5 +1,5 @@
 module.exports = {
     auth: require('./auth'),
-    tour: require('./tour'),
+    tours: require('./tours'),
     tourDate: require('./tourDate'),
 }
