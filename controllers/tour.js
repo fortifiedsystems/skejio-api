@@ -49,7 +49,7 @@ const update = (req, res) => {
 }
 
 const destroy = (req, res) => {
-    db.Tour.findByIdAndDelete(req.params.id, (err, deletedTour) => {
+    db.Tour.findByIdAndDelete(req.params.showId, (err, deletedTour) => {
         if (err) console.log('Error in tour#destroy:', err);
         if (!deletedTour) return res.status(200).json({
             "message": "No tour with that id found in DB",
