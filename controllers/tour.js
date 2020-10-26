@@ -14,7 +14,7 @@ const index = (req, res) => {
 }
 
 const show = (req, res) => {
-    db.Tour.findOne({ _id: req.params.id }, (err, foundTour) => {
+    db.Tour.findById(req.params.id, (err, foundTour) => {
         if (err) console.log('Error in tour#show:', err);
         if (!foundTour) return res.status(200).json({
             "message": "There is no tour with this id"
@@ -33,7 +33,7 @@ const create = (req, res) => {
         // 3. if artist or manager, assign id to req.body.artist
         // 3a. Will need to have a dropdown if user creating tour is a manager so they can select from artists.
 
-        res.status(201).json({ "tour": savedTour });
+        res.status(201).json({ 'tour': savedTour });
     });
 }
 
@@ -56,7 +56,7 @@ const destroy = (req, res) => {
         })
 
         res.status(200).json({
-            "tour": deletedGame
+            "tour": deletedTour
         });
     })
 }
