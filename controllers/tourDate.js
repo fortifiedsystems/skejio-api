@@ -37,11 +37,21 @@ const create = async (req, res) => {
     } catch (err) {
         console.log('Error at tourDate#create:', err);
     }
+}
 
+const update = (req, res) => {
+    db.TourDate.findByIdAndUpdate(req.params.showId, req.body, { new: true }, (err, updatedTourDate) => {
+        if (err) console.log('Error at tourDate#update:', err);
+        if (!updatedTourDate) return res.status(200).json({
+            "message": "Tour date does not exist."
+        });
+        res.status(200).json({ 'tourDate': updatedTourDate });
+    });
 }
 
 module.exports = {
     create,
     index,
     show,
+    update,
 }
