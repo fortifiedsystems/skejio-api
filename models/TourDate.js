@@ -14,12 +14,27 @@ const TourDateSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
     },
-    fee: Number,
-    deposit: Number,
-    depositReceived: Boolean,
+    fee: {
+        type: Number,
+        default: 0,
+    },
+    deposit: {
+        type: Number,
+        default: 0,
+    },
+    depositReceived: {
+        type: Boolean,
+        default: false,
+    },
     contract: String,
-    contractSigned: Boolean,
-    paidInFull: Boolean,
+    contractSigned: {
+        type: Boolean,
+        default: false,
+    },
+    paidInFull: {
+        type: Boolean,
+        default: false,
+    },
     promoterName: {
         type: String,
         default: '',
@@ -31,6 +46,10 @@ const TourDateSchema = new mongoose.Schema({
     promoterPhone: {
         type: String,
         match: validate.PHONE,
+    },
+    complete: {
+        type: Boolean,
+        default: false,
     },
     threads: [{
         type: mongoose.Schema.Types.ObjectId,
