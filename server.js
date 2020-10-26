@@ -12,6 +12,7 @@ app.use(cors());
 app.use('/api/v1/auth', routes.auth);
 app.use('/api/v1/tours', routes.tours);
 app.use('/api/v1/dates', routes.tourDate);
+app.use('/api/v1/threads', routes.threads);
 
 // connection
 app.listen(PORT, () => {

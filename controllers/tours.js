@@ -13,6 +13,8 @@ const index = (req, res) => {
     })
 }
 
+
+// SHOW
 const show = (req, res) => {
     db.Tour.findById(req.params.id, (err, foundTour) => {
         if (err) console.log('Error in tour#show:', err);
@@ -24,6 +26,8 @@ const show = (req, res) => {
     })
 }
 
+
+// CREATE
 const create = (req, res) => {
     db.Tour.create(req.body, (err, savedTour) => {
         if (err) console.log('Error in tour#create:', err);
@@ -37,6 +41,8 @@ const create = (req, res) => {
     });
 }
 
+
+// UPDATE
 const update = (req, res) => {
     db.Tour.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedTour) => {
         if (err) console.log('Error in tour#update:', err);
@@ -48,6 +54,8 @@ const update = (req, res) => {
     })
 }
 
+
+// DELETE
 const destroy = (req, res) => {
     db.Tour.findByIdAndDelete(req.params.showId, (err, deletedTour) => {
         if (err) console.log('Error in tour#destroy:', err);

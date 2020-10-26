@@ -8,7 +8,6 @@ const ThreadSchema = new mongoose.Schema({
     tourDate: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'TourDate',
-        required: true,
     },
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -16,6 +15,7 @@ const ThreadSchema = new mongoose.Schema({
     }],
     content: {
         type: String,
+        required: true,
         maxlength: 300,
     },
 }, {

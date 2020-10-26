@@ -1,5 +1,6 @@
 const db = require('../models');
 
+
 // INDEX
 const index = (req, res) => {
     db.TourDate.find({}, (err, foundTourDates) => {
