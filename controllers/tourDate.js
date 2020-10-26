@@ -65,14 +65,20 @@ const create = async (req, res) => {
 
 // UPDATE
 const update = (req, res) => {
-    db.TourDate.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedTourDate) => {
-        if (err) console.log('Error at tourDate#update:', err);
-        if (!updatedTourDate) res.status(200).json({
-            "message": "Tour date does not exist."
-        });
+    db.TourDate.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+        (err, updatedTourDate) => {
+            if (err) console.log('Error at tourDate#update:', err);
+            if (!updatedTourDate) res.status(200).json({
+                "message": "Tour date does not exist."
+            });
 
-        res.status(200).json({ 'tourDate': updatedTourDate });
-    });
+            res.status(200).json({
+                'tourDate': updatedTourDate
+            });
+        });
 }
 
 
