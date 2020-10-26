@@ -14,19 +14,24 @@ const index = (req, res) => {
 }
 
 const show = (req, res) => {
-    db.Tour.find(req.params.id, (err, foundTour) => {
+    db.Tour.findOne({ _id: req.params.id }, (err, foundTour) => {
         if (err) console.log('Error in tour#show:', err);
         if (!foundTour) return res.status(200).json({
             "message": "There is no tour with this id"
         })
 
-        res.status(200).json({ "tours": foundTours });
+        res.status(200).json({ "tours": foundTour });
     })
 }
 
 const create = (req, res) => {
     db.Tour.create(req.body, (err, savedTour) => {
         if (err) console.log('Error in tour#create:', err);
+        // TODO assign artistId to req.body.artist
+        // 1. Get id of current user
+        // 2. if current user is a teammate, return Unauthorized error
+        // 3. if artist or manager, assign id to req.body.artist
+        // 3a. Will need to have a dropdown if user creating tour is a manager so they can select from artists.
 
         res.status(201).json({ "tour": savedTour });
     });
