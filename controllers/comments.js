@@ -74,6 +74,19 @@ const update = (req, res) => {
         });
 }
 
+const destroy = (req, res) => {
+    db.Comment.findByIdAndDelete(req.params.id, (err, deletedComment) => {
+        if (err) console.log('Error at comment#delete', err);
+        if (!deletedComment) res.status(200).json({
+            'message': 'Cannot delete a comment that does not exist',
+        });
+
+        res.status(200).json({
+            'comment': deletedComment,
+        });
+    })
+}
+
 
 
 module.exports = {
@@ -82,4 +95,5 @@ module.exports = {
     threadIndex,
     show,
     update,
+    destroy,
 }
