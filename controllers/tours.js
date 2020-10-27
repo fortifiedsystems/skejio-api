@@ -12,7 +12,7 @@ const index = (req, res) => {
         res.status(200).json({
             'tours': foundTours
         });
-    })
+    });
 }
 
 
@@ -37,10 +37,10 @@ const show = (req, res) => {
         if (err) console.log('Error in tour#show:', err);
         if (!foundTour) return res.status(200).json({
             "message": "There is no tour with this id"
-        })
+        });
 
         res.status(200).json({ "tours": foundTour });
-    })
+    });
 }
 
 
@@ -68,7 +68,7 @@ const update = (req, res) => {
         });
 
         res.status(200).json({ 'tour': updatedTour });
-    })
+    });
 }
 
 
@@ -78,12 +78,12 @@ const destroy = (req, res) => {
         if (err) console.log('Error in tour#destroy:', err);
         if (!deletedTour) return res.status(200).json({
             "message": "No tour with that id found in DB",
-        })
+        });
 
         res.status(200).json({
             "tour": deletedTour
         });
-    })
+    });
 }
 
 

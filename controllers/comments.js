@@ -58,7 +58,7 @@ const create = async (req, res) => {
 
             res.status(201).json({
                 'comment': createdComment
-            })
+            });
         });
     } catch (error) {
         console.log('Error at comments#create:', err);
@@ -96,7 +96,7 @@ const destroy = (req, res) => {
         res.status(200).json({
             'comment': deletedComment,
         });
-    })
+    });
 }
 
 

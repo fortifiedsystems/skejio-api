@@ -11,8 +11,8 @@ const index = (req, res) => {
 
         res.status(200).json({
             'todos': foundTodos,
-        })
-    })
+        });
+    });
 }
 
 
@@ -41,8 +41,8 @@ const show = (req, res) => {
 
         res.status(200).json({
             'todo': foundTodo,
-        })
-    })
+        });
+    });
 }
 
 
@@ -54,7 +54,7 @@ const create = (req, res) => {
         res.status(200).json({
             'todo': createdTodo,
         });
-    })
+    });
 }
 
 
@@ -88,7 +88,7 @@ const destroy = (req, res) => {
         res.status(200).json({
             'todo': deletedTodo
         });
-    })
+    });
 }
 
 

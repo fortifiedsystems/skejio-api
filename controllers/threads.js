@@ -59,7 +59,7 @@ const create = async (req, res) => {
             res.status(201).json({
                 'thread': createdThread,
             });
-        })
+        });
     } catch (err) {
         console.log('Error at thread#create:', err);
     }
