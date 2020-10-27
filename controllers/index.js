@@ -4,4 +4,5 @@ module.exports = {
     tourDate: require('./tourDate'),
     threads: require('./threads'),
     comments: require('./comments'),
+    todos: require('./todos'),
 }

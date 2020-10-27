@@ -9,7 +9,9 @@ const index = (req, res) => {
             "message": "You have not created a tour yet."
         });
 
-        res.status(200).json({ "tours": foundTours });
+        res.status(200).json({
+            'tours': foundTours
+        });
     })
 }
 

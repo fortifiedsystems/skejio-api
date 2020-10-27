@@ -14,6 +14,7 @@ app.use('/api/v1/tours', routes.tours);
 app.use('/api/v1/dates', routes.tourDate);
 app.use('/api/v1/threads', routes.threads);
 app.use('/api/v1/comments', routes.comments);
+app.use('/api/v1/todos', routes.todos);
 
 // connection
 app.listen(PORT, () => {
