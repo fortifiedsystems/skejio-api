@@ -67,6 +67,7 @@ const login = async (req, res) => {
                 {
                     _id: foundUser._id,
                     userType: foundUser.type,
+                    userManager: foundUser.manager,
                 },
                 "super_secret_key",
                 {

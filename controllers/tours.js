@@ -46,6 +46,11 @@ const show = (req, res) => {
 
 // POST create
 const create = (req, res) => {
+    console.log(req);
+    if (req.userType === 'Teammate') res.status(403).json({
+        'message': 'You are not authorized to create a tour. Contact the manager of this artist.',
+    });
+
     db.Tour.create({ ...req.body, artist: req.userId }, (err, savedTour) => {
         if (err) console.log('Error in tour#create:', err);
 

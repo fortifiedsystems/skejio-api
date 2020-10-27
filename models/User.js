@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     },
     accountType: {
         type: String,
-        default: '',
+        required: true,
     },
     profileImg: {
         type: String,

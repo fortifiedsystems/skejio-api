@@ -48,8 +48,9 @@ const show = (req, res) => {
 
 // POST create
 const create = async (req, res) => {
+
     if (user.type === 'Teammate') return res.status(403).json({
-        'message': 'teammates cannot create threads. Contact manager.'
+        'message': 'Teammates cannot create threads. Contact manager.'
     });
 
     try {
@@ -72,6 +73,10 @@ const create = async (req, res) => {
 
 // PUT update
 const update = (req, res) => {
+    if (user.type === 'Teammate') return res.status(403).json({
+        'message': 'Teammates cannot update threads. Contact manager.'
+    });
+
     db.Thread.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -91,6 +96,10 @@ const update = (req, res) => {
 
 // DELETE
 const destroy = (req, res) => {
+    if (user.type === 'Teammate') return res.status(403).json({
+        'message': 'Teammates cannot create threads. Contact manager.'
+    });
+
     db.Thread.findByIdAndDelete(req.params.id, (err, deletedThread) => {
         if (err) console.log('Error at thread#delete:', err);
         if (!deletedThread) res.status(200).json({

@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const ctrl = require('../controllers');
+const authRequired = require('../middleware/authRequired');
 
-router.get('/', ctrl.todos.index);
-router.get('/user/:userId', ctrl.todos.userTodoIndex);
-router.get('/:id', ctrl.todos.show);
-router.post('/', ctrl.todos.create);
-router.put('/:id', ctrl.todos.update);
-router.delete('/:id', ctrl.todos.destroy);
+router.get('/', authRequired, ctrl.todos.index);
+router.get('/user/:userId', authRequired, ctrl.todos.userTodoIndex);
+router.get('/:id', authRequired, ctrl.todos.show);
+router.post('/', authRequired, ctrl.todos.create);
+router.put('/:id', authRequired, ctrl.todos.update);
+router.delete('/:id', authRequired, ctrl.todos.destroy);
 
 module.exports = router;
