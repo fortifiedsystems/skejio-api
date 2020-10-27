@@ -33,23 +33,27 @@ const show = (req, res) => {
 
 // POST create
 const create = async (req, res) => {
-
-    if (user.type === 'Teammate') return res.status(403).json({
+    if (req.userType === 'Teammate') return res.status(403).json({
         'message': 'Teammates cannot create threads. Contact manager.'
     });
 
     try {
-        req.body.tourDate = req.params.dateId;
         const date = await db.TourDate.findById(req.params.dateId);
-        db.Thread.create(req.body, (err, createdThread) => {
-            if (err) console.log('Error at thread#create:', err);
-            date.threads.push(createdThread);
-            date.save();
+        db.Thread.create(
+            {
+                ...req.body,
+                user: req.userId,
+                tourDate: req.params.dateId,
+            },
+            (err, createdThread) => {
+                if (err) console.log('Error at thread#create:', err);
+                date.threads.push(createdThread);
+                date.save();
 
-            res.status(201).json({
-                'thread': createdThread,
+                res.status(201).json({
+                    'thread': createdThread,
+                });
             });
-        });
     } catch (err) {
         console.log('Error at thread#create:', err);
     }
@@ -58,7 +62,7 @@ const create = async (req, res) => {
 
 // PUT update
 const update = (req, res) => {
-    if (user.type === 'Teammate') return res.status(403).json({
+    if (req.userType === 'Teammate') return res.status(403).json({
         'message': 'Teammates cannot update threads. Contact manager.'
     });
 
@@ -81,7 +85,7 @@ const update = (req, res) => {
 
 // DELETE
 const destroy = (req, res) => {
-    if (user.type === 'Teammate') return res.status(403).json({
+    if (req.userType === 'Teammate') return res.status(403).json({
         'message': 'Teammates cannot create threads. Contact manager.'
     });
 

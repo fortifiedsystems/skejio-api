@@ -31,7 +31,6 @@ const show = (req, res) => {
 
 // POST create
 const create = (req, res) => {
-    console.log(req);
     if (req.userType === 'Teammate') res.status(403).json({
         'message': 'You are not authorized to create a tour. Contact the manager of this artist.',
     });
@@ -46,6 +45,10 @@ const create = (req, res) => {
 
 // PUT update
 const update = (req, res) => {
+    if (req.userType === 'Teammate') res.status(403).json({
+        'message': 'You are not authorized to update a tour. Contact the manager of this artist.',
+    });
+
     db.Tour.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedTour) => {
         if (err) console.log('Error in tour#update:', err);
         if (!updatedTour) return res.status(200).json({
@@ -59,7 +62,11 @@ const update = (req, res) => {
 
 // DELETE
 const destroy = (req, res) => {
-    db.Tour.findByIdAndDelete(req.params.showId, (err, deletedTour) => {
+    db.Tour.findByIdAndDelete(req.params.id, (err, deletedTour) => {
+        if (req.userType === 'Teammate') res.status(403).json({
+            'message': 'You are not authorized to delete a tour. Contact the manager of this artist.',
+        });
+
         if (err) console.log('Error in tour#destroy:', err);
         if (!deletedTour) return res.status(200).json({
             "message": "No tour with that id found in DB",

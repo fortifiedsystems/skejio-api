@@ -34,10 +34,10 @@ const show = (req, res) => {
 // POST create
 const create = async (req, res) => {
     try {
+        req.body.tour = req.params.tourId;
         const tour = await db.Tour.findById(req.params.tourId);
         db.TourDate.create(req.body, (err, createdTourDate) => {
             if (err) console.log('Error at tourDate#create:', err);
-            req.body.tour = req.params.tourId;
             tour.tourDates.push(createdTourDate);
             tour.save();
 

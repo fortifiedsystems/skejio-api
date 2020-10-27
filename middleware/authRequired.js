@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
                 message: UNAUTHORIZED
             });
             req.userId = payload._id;
-            req.userType = payload.type;
+            req.userType = payload.userType;
             next();
         });
     } else {
