@@ -1,4 +1,3 @@
-const { json } = require('express');
 const db = require('../models');
 
 
@@ -16,6 +15,8 @@ const index = (req, res) => {
     })
 }
 
+
+// GET user todos - retrieve todos for specific user.
 const userTodoIndex = (req, res) => {
     db.Todo.find({ 'user': req.params.userId }, (err, foundUserTodos) => {
         if (err) console.log('Error at todo#userTodoIndex:', err);
@@ -90,6 +91,8 @@ const destroy = (req, res) => {
     })
 }
 
+
+// Exports
 module.exports = {
     index,
     userTodoIndex,
