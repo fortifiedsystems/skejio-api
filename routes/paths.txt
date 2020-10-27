@@ -2,6 +2,7 @@
 # TOUR ENDPOINTS
 
 GET: /tours
+GET: /tours/artist/:artistId
 GET: /tours/:id
 POST: /tours
 PUT: /tours/:id

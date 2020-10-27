@@ -1,17 +1,18 @@
+// External Modules
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// Internal Modules
 const db = require('../models');
 
-
+// Constants
 const UNIQUE_ERR = 'Account with this email or username is already registered.'
 const INVALID_LOGIN = 'Email or password is incorrect';
 const TRY_AGAIN = 'Something went wrong. Please try again.';
 
 
 
-
-// POST Register Route
+// POST register
 const register = async (req, res) => {
     try {
         const foundUser = await db.User.findOne({ email: req.body.email });
@@ -52,7 +53,7 @@ const register = async (req, res) => {
 
 
 
-// POST Login Route
+// POST login
 const login = async (req, res) => {
     try {
         const foundUser = await db.User.findOne({ email: req.body.email });

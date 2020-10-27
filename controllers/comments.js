@@ -1,5 +1,7 @@
 const db = require('../models');
 
+
+// GET index 
 const index = (req, res) => {
     db.Comment.find({}, (err, foundComments) => {
         if (err) console.log('Error at comment#index:', err);
@@ -13,6 +15,8 @@ const index = (req, res) => {
     });
 }
 
+
+// GET index for specific thread
 const threadIndex = (req, res) => {
     db.Comment.find({ 'thread': req.params.threadId }, (err, foundComments) => {
         if (err) console.log('Error at comments#threadIndex', err);
@@ -26,6 +30,8 @@ const threadIndex = (req, res) => {
     });
 }
 
+
+// GET show
 const show = (req, res) => {
     db.Comment.findById(req.params.id, (err, foundComment) => {
         if (err) console.log('Error at comment#show:', err);
@@ -39,6 +45,8 @@ const show = (req, res) => {
     });
 }
 
+
+// POST create
 const create = async (req, res) => {
     try {
         req.body.thread = req.params.threadId;
@@ -57,6 +65,8 @@ const create = async (req, res) => {
     }
 }
 
+
+// PUT update
 const update = (req, res) => {
     db.Comment.findByIdAndUpdate(
         req.params.id,
@@ -74,6 +84,8 @@ const update = (req, res) => {
         });
 }
 
+
+// DELETE
 const destroy = (req, res) => {
     db.Comment.findByIdAndDelete(req.params.id, (err, deletedComment) => {
         if (err) console.log('Error at comment#delete', err);
@@ -89,6 +101,7 @@ const destroy = (req, res) => {
 
 
 
+// EXPORTS
 module.exports = {
     create,
     index,

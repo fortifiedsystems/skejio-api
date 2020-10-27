@@ -1,5 +1,7 @@
 const db = require('../models');
 
+
+// GET index
 const index = (req, res) => {
     db.Thread.find({}, (err, foundThreads) => {
         if (err) console.log('Error at threads#index:', err);
@@ -13,6 +15,8 @@ const index = (req, res) => {
     });
 }
 
+
+// GET index route to retrieve threads on specific date.
 const dateIndex = (req, res) => {
     db.Thread.find({ 'tourDate': dateId }, (err, foundThreads) => {
         if (err) console.log('Error at threads#dateIndex', err);
@@ -26,6 +30,8 @@ const dateIndex = (req, res) => {
     });
 }
 
+
+// GET show
 const show = (req, res) => {
     db.Thread.findById(req.params.id, (err, foundThread) => {
         if (err) console.log('Error at thread#show:', err);
@@ -39,6 +45,8 @@ const show = (req, res) => {
     });
 }
 
+
+// POST create
 const create = async (req, res) => {
     try {
         req.body.tourDate = req.params.dateId;
@@ -57,6 +65,8 @@ const create = async (req, res) => {
     }
 }
 
+
+// PUT update
 const update = (req, res) => {
     db.Thread.findByIdAndUpdate(
         req.params.id,
@@ -74,6 +84,8 @@ const update = (req, res) => {
         });
 }
 
+
+// DELETE
 const destroy = (req, res) => {
     db.Thread.findByIdAndDelete(req.params.id, (err, deletedThread) => {
         if (err) console.log('Error at thread#delete:', err);
@@ -87,6 +99,9 @@ const destroy = (req, res) => {
     });
 }
 
+
+
+// EXPORTS
 module.exports = {
     index,
     dateIndex,

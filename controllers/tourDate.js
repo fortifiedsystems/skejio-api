@@ -1,7 +1,7 @@
 const db = require('../models');
 
 
-// INDEX
+// GET index
 const index = (req, res) => {
     db.TourDate.find({}, (err, foundTourDates) => {
         if (err) console.log('Error at tourDate#index:', err);
@@ -16,7 +16,7 @@ const index = (req, res) => {
 }
 
 
-// TOUR INDEX
+// GET index for retrieving dates from specific tour
 const tourIndex = (req, res) => {
     db.TourDate.find({ 'tour': req.params.tourId }, (err, foundTourDates) => {
         if (err) console.log('Error at tourDate#index:', err);
@@ -31,7 +31,7 @@ const tourIndex = (req, res) => {
 }
 
 
-// SHOW
+// GET show
 const show = (req, res) => {
     db.TourDate.findById(req.params.id, (err, foundTourDate) => {
         if (err) console.log('Error at tourDate#show', err);
@@ -46,7 +46,7 @@ const show = (req, res) => {
 }
 
 
-// CREATE
+// POST create
 const create = async (req, res) => {
     try {
         const tour = await db.Tour.findById(req.params.tourId);
@@ -64,7 +64,7 @@ const create = async (req, res) => {
 }
 
 
-// UPDATE
+// PUT update
 const update = (req, res) => {
     db.TourDate.findByIdAndUpdate(
         req.params.id,
@@ -97,6 +97,9 @@ const destroy = (req, res) => {
     });
 }
 
+
+
+// exports
 module.exports = {
     create,
     index,

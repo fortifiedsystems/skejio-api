@@ -1,7 +1,7 @@
 const db = require('../models');
 
 
-// TODO adjust for authorization levels. On all methods.
+// GET index
 const index = (req, res) => {
     db.Tour.find({}, (err, foundTours) => {
         if (err) console.log('Error in tour#index:', err);
@@ -14,7 +14,22 @@ const index = (req, res) => {
 }
 
 
-// SHOW
+// GET index of tours for specific options
+const artistTourIndex = (req, res) => {
+    db.Tour.find({ 'artist': req.params.artistId }, (err, foundTours) => {
+        if (err) console.log('Error at tours#artistTourIndex:', err);
+        if (!foundTours.length) return res.status(200).json({
+            'message': 'There are no tours scheduled for this artist.'
+        });
+
+        res.status(200).json({
+            'tours': foundTours,
+        });
+    });
+}
+
+
+// GET show
 const show = (req, res) => {
     db.Tour.findById(req.params.id, (err, foundTour) => {
         if (err) console.log('Error in tour#show:', err);
@@ -27,7 +42,7 @@ const show = (req, res) => {
 }
 
 
-// CREATE
+// POST create
 const create = (req, res) => {
     db.Tour.create(req.body, (err, savedTour) => {
         if (err) console.log('Error in tour#create:', err);
@@ -42,7 +57,7 @@ const create = (req, res) => {
 }
 
 
-// UPDATE
+// PUT update
 const update = (req, res) => {
     db.Tour.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedTour) => {
         if (err) console.log('Error in tour#update:', err);
@@ -69,8 +84,11 @@ const destroy = (req, res) => {
     })
 }
 
+
+// exports
 module.exports = {
     index,
+    artistTourIndex,
     show,
     create,
     update,
