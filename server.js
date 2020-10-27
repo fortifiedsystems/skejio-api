@@ -13,6 +13,7 @@ app.use('/api/v1/auth', routes.auth);
 app.use('/api/v1/tours', routes.tours);
 app.use('/api/v1/dates', routes.tourDate);
 app.use('/api/v1/threads', routes.threads);
+app.use('/api/v1/comments', routes.comments);
 
 // connection
 app.listen(PORT, () => {
