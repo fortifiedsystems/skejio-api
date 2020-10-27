@@ -6,6 +6,10 @@ const ManagerSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    type: {
+        type: String,
+        default: 'Manager',
+    },
     teammates: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teammate',

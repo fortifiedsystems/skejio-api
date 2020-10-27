@@ -66,6 +66,7 @@ const login = async (req, res) => {
             const signedJwt = jwt.sign(
                 {
                     _id: foundUser._id,
+                    userType: foundUser.type,
                 },
                 "super_secret_key",
                 {

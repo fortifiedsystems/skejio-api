@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validate = require('./constants');
+const validate = require('../utils/constants');
 
 
 const UserSchema = new mongoose.Schema({
@@ -56,5 +56,4 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', UserSchema);
 
-mongoose.model('adf', UserSchema, 'items',)
 module.exports = User;

@@ -10,6 +10,10 @@ const TeammateSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    type: {
+        type: String,
+        default: 'Teammate',
+    },
     manager: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Manager',

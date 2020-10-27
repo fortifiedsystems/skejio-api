@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
-const validate = require('./constants');
+const validate = require('../utils/constants');
 
 const TourDateSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
     },
+    // only stores string of the ticketmast id.
     venue: {
         type: String,
         required: true,

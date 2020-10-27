@@ -3,7 +3,7 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
-    db.Thread.find({}, (err, foundThreads) => {
+    db.Thread.find(req.query, (err, foundThreads) => {
         if (err) console.log('Error at threads#index:', err);
         if (!foundThreads) res.status(200).json({
             'message': 'No thread exists.'
@@ -48,6 +48,10 @@ const show = (req, res) => {
 
 // POST create
 const create = async (req, res) => {
+    if (user.type === 'Teammate') return res.status(403).json({
+        'message': 'teammates cannot create threads. Contact manager.'
+    });
+
     try {
         req.body.tourDate = req.params.dateId;
         const date = await db.TourDate.findById(req.params.dateId);

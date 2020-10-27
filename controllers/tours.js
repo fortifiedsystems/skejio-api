@@ -46,13 +46,8 @@ const show = (req, res) => {
 
 // POST create
 const create = (req, res) => {
-    db.Tour.create(req.body, (err, savedTour) => {
+    db.Tour.create({ ...req.body, artist: req.userId }, (err, savedTour) => {
         if (err) console.log('Error in tour#create:', err);
-        // TODO assign artistId to req.body.artist
-        // 1. Get id of current user
-        // 2. if current user is a teammate, return Unauthorized error
-        // 3. if artist or manager, assign id to req.body.artist
-        // 3a. Will need to have a dropdown if user creating tour is a manager so they can select from artists.
 
         res.status(201).json({ 'tour': savedTour });
     });
