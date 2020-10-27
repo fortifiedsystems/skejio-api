@@ -1,4 +1,34 @@
+const { json } = require('express');
 const db = require('../models');
+
+
+// GET index
+const index = (req, res) => {
+    db.Todo.find({}, (err, foundTodos) => {
+        if (err) console.log('Error at todo#index');
+        if (!foundTodos.length) res.status(200).json({
+            'message': 'There is nothing to do.'
+        });
+
+        res.status(200).json({
+            'todos': foundTodos,
+        })
+    })
+}
+
+const userTodoIndex = (req, res) => {
+    db.Todo.find({ 'user': req.params.userId }, (err, foundUserTodos) => {
+        if (err) console.log('Error at todo#userTodoIndex:', err);
+        if (!foundUserTodos) res.status(200).json({
+            'message': 'No todos attached to this user.'
+        });
+
+        res.status(200).json({
+            'userTodos': foundUserTodos,
+        });
+    });
+}
+
 
 // GET show 
 const show = (req, res) => {
@@ -41,13 +71,30 @@ const update = (req, res) => {
 
             res.status(200).json({
                 'todo': updatedTodo,
-            })
-        }
-    )
+            });
+        });
+}
+
+
+// DELETE
+const destroy = (req, res) => {
+    db.Todo.findByIdAndDelete(req.params.id, (err, deletedTodo) => {
+        if (err) console.log('Error at todo#destroy:', err);
+        if (!deletedTodo) res.status(200).json({
+            'message': 'Cannot delete an item that does not exist.',
+        });
+
+        res.status(200).json({
+            'todo': deletedTodo
+        });
+    })
 }
 
 module.exports = {
+    index,
+    userTodoIndex,
     create,
     show,
     update,
+    destroy,
 }
