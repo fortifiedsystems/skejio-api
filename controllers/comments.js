@@ -44,8 +44,28 @@ const create = async (req, res) => {
     }
 }
 
+const update = (req, res) => {
+    db.Comment.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+        (err, updatedComment) => {
+            if (err) console.log('Error at comments#update:', err);
+            if (!updatedComment) res.status(200).json({
+                'message': 'Cannot update comment that does not exist.',
+            });
+
+            res.status(201).json({
+                'comment': updatedComment,
+            });
+        });
+}
+
+
+
 module.exports = {
     create,
     index,
     threadIndex,
+    update,
 }
