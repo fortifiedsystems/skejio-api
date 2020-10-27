@@ -16,21 +16,6 @@ const index = (req, res) => {
 }
 
 
-// GET index route to retrieve threads on specific date.
-const dateIndex = (req, res) => {
-    db.Thread.find({ 'tourDate': dateId }, (err, foundThreads) => {
-        if (err) console.log('Error at threads#dateIndex', err);
-        if (!foundThreads) res.status(200).json({
-            'message': 'No threads exist for this date.'
-        });
-
-        res.status(200).json({
-            'threads': foundThreads,
-        });
-    });
-}
-
-
 // GET show
 const show = (req, res) => {
     db.Thread.findById(req.params.id, (err, foundThread) => {
@@ -117,7 +102,6 @@ const destroy = (req, res) => {
 // EXPORTS
 module.exports = {
     index,
-    dateIndex,
     show,
     create,
     update,

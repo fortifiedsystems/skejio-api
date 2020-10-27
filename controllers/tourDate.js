@@ -3,22 +3,7 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
-    db.TourDate.find({}, (err, foundTourDates) => {
-        if (err) console.log('Error at tourDate#index:', err);
-        if (!foundTourDates) res.status(200).json({
-            'message': 'No tour dates assigned to this tour.'
-        });
-
-        res.status(200).json({
-            'tourDates': foundTourDates,
-        });
-    });
-}
-
-
-// GET index for retrieving dates from specific tour
-const tourIndex = (req, res) => {
-    db.TourDate.find({ 'tour': req.params.tourId }, (err, foundTourDates) => {
+    db.TourDate.find(req.query, (err, foundTourDates) => {
         if (err) console.log('Error at tourDate#index:', err);
         if (!foundTourDates) res.status(200).json({
             'message': 'No tour dates assigned to this tour.'
@@ -101,10 +86,9 @@ const destroy = (req, res) => {
 
 // exports
 module.exports = {
-    create,
     index,
-    tourIndex,
     show,
+    create,
     update,
     destroy,
 }

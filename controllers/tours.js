@@ -3,7 +3,7 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
-    db.Tour.find({}, (err, foundTours) => {
+    db.Tour.find(req.query, (err, foundTours) => {
         if (err) console.log('Error in tour#index:', err);
         if (!foundTours.length) return res.status(200).json({
             "message": "You have not created a tour yet."
@@ -11,21 +11,6 @@ const index = (req, res) => {
 
         res.status(200).json({
             'tours': foundTours
-        });
-    });
-}
-
-
-// GET index of tours for specific options
-const artistTourIndex = (req, res) => {
-    db.Tour.find({ 'artist': req.params.artistId }, (err, foundTours) => {
-        if (err) console.log('Error at tours#artistTourIndex:', err);
-        if (!foundTours.length) return res.status(200).json({
-            'message': 'There are no tours scheduled for this artist.'
-        });
-
-        res.status(200).json({
-            'tours': foundTours,
         });
     });
 }
@@ -90,7 +75,6 @@ const destroy = (req, res) => {
 // exports
 module.exports = {
     index,
-    artistTourIndex,
     show,
     create,
     update,

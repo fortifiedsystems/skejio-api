@@ -4,7 +4,6 @@ const ctrl = require('../controllers');
 const authRequired = require('../middleware/authRequired');
 
 router.get('/', authRequired, ctrl.todos.index);
-router.get('/user/:userId', authRequired, ctrl.todos.userTodoIndex);
 router.get('/:id', authRequired, ctrl.todos.show);
 router.post('/', authRequired, ctrl.todos.create);
 router.put('/:id', authRequired, ctrl.todos.update);

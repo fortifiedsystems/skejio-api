@@ -3,7 +3,7 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
-    db.Todo.find({}, (err, foundTodos) => {
+    db.Todo.find(req.query, (err, foundTodos) => {
         if (err) console.log('Error at todo#index');
         if (!foundTodos.length) res.status(200).json({
             'message': 'There is nothing to do.'
@@ -11,21 +11,6 @@ const index = (req, res) => {
 
         res.status(200).json({
             'todos': foundTodos,
-        });
-    });
-}
-
-
-// GET user todos - retrieve todos for specific user.
-const userTodoIndex = (req, res) => {
-    db.Todo.find({ 'user': req.params.userId }, (err, foundUserTodos) => {
-        if (err) console.log('Error at todo#userTodoIndex:', err);
-        if (!foundUserTodos) res.status(200).json({
-            'message': 'No todos attached to this user.'
-        });
-
-        res.status(200).json({
-            'userTodos': foundUserTodos,
         });
     });
 }
@@ -95,7 +80,6 @@ const destroy = (req, res) => {
 // Exports
 module.exports = {
     index,
-    userTodoIndex,
     create,
     show,
     update,

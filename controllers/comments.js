@@ -3,7 +3,7 @@ const db = require('../models');
 
 // GET index 
 const index = (req, res) => {
-    db.Comment.find({}, (err, foundComments) => {
+    db.Comment.find(req.query, (err, foundComments) => {
         if (err) console.log('Error at comment#index:', err);
         if (!foundComments) res.status(200).json({
             'message': 'No comments on this thread.'
@@ -11,21 +11,6 @@ const index = (req, res) => {
 
         res.status(200).json({
             'comments': foundComments
-        });
-    });
-}
-
-
-// GET index for specific thread
-const threadIndex = (req, res) => {
-    db.Comment.find({ 'thread': req.params.threadId }, (err, foundComments) => {
-        if (err) console.log('Error at comments#threadIndex', err);
-        if (!foundComments) res.status(200).json({
-            'message': 'No threads exist for this date.'
-        });
-
-        res.status(200).json({
-            'comments': foundComments,
         });
     });
 }
@@ -105,7 +90,6 @@ const destroy = (req, res) => {
 module.exports = {
     create,
     index,
-    threadIndex,
     show,
     update,
     destroy,
