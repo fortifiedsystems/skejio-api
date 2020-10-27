@@ -1,5 +1,4 @@
 const db = require('../models');
-const tourDate = require('./tourDate');
 
 const index = (req, res) => {
     db.Thread.find({}, (err, foundThreads) => {
@@ -75,10 +74,24 @@ const update = (req, res) => {
         });
 }
 
+const destroy = (req, res) => {
+    db.Thread.findByIdAndDelete(req.params.id, (err, deletedThread) => {
+        if (err) console.log('Error at thread#delete:', err);
+        if (!deletedThread) res.status(200).json({
+            'message': 'Cannot delete a thread that does not exist.'
+        });
+
+        res.status(200).json({
+            'thread': deletedThread,
+        });
+    });
+}
+
 module.exports = {
     index,
     dateIndex,
     show,
     create,
     update,
+    destroy,
 }
