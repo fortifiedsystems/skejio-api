@@ -26,7 +26,28 @@ const create = (req, res) => {
     })
 }
 
+
+// PUT update
+const update = (req, res) => {
+    db.Todo.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+        (err, updatedTodo) => {
+            if (err) console.log('Error at todo#update:', err);
+            if (!updatedTodo) res.status(200).json({
+                'message': 'Cannot update todo that does not exist.',
+            });
+
+            res.status(200).json({
+                'todo': updatedTodo,
+            })
+        }
+    )
+}
+
 module.exports = {
     create,
     show,
+    update,
 }
