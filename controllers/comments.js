@@ -26,6 +26,19 @@ const threadIndex = (req, res) => {
     });
 }
 
+const show = (req, res) => {
+    db.Comment.findById(req.params.id, (err, foundComment) => {
+        if (err) console.log('Error at comment#show:', err);
+        if (!foundComment) res.status(200).json({
+            'message': 'This comment does not exist.',
+        });
+
+        res.status(200).json({
+            'comment': foundComment,
+        });
+    });
+}
+
 const create = async (req, res) => {
     try {
         req.body.thread = req.params.threadId;
@@ -67,5 +80,6 @@ module.exports = {
     create,
     index,
     threadIndex,
+    show,
     update,
 }
