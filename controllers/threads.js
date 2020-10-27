@@ -27,8 +27,20 @@ const dateIndex = (req, res) => {
     });
 }
 
+const show = (req, res) => {
+    db.Thread.findById(req.params.id, (err, foundThread) => {
+        if (err) console.log('Error at thread#show:', err);
+        if (!foundThread) res.status(200).json({
+            'message': 'This thread does not exist.',
+        });
+
+        res.status(200).json({
+            'thread': foundThread,
+        });
+    });
+}
+
 const create = async (req, res) => {
-    // TODO attach a user to each thread upon creation.
     try {
         req.body.tourDate = req.params.dateId;
         const date = await db.TourDate.findById(req.params.dateId);
@@ -49,5 +61,6 @@ const create = async (req, res) => {
 module.exports = {
     index,
     dateIndex,
+    show,
     create,
 }
