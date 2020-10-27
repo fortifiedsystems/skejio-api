@@ -58,9 +58,27 @@ const create = async (req, res) => {
     }
 }
 
+const update = (req, res) => {
+    db.Thread.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+        (err, updatedThread) => {
+            if (err) console.log('Error at thread#update:', err);
+            if (!updatedThread) res.status(200).json({
+                'message': 'Cannot update thread that does not exist.',
+            });
+
+            res.status(201).json({
+                'thread': updatedThread,
+            });
+        });
+}
+
 module.exports = {
     index,
     dateIndex,
     show,
     create,
+    update,
 }
