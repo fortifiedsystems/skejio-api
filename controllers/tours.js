@@ -30,16 +30,25 @@ const show = (req, res) => {
 
 
 // POST create
-const create = (req, res) => {
+const create = async (req, res) => {
     if (req.userType === 'Teammate') res.status(403).json({
         'message': 'You are not authorized to create a tour. Contact the manager of this artist.',
     });
 
-    db.Tour.create({ ...req.body, artist: req.userId }, (err, savedTour) => {
-        if (err) console.log('Error in tour#create:', err);
+    try {
+        const artist = await db.Artist.findById(req.params.artistId);
+        db.Tour.create({ ...req.body, artist: req.userId }, (err, savedTour) => {
+            if (err) console.log('Error in tour#create:', err);
+            artist.tours.push(savedTour);
+            artist.save();
 
-        res.status(201).json({ 'tour': savedTour });
-    });
+            res.status(201).json({ 'tour': savedTour });
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Something went wrong. Try again.',
+        })
+    }
 }
 
 
@@ -61,21 +70,28 @@ const update = (req, res) => {
 
 
 // DELETE
-const destroy = (req, res) => {
-    db.Tour.findByIdAndDelete(req.params.id, (err, deletedTour) => {
-        if (req.userType === 'Teammate') res.status(403).json({
-            'message': 'You are not authorized to delete a tour. Contact the manager of this artist.',
-        });
+const destroy = async (req, res) => {
+    try {
+        db.Tour.findByIdAndDelete(req.params.id, (err, deletedTour) => {
+            if (req.userType === 'Teammate') res.status(403).json({
+                message: 'You are not authorized to delete a tour. Contact the manager of this artist.',
+            });
+            db.TourDate.deleteMany({ tour: req.params.id });
 
-        if (err) console.log('Error in tour#destroy:', err);
-        if (!deletedTour) return res.status(200).json({
-            "message": "No tour with that id found in DB",
-        });
+            if (err) console.log('Error in tour#destroy:', err);
+            if (!deletedTour) return res.status(200).json({
+                message: 'Tour does not exist',
+            });
 
-        res.status(200).json({
-            "tour": deletedTour
+            res.status(200).json({
+                deletedTour: deletedTour
+            });
         });
-    });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Something went wrong. Try again.',
+        });
+    }
 }
 
 

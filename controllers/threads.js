@@ -84,21 +84,29 @@ const update = (req, res) => {
 
 
 // DELETE
-const destroy = (req, res) => {
-    if (req.userType === 'Teammate') return res.status(403).json({
-        'message': 'Teammates cannot create threads. Contact manager.'
-    });
-
-    db.Thread.findByIdAndDelete(req.params.id, (err, deletedThread) => {
-        if (err) console.log('Error at thread#delete:', err);
-        if (!deletedThread) res.status(200).json({
-            'message': 'Cannot delete a thread that does not exist.'
+const destroy = async (req, res) => {
+    try {
+        if (req.userType === 'Teammate') return res.status(403).json({
+            'message': 'Teammates cannot create threads. Contact manager.'
         });
 
-        res.status(200).json({
-            'thread': deletedThread,
+        db.Thread.findByIdAndDelete(req.params.id, (err, deletedThread) => {
+            if (err) console.log('Error at thread#delete:', err);
+            if (!deletedThread) res.status(200).json({
+                'message': 'Cannot delete a thread that does not exist.'
+            });
+
+            db.Comment.deleteMany({ thread: req.params.id });
+
+            res.status(200).json({
+                'thread': deletedThread,
+            });
         });
-    });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Something went wrong. Try again.',
+        });
+    }
 }
 
 

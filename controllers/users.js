@@ -51,17 +51,34 @@ const update = (req, res) => {
 
 
 // DELETE destroy route
-const destroy = (req, res) => {
-    db.User.findByIdAndDelete(req.params.id, (err, deletedUser) => {
-        if (err) console.log('Error at users#destroy');
-        if (!deletedUser) return res.status(404).json({
-            message: 'Could not find this user.',
-        })
+const destroy = async (req, res) => {
+    try {
+        const user = await db.User.findById(req.params.id);
 
-        res.status(200).json({
-            deletedUser: deletedUser,
+        if (user.__t === 'Artist') {
+            await db.Tour.deleteMany({ artist: req.params.id });
+        }
+
+        await db.Thread.deleteMany({ user: req.params.id });
+        await db.Comment.deleteMany({ user: req.params.id });
+        await db.Todos.deleteMany({ user: req.params.id });
+
+        await db.User.findByIdAndDelete(req.params.id, (err, deletedUser) => {
+            if (err) console.log('Error at users#destroy');
+            if (!deletedUser) return res.status(404).json({
+                message: 'Could not find this user.',
+            })
+
+            res.status(200).json({
+                deletedUser: deletedUser,
+            });
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: 'Something went wrong. Try again.',
         })
-    })
+    }
+
 }
 
 
