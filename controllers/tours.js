@@ -71,17 +71,23 @@ const update = (req, res) => {
 
 // DELETE
 const destroy = async (req, res) => {
-    try {
-        db.Tour.findByIdAndDelete(req.params.id, (err, deletedTour) => {
-            if (req.userType === 'Teammate') res.status(403).json({
-                message: 'You are not authorized to delete a tour. Contact the manager of this artist.',
-            });
-            db.TourDate.deleteMany({ tour: req.params.id });
+    if (req.userType === 'Teammate') res.status(403).json({
+        message: 'You are not authorized to delete a tour. Contact the manager of this artist.',
+    });
 
+    try {
+        db.Tour.findByIdAndDelete(req.params.id, async (err, deletedTour) => {
             if (err) console.log('Error in tour#destroy:', err);
             if (!deletedTour) return res.status(200).json({
                 message: 'Tour does not exist',
             });
+
+            const artist = await db.Artist.findById(deletedTour.artist);
+            let index = artist.tours.indexOf(req.params.id);
+            artist.tours.splice(index);
+            artist.save();
+
+            await db.TourDate.deleteMany({ tour: deletedTour._id });
 
             res.status(200).json({
                 deletedTour: deletedTour

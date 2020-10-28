@@ -69,15 +69,20 @@ const update = (req, res) => {
 
 
 // DELETE
-const destroy = async (req, res) => {
+const destroy = (req, res) => {
     try {
-        db.TourDate.findByIdAndDelete(req.params.id, (err, deletedTourDate) => {
+        db.TourDate.findByIdAndDelete(req.params.id, async (err, deletedTourDate) => {
             if (err) console.log('Error at tourDate#delete:', err);
             if (!deletedTourDate) return res.status(200).json({
                 "message": "Cannot delete a tour date that doesn't exist.",
             });
 
-            db.Thread.deleteMany({ tourdate: req.params.id });
+            const tour = await db.Tour.findById(deletedTourDate.tour);
+            let index = tour.tourDates.indexOf(req.params.id);
+            tour.tourDates.splice(index, 1);
+            tour.save();
+
+            await db.Thread.deleteMany({ tourDate: req.params.id });
 
             res.status(200).json({
                 'tourDate': deletedTourDate
