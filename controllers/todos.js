@@ -32,14 +32,28 @@ const show = (req, res) => {
 
 
 // POST create
-const create = (req, res) => {
-    db.Todo.create(req.body, (err, createdTodo) => {
-        if (err) console.log('Error at todo#create:', err);
+const create = async (req, res) => {
+    try {
+        const tourDate = await db.TourDate.findById(req.params.dateId);
+        const body = {
+            ...req.body,
+            user: req.userId,
+            tourDate: req.params.dateId,
+        }
 
-        res.status(200).json({
-            'todo': createdTodo,
+        db.Todo.create(body, (err, createdTodo) => {
+            if (err) console.log('Error at todo#create:', err);
+            tourDate.todos.push(createdTodo);
+            tourDate.save();
+
+            res.status(200).json({
+                'todo': createdTodo,
+            });
         });
-    });
+    } catch (error) {
+        return res.send(error);
+    }
+
 }
 
 
