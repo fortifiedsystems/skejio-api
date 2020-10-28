@@ -47,7 +47,7 @@ const create = async (req, res) => {
             tourDate.save();
 
             res.status(200).json({
-                'todo': createdTodo,
+                'createdTodo': createdTodo,
             });
         });
     } catch (error) {
@@ -70,7 +70,7 @@ const update = (req, res) => {
             });
 
             res.status(200).json({
-                'todo': updatedTodo,
+                'updatedTodo': updatedTodo,
             });
         });
 }
@@ -85,7 +85,7 @@ const destroy = (req, res) => {
         });
 
         res.status(200).json({
-            'todo': deletedTodo
+            'deletedTodo': deletedTodo
         });
     });
 }
