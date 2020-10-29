@@ -34,17 +34,22 @@ const show = (req, res) => {
 // POST create
 const create = async (req, res) => {
     try {
-        const thread = await db.Thread.findById(req.params.threadId);
         db.Comment.create(
             {
                 ...req.body,
                 user: req.userId,
                 thread: req.params.threadId,
             },
-            (err, createdComment) => {
+            async (err, createdComment) => {
                 if (err) console.log('Error at comments#create:', err);
+                const thread = await db.Thread.findById(req.params.threadId);
+                const user = await db.User.findById(req.userId);
+
                 thread.comments.push(createdComment);
+                user.comments.push(createdComment);
+
                 thread.save();
+                user.save();
 
                 res.status(201).json({
                     'comment': createdComment
@@ -58,6 +63,12 @@ const create = async (req, res) => {
 
 // PUT update
 const update = (req, res) => {
+    if (req.userId !== req.body.user) {
+        return res.status(403).json({
+            message: 'Can\'t edit a comment you did not write.',
+        });
+    }
+
     db.Comment.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -65,11 +76,11 @@ const update = (req, res) => {
         (err, updatedComment) => {
             if (err) console.log('Error at comments#update:', err);
             if (!updatedComment) res.status(200).json({
-                'message': 'Cannot update comment that does not exist.',
+                message: 'Cannot update comment that does not exist.',
             });
 
             res.status(201).json({
-                'comment': updatedComment,
+                comment: updatedComment,
             });
         });
 }
@@ -77,16 +88,37 @@ const update = (req, res) => {
 
 // DELETE
 const destroy = (req, res) => {
-    db.Comment.findByIdAndDelete(req.params.id, (err, deletedComment) => {
-        if (err) console.log('Error at comment#delete', err);
-        if (!deletedComment) res.status(200).json({
-            'message': 'Cannot delete a comment that does not exist',
-        });
+    try {
+        db.Comment.findByIdAndDelete(req.params.id, async (err, deletedComment) => {
+            if (err) console.log('Error at comment#delete', err);
+            if (!deletedComment) res.status(200).json({
+                message: 'Cannot delete a comment that does not exist',
+            });
 
-        res.status(200).json({
-            'comment': deletedComment,
+            const thread = await db.Thread.findById(deletedComment.thread);
+            const user = await db.User.findById(deletedComment.user);
+            if (user._id === thread.user) return res.status(403).json({
+                message: 'Cannot delete a comment you did not write',
+            });
+
+            const threadIndex = thread.comments.indexOf(req.params.id);
+            const userIndex = user.comments.indexOf(req.userId);
+
+            thread.comments.splice(threadIndex, 1);
+            user.comments.splice(userIndex, 1);
+
+            thread.save();
+            user.save();
+
+            res.status(200).json({
+                comment: deletedComment,
+            });
         });
-    });
+    } catch (error) {
+        res.status(200).json({
+            message: 'Something went wrong. Try again.'
+        });
+    }
 }
 
 
