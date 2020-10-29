@@ -82,7 +82,7 @@ const destroy = (req, res) => {
             tour.tourDates.splice(index, 1);
             tour.save();
 
-            await db.Thread.deleteMany({ tourDate: req.params.id });
+            await db.Thread.deleteMany({ tourDate: deletedTourDate._id });
 
             res.status(200).json({
                 'tourDate': deletedTourDate

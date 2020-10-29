@@ -37,12 +37,14 @@ const create = async (req, res) => {
 
     try {
         const artist = await db.Artist.findById(req.params.artistId);
-        db.Tour.create({ ...req.body, artist: req.userId }, (err, savedTour) => {
+        db.Tour.create({ ...req.body, artist: artist._id }, (err, savedTour) => {
             if (err) console.log('Error in tour#create:', err);
             artist.tours.push(savedTour);
             artist.save();
 
-            res.status(201).json({ 'tour': savedTour });
+            res.status(201).json({
+                tour: savedTour
+            });
         });
     } catch (error) {
         res.status(500).json({
@@ -83,7 +85,8 @@ const destroy = async (req, res) => {
             });
 
             const artist = await db.Artist.findById(deletedTour.artist);
-            let index = artist.tours.indexOf(req.params.id);
+            console.log(artist);
+            const index = artist.tours.indexOf(req.params.id);
             artist.tours.splice(index);
             artist.save();
 

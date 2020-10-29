@@ -84,19 +84,30 @@ const update = (req, res) => {
 
 
 // DELETE
-const destroy = async (req, res) => {
-    try {
-        if (req.userType === 'Teammate') return res.status(403).json({
-            'message': 'Teammates cannot create threads. Contact manager.'
-        });
+const destroy = (req, res) => {
+    if (req.userType === 'Teammate') return res.status(403).json({
+        message: 'Teammates cannot create threads. Contact manager.'
+    });
 
-        db.Thread.findByIdAndDelete(req.params.id, (err, deletedThread) => {
+    try {
+        db.Thread.findByIdAndDelete(req.params.id, async (err, deletedThread) => {
             if (err) console.log('Error at thread#delete:', err);
             if (!deletedThread) res.status(200).json({
-                'message': 'Cannot delete a thread that does not exist.'
+                message: 'Could not find this thread.'
             });
 
-            db.Comment.deleteMany({ thread: req.params.id });
+            const tourDate = await db.TourDate.findById(deletedThread.tourDate);
+            const user = await db.User.findById(deletedThread.user);
+            const dateIndex = tourDate.threads.indexOf(req.params.id);
+            const userIndex = user.threads.indexOf(req.params.id);
+
+            tourDate.threads.splice(dateIndex, 1);
+            user.threads.splice(userIndex, 1);
+
+            tourDate.save();
+            user.save();
+
+            await db.Comment.deleteMany({ thread: deletedThread._id });
 
             res.status(200).json({
                 'thread': deletedThread,

@@ -63,7 +63,6 @@ const login = async (req, res) => {
         if (!match) return res.send({ message: INVALID_LOGIN });
 
         if (match) {
-            console.log('made it here');
             const signedJwt = jwt.sign(
                 {
                     _id: foundUser._id,
@@ -74,7 +73,7 @@ const login = async (req, res) => {
                     expiresIn: '24h',
                 }
             )
-            console.log('made it here');
+
             return res.status(200).json({
                 status: 200,
                 message: 'Successfully logged in.',
