@@ -85,9 +85,9 @@ const destroy = async (req, res) => {
             });
 
             const artist = await db.Artist.findById(deletedTour.artist);
-            console.log(artist);
-            const index = artist.tours.indexOf(req.params.id);
-            artist.tours.splice(index);
+            const index = artist.tours.indexOf(deletedTour._id);
+
+            artist.tours.splice(index, 1);
             artist.save();
 
             await db.TourDate.deleteMany({ tour: deletedTour._id });

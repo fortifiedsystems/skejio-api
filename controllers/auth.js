@@ -39,9 +39,11 @@ const register = async (req, res) => {
 
         const createdUser = await account.create({ ...req.body, password: hash });
 
-        return res
-            .status(201)
-            .json({ status: 201, message: 'success', createdUser });
+        return res.status(201).json({
+            status: 201,
+            message: 'success',
+            createdUser
+        });
     } catch (err) {
         return res.status(500).json({
             status: 500,

@@ -5,12 +5,12 @@ const db = require('../models');
 const index = (req, res) => {
     db.Todo.find(req.query, (err, foundTodos) => {
         if (err) console.log('Error at todo#index');
-        if (!foundTodos.length) res.status(200).json({
-            'message': 'There is nothing to do.'
+        if (!foundTodos.length) res.status(404).json({
+            message: 'There is nothing to do.'
         });
 
         res.status(200).json({
-            'todos': foundTodos,
+            todos: foundTodos,
         });
     });
 }
@@ -20,12 +20,12 @@ const index = (req, res) => {
 const show = (req, res) => {
     db.Todo.findById(req.params.id, (err, foundTodo) => {
         if (err) console.log('Error at todo#show:', err);
-        if (!foundTodo) res.status(200).json({
-            'message': 'No todo with this id exists',
+        if (!foundTodo) res.status(404).json({
+            message: 'No todo with this id exists',
         });
 
         res.status(200).json({
-            'todo': foundTodo,
+            todo: foundTodo,
         });
     });
 }
@@ -72,7 +72,7 @@ const update = (req, res) => {
         { new: true },
         (err, updatedTodo) => {
             if (err) console.log('Error at todo#update:', err);
-            if (!updatedTodo) res.status(200).json({
+            if (!updatedTodo) res.status(404).json({
                 'message': 'Cannot update todo that does not exist.',
             });
 
@@ -88,13 +88,12 @@ const destroy = (req, res) => {
     try {
         db.Todo.findByIdAndDelete(req.params.id, async (err, deletedTodo) => {
             if (err) console.log('Error at todo#destroy:', err);
-            if (!deletedTodo) res.status(200).json({
+            if (!deletedTodo) res.status(404).json({
                 message: 'Could not find this todo.',
             });
 
             const tourDate = await db.TourDate.findById(deletedTodo.tourDate);
             const user = await db.User.findById(req.userId);
-
 
             const tourDateIndex = tourDate.todos.indexOf(deletedTodo._id);
             const userIndex = user.todos.indexOf(deletedTodo._id);
@@ -114,7 +113,6 @@ const destroy = (req, res) => {
             message: error,
         });
     }
-
 }
 
 

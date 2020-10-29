@@ -5,8 +5,8 @@ const db = require('../models');
 const index = (req, res) => {
     db.User.find(req.query, (err, foundUsers) => {
         if (err) console.log('Error at users#index');
-        if (!foundUsers) return res.status(404).json({
-            message: 'Could not find any users.',
+        if (!foundUsers.length) return res.status(404).json({
+            message: 'No users exist.',
         });
 
         res.status(200).json({
@@ -76,9 +76,8 @@ const destroy = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             message: 'Something went wrong. Try again.',
-        })
+        });
     }
-
 }
 
 

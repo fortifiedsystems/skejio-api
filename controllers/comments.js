@@ -26,14 +26,14 @@ const show = (req, res) => {
             });
 
             return res.status(200).json({
-                'comment': foundComment,
+                comment: foundComment,
             });
         });
     } catch (error) {
         return res.status(500).json({
             status: 500,
             message: 'Something went wrong. Please try again.',
-        })
+        });
     }
 }
 
@@ -70,7 +70,7 @@ const create = async (req, res) => {
         return res.status(500).json({
             status: 500,
             message: 'Something went wrong. Please try again.',
-        })
+        });
     }
 }
 

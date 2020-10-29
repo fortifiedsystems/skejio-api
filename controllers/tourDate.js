@@ -5,12 +5,12 @@ const db = require('../models');
 const index = (req, res) => {
     db.TourDate.find(req.query, (err, foundTourDates) => {
         if (err) console.log('Error at tourDate#index:', err);
-        if (!foundTourDates) res.status(200).json({
-            'message': 'No tour dates assigned to this tour.'
+        if (!foundTourDates.length) res.status(404).json({
+            message: 'No tour dates assigned to this tour.'
         });
 
         res.status(200).json({
-            'tourDates': foundTourDates,
+            tourDates: foundTourDates,
         });
     });
 }
@@ -20,12 +20,12 @@ const index = (req, res) => {
 const show = (req, res) => {
     db.TourDate.findById(req.params.id, (err, foundTourDate) => {
         if (err) console.log('Error at tourDate#show', err);
-        if (!foundTourDate) res.status(200).json({
-            'message': 'Tour date not found.',
+        if (!foundTourDate) res.status(404).json({
+            message: 'Tour date not found.',
         });
 
         res.status(200).json({
-            'tourDate': foundTourDate,
+            tourDate: foundTourDate,
         });
     });
 }
@@ -57,12 +57,12 @@ const update = (req, res) => {
         { new: true },
         (err, updatedTourDate) => {
             if (err) console.log('Error at tourDate#update:', err);
-            if (!updatedTourDate) res.status(200).json({
-                "message": "Tour date does not exist."
+            if (!updatedTourDate) res.status(404).json({
+                message: 'Tour date does not exist.',
             });
 
             res.status(200).json({
-                'tourDate': updatedTourDate
+                tourDate: updatedTourDate
             });
         });
 }
@@ -73,8 +73,8 @@ const destroy = (req, res) => {
     try {
         db.TourDate.findByIdAndDelete(req.params.id, async (err, deletedTourDate) => {
             if (err) console.log('Error at tourDate#delete:', err);
-            if (!deletedTourDate) return res.status(200).json({
-                "message": "Cannot delete a tour date that doesn't exist.",
+            if (!deletedTourDate) return res.status(404).json({
+                message: 'Could not find tour date',
             });
 
             const tour = await db.Tour.findById(deletedTourDate.tour);
@@ -86,7 +86,7 @@ const destroy = (req, res) => {
             await db.Todo.deleteMany({ tourDate: deletedTourDate._id });
 
             res.status(200).json({
-                'tourDate': deletedTourDate
+                tourDate: deletedTourDate
             });
         });
     } catch (error) {

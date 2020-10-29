@@ -6,11 +6,11 @@ const index = (req, res) => {
     db.Thread.find(req.query, (err, foundThreads) => {
         if (err) console.log('Error at threads#index:', err);
         if (!foundThreads) res.status(200).json({
-            'message': 'No thread exists.'
+            message: 'No thread exists.'
         });
 
         res.status(200).json({
-            'threads': foundThreads,
+            threads: foundThreads,
         });
     });
 }
@@ -21,18 +21,18 @@ const show = (req, res) => {
     db.Thread.findById(req.params.id, (err, foundThread) => {
         if (err) console.log('Error at thread#show:', err);
         if (!foundThread) res.status(200).json({
-            'message': 'This thread does not exist.',
+            message: 'This thread does not exist.',
         });
 
         res.status(200).json({
-            'thread': foundThread,
+            thread: foundThread,
         });
     });
 }
 
 
 // POST create
-const create = async (req, res) => {
+const create = (req, res) => {
     if (req.userType === 'Teammate') return res.status(403).json({
         'message': 'Teammates cannot create threads. Contact manager.'
     });
