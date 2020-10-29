@@ -38,17 +38,23 @@ const create = async (req, res) => {
     });
 
     try {
-        const date = await db.TourDate.findById(req.params.dateId);
         db.Thread.create(
             {
                 ...req.body,
                 user: req.userId,
                 tourDate: req.params.dateId,
             },
-            (err, createdThread) => {
+            async (err, createdThread) => {
                 if (err) console.log('Error at thread#create:', err);
+
+                const date = await db.TourDate.findById(req.params.dateId);
+                const user = await db.User.findById(req.userId);
+
                 date.threads.push(createdThread);
+                user.threads.push(createdThread);
+
                 date.save();
+                user.save();
 
                 res.status(201).json({
                     'thread': createdThread,
