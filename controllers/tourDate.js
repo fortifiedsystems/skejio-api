@@ -78,11 +78,12 @@ const destroy = (req, res) => {
             });
 
             const tour = await db.Tour.findById(deletedTourDate.tour);
-            let index = tour.tourDates.indexOf(req.params.id);
+            let index = tour.tourDates.indexOf(deletedTourDate._id);
             tour.tourDates.splice(index, 1);
             tour.save();
 
             await db.Thread.deleteMany({ tourDate: deletedTourDate._id });
+            await db.Todo.deleteMany({ tourDate: deletedTourDate._id });
 
             res.status(200).json({
                 'tourDate': deletedTourDate

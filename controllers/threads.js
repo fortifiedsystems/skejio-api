@@ -103,9 +103,10 @@ const destroy = (req, res) => {
             });
 
             const tourDate = await db.TourDate.findById(deletedThread.tourDate);
-            const user = await db.User.findById(deletedThread.user);
-            const dateIndex = tourDate.threads.indexOf(req.params.id);
-            const userIndex = user.threads.indexOf(req.params.id);
+            const user = await db.User.findById(req.userId);
+
+            const dateIndex = tourDate.threads.indexOf(deletedThread._id);
+            const userIndex = user.threads.indexOf(deletedThread._id);
 
             tourDate.threads.splice(dateIndex, 1);
             user.threads.splice(userIndex, 1);

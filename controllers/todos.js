@@ -32,28 +32,35 @@ const show = (req, res) => {
 
 
 // POST create
-const create = async (req, res) => {
+const create = (req, res) => {
     try {
-        const tourDate = await db.TourDate.findById(req.params.dateId);
-        const body = {
-            ...req.body,
-            user: req.userId,
-            tourDate: req.params.dateId,
-        }
+        db.Todo.create(
+            {
+                ...req.body,
+                user: req.userId,
+                tourDate: req.params.dateId,
+            },
+            async (err, createdTodo) => {
+                if (err) console.log('Error at todo#create:', err);
 
-        db.Todo.create(body, (err, createdTodo) => {
-            if (err) console.log('Error at todo#create:', err);
-            tourDate.todos.push(createdTodo);
-            tourDate.save();
+                const date = await db.TourDate.findById(req.params.dateId);
+                const user = await db.User.findById(req.userId);
 
-            res.status(200).json({
-                'createdTodo': createdTodo,
+                date.todos.push(createdTodo);
+                user.todos.push(createdTodo);
+
+                date.save();
+                user.save();
+
+                res.status(200).json({
+                    createdTodo: createdTodo,
+                });
             });
-        });
     } catch (error) {
-        return res.send(error);
+        return res.status(500).json({
+            message: error
+        });
     }
-
 }
 
 
@@ -78,16 +85,36 @@ const update = (req, res) => {
 
 // DELETE
 const destroy = (req, res) => {
-    db.Todo.findByIdAndDelete(req.params.id, (err, deletedTodo) => {
-        if (err) console.log('Error at todo#destroy:', err);
-        if (!deletedTodo) res.status(200).json({
-            'message': 'Cannot delete an item that does not exist.',
-        });
+    try {
+        db.Todo.findByIdAndDelete(req.params.id, async (err, deletedTodo) => {
+            if (err) console.log('Error at todo#destroy:', err);
+            if (!deletedTodo) res.status(200).json({
+                message: 'Could not find this todo.',
+            });
 
-        res.status(200).json({
-            'deletedTodo': deletedTodo
+            const tourDate = await db.TourDate.findById(deletedTodo.tourDate);
+            const user = await db.User.findById(req.userId);
+
+
+            const tourDateIndex = tourDate.todos.indexOf(deletedTodo._id);
+            const userIndex = user.todos.indexOf(deletedTodo._id);
+
+            tourDate.todos.splice(tourDateIndex, 1);
+            user.todos.splice(userIndex, 1);
+
+            tourDate.save();
+            user.save();
+
+            res.status(200).json({
+                deletedTodo: deletedTodo
+            });
         });
-    });
+    } catch (error) {
+        return res.status(500).json({
+            message: error,
+        });
+    }
+
 }
 
 

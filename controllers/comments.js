@@ -96,13 +96,14 @@ const destroy = (req, res) => {
             });
 
             const thread = await db.Thread.findById(deletedComment.thread);
-            const user = await db.User.findById(deletedComment.user);
+            const user = await db.User.findById(req.userId);
+
             if (user._id === thread.user) return res.status(403).json({
                 message: 'Cannot delete a comment you did not write',
             });
 
-            const threadIndex = thread.comments.indexOf(req.params.id);
-            const userIndex = user.comments.indexOf(req.userId);
+            const threadIndex = thread.comments.indexOf(deletedComment._id);
+            const userIndex = user.comments.indexOf(deletedComment._id);
 
             thread.comments.splice(threadIndex, 1);
             user.comments.splice(userIndex, 1);
