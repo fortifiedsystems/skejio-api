@@ -5,11 +5,11 @@ const db = require('../models');
 const index = (req, res) => {
     db.Comment.find(req.query, (err, foundComments) => {
         if (err) console.log('Error at comment#index:', err);
-        if (!foundComments) res.status(200).json({
-            'message': 'No comments on this thread.'
-        })
+        if (!foundComments.length) return res.status(404).json({
+            message: 'No comments on this thread.'
+        });
 
-        res.status(200).json({
+        return res.status(200).json({
             'comments': foundComments
         });
     });
@@ -18,16 +18,23 @@ const index = (req, res) => {
 
 // GET show
 const show = (req, res) => {
-    db.Comment.findById(req.params.id, (err, foundComment) => {
-        if (err) console.log('Error at comment#show:', err);
-        if (!foundComment) res.status(200).json({
-            'message': 'This comment does not exist.',
-        });
+    try {
+        db.Comment.findById(req.params.id, (err, foundComment) => {
+            if (err) console.log('Error at comment#show:', err);
+            if (!foundComment) return res.status(404).json({
+                message: 'This comment does not exist.',
+            });
 
-        res.status(200).json({
-            'comment': foundComment,
+            return res.status(200).json({
+                'comment': foundComment,
+            });
         });
-    });
+    } catch (error) {
+        return res.status(500).json({
+            status: 500,
+            message: 'Something went wrong. Please try again.',
+        })
+    }
 }
 
 
@@ -45,18 +52,25 @@ const create = async (req, res) => {
                 const thread = await db.Thread.findById(req.params.threadId);
                 const user = await db.User.findById(req.userId);
 
+                if (!thread || !user) return res.status(404).json({
+                    message: 'Comments cannot be created without a thread',
+                })
+
                 thread.comments.push(createdComment);
                 user.comments.push(createdComment);
 
                 thread.save();
                 user.save();
 
-                res.status(201).json({
+                return res.status(201).json({
                     'comment': createdComment
                 });
             });
     } catch (error) {
-        console.log('Error at comments#create:', err);
+        return res.status(500).json({
+            status: 500,
+            message: 'Something went wrong. Please try again.',
+        })
     }
 }
 
@@ -75,11 +89,11 @@ const update = (req, res) => {
         { new: true },
         (err, updatedComment) => {
             if (err) console.log('Error at comments#update:', err);
-            if (!updatedComment) res.status(200).json({
-                message: 'Cannot update comment that does not exist.',
+            if (!updatedComment) return res.status(404).json({
+                message: 'Comment does not exist.',
             });
 
-            res.status(201).json({
+            return res.status(201).json({
                 comment: updatedComment,
             });
         });
@@ -98,6 +112,10 @@ const destroy = (req, res) => {
             const thread = await db.Thread.findById(deletedComment.thread);
             const user = await db.User.findById(req.userId);
 
+            if (!thread || !user) return res.status(404).json({
+                message: 'Thread or user undefined.',
+            })
+
             if (user._id === thread.user) return res.status(403).json({
                 message: 'Cannot delete a comment you did not write',
             });
@@ -111,7 +129,7 @@ const destroy = (req, res) => {
             thread.save();
             user.save();
 
-            res.status(200).json({
+            return res.status(200).json({
                 comment: deletedComment,
             });
         });
