@@ -39,16 +39,12 @@ const create = (req, res) => {
 
     try {
         db.Thread.create(
-            {
-                ...req.body,
-                user: req.userId,
-                tourDate: req.params.dateId,
-            },
+            req.body,
             async (err, createdThread) => {
                 if (err) console.log('Error at thread#create:', err);
 
-                const date = await db.TourDate.findById(req.params.dateId);
-                const user = await db.User.findById(req.userId);
+                const date = await db.TourDate.findById(req.body.tourDate);
+                const user = await db.User.findById(req.body.user);
 
                 date.threads.push(createdThread);
                 user.threads.push(createdThread);

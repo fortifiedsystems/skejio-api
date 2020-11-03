@@ -18,7 +18,7 @@ const index = (req, res) => {
 
 // GET show route
 const show = (req, res) => {
-    db.User.findById(req.params.id, (err, foundUser) => {
+    db.User.findById(req.userId, (err, foundUser) => {
         if (err) console.log('Error at users#show');
         if (!foundUser) return res.status(404).json({
             message: 'Could not find this user.',

@@ -76,7 +76,7 @@ const login = async (req, res) => {
                 }
             )
 
-            return res.status(200).json({
+            return await res.status(200).json({
                 status: 200,
                 message: 'Successfully logged in.',
                 id: foundUser._id,

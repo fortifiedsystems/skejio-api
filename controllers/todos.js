@@ -1,6 +1,7 @@
 const db = require('../models');
 
 
+
 // GET index
 const index = (req, res) => {
     db.Todo.find(req.query, (err, foundTodos) => {
@@ -8,6 +9,11 @@ const index = (req, res) => {
         if (!foundTodos.length) res.status(404).json({
             message: 'There is nothing to do.'
         });
+
+        for (let i = 0; i < foundTodos.length; i++) {
+            foundTodos[i].dueDate = foundTodos[i].dueDate.toLocaleDateString("en-US");
+            foundTodos[i].createdAt = foundTodos[i].createdAt.toLocaleDateString("en-US");
+        }
 
         res.status(200).json({
             todos: foundTodos,
@@ -38,12 +44,12 @@ const create = (req, res) => {
             {
                 ...req.body,
                 user: req.userId,
-                tourDate: req.params.dateId,
+                // tourDate: req.params.dateId,
             },
             async (err, createdTodo) => {
                 if (err) console.log('Error at todo#create:', err);
 
-                const date = await db.TourDate.findById(req.params.dateId);
+                const date = await db.TourDate.findById(req.body.tourDate);
                 const user = await db.User.findById(req.userId);
 
                 date.todos.push(createdTodo);
@@ -66,20 +72,25 @@ const create = (req, res) => {
 
 // PUT update
 const update = (req, res) => {
-    db.Todo.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true },
-        (err, updatedTodo) => {
-            if (err) console.log('Error at todo#update:', err);
-            if (!updatedTodo) res.status(404).json({
-                'message': 'Cannot update todo that does not exist.',
-            });
+    try {
+        db.Todo.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, updatedTodo) => {
+                if (err) console.log('Error at todo#update:', err);
+                if (!updatedTodo) res.status(404).json({
+                    'message': 'Cannot update todo that does not exist.',
+                });
 
-            res.status(200).json({
-                'updatedTodo': updatedTodo,
+                res.status(200).json({
+                    'updatedTodo': updatedTodo,
+                });
             });
-        });
+    } catch (error) {
+        console.log(error);
+    }
+
 }
 
 
