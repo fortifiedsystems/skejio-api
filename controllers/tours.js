@@ -3,9 +3,10 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
+    console.log(req.query);
     db.Tour.find(req.query, (err, foundTours) => {
         if (err) console.log('Error in tour#index:', err);
-        if (!foundTours.length) return res.status(200).json({
+        if (!foundTours) return res.status(200).json({
             "message": "You have not created a tour yet."
         });
 
@@ -36,8 +37,8 @@ const create = async (req, res) => {
     });
 
     try {
-        const artist = await db.Artist.findById(req.params.artistId);
-        db.Tour.create({ ...req.body, artist: artist._id }, (err, savedTour) => {
+        const artist = await db.Artist.findById(req.body.artist);
+        db.Tour.create(req.body, (err, savedTour) => {
             if (err) console.log('Error in tour#create:', err);
             artist.tours.push(savedTour);
             artist.save();

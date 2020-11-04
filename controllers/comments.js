@@ -42,15 +42,11 @@ const show = (req, res) => {
 const create = async (req, res) => {
     try {
         db.Comment.create(
-            {
-                ...req.body,
-                user: req.userId,
-                thread: req.params.threadId,
-            },
+            req.body,
             async (err, createdComment) => {
                 if (err) console.log('Error at comments#create:', err);
-                const thread = await db.Thread.findById(req.params.threadId);
-                const user = await db.User.findById(req.userId);
+                const thread = await db.Thread.findById(req.body.thread);
+                const user = await db.User.findById(req.body.user);
 
                 if (!thread || !user) return res.status(404).json({
                     message: 'Comments cannot be created without a thread',
