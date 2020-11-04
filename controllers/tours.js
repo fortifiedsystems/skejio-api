@@ -3,7 +3,6 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
-    console.log(req.query);
     db.Tour.find(req.query, (err, foundTours) => {
         if (err) console.log('Error in tour#index:', err);
         if (!foundTours) return res.status(200).json({

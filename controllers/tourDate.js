@@ -3,9 +3,10 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
+    console.log(req.query);
     db.TourDate.find(req.query, (err, foundTourDates) => {
         if (err) console.log('Error at tourDate#index:', err);
-        if (!foundTourDates.length) res.status(404).json({
+        if (!foundTourDates) return res.status(404).json({
             message: 'No tour dates assigned to this tour.'
         });
 
@@ -18,16 +19,24 @@ const index = (req, res) => {
 
 // GET show
 const show = (req, res) => {
-    db.TourDate.findById(req.params.id, (err, foundTourDate) => {
-        if (err) console.log('Error at tourDate#show', err);
-        if (!foundTourDate) res.status(404).json({
-            message: 'Tour date not found.',
-        });
+    db.TourDate.findById(req.params.id)
+        .populate({
+            // this might be a problem.
+            path: 'threads todos',
+            populate: {
+                path: 'comments',
+            }
+        })
+        .exec((err, foundTourDate) => {
+            if (err) console.log('Error at tourDate#show', err);
+            if (!foundTourDate) return res.status(404).json({
+                message: 'Tour date not found.',
+            });
 
-        res.status(200).json({
-            tourDate: foundTourDate,
+            res.status(200).json({
+                tourDate: foundTourDate,
+            });
         });
-    });
 }
 
 
@@ -57,7 +66,7 @@ const update = (req, res) => {
         { new: true },
         (err, updatedTourDate) => {
             if (err) console.log('Error at tourDate#update:', err);
-            if (!updatedTourDate) res.status(404).json({
+            if (!updatedTourDate) return res.status(404).json({
                 message: 'Tour date does not exist.',
             });
 
