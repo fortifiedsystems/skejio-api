@@ -18,14 +18,18 @@ const index = (req, res) => {
 
 // GET show
 const show = (req, res) => {
-    db.Tour.findById(req.params.id, (err, foundTour) => {
-        if (err) console.log('Error in tour#show:', err);
-        if (!foundTour) return res.status(200).json({
-            "message": "There is no tour with this id"
-        });
+    db.Tour.findById(req.params.id)
+        .populate({
+            path: 'tourDates',
+        })
+        .exec((err, foundTour) => {
+            if (err) console.log('Error in tour#show:', err);
+            if (!foundTour) return res.status(200).json({
+                "message": "There is no tour with this id"
+            });
 
-        res.status(200).json({ "tours": foundTour });
-    });
+            res.status(200).json({ "tours": foundTour });
+        });
 }
 
 
@@ -36,6 +40,7 @@ const create = async (req, res) => {
     });
 
     try {
+        console.log(req.body);
         const artist = await db.Artist.findById(req.body.artist);
         db.Tour.create(req.body, (err, savedTour) => {
             if (err) console.log('Error in tour#create:', err);
