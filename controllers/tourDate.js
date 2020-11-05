@@ -22,7 +22,7 @@ const show = (req, res) => {
     db.TourDate.findById(req.params.id)
         .populate({
             // this might be a problem.
-            path: 'threads todos',
+            path: 'threads todos artist tour',
             populate: {
                 path: 'comments',
             }
