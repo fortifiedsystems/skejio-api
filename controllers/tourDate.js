@@ -43,13 +43,13 @@ const show = (req, res) => {
 // POST create
 const create = async (req, res) => {
     try {
-        req.body.tour = req.params.tourId;
-        const tour = await db.Tour.findById(req.params.tourId);
-        db.TourDate.create(req.body, (err, createdTourDate) => {
+        const tour = await db.Tour.findById(req.body.tour);
+        await db.TourDate.create(req.body, (err, createdTourDate) => {
             if (err) console.log('Error at tourDate#create:', err);
             tour.tourDates.push(createdTourDate);
             tour.save();
 
+            console.log(createdTourDate);
             res.status(201).json({ 'tourDate': createdTourDate })
         });
     } catch (err) {
