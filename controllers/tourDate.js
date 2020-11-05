@@ -60,6 +60,7 @@ const create = async (req, res) => {
 
 // PUT update
 const update = (req, res) => {
+    console.log(req.body);
     db.TourDate.findByIdAndUpdate(
         req.params.id,
         req.body,

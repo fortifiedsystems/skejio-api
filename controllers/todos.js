@@ -4,9 +4,10 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
+    // console.log('query', req.query);
     db.Todo.find(req.query, (err, foundTodos) => {
         if (err) console.log('Error at todo#index');
-        if (!foundTodos.length) res.status(404).json({
+        if (!foundTodos) return res.status(404).json({
             message: 'There is nothing to do.'
         });
 
@@ -15,7 +16,7 @@ const index = (req, res) => {
             foundTodos[i].createdAt = foundTodos[i].createdAt.toLocaleDateString("en-US");
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             todos: foundTodos,
         });
     });
@@ -26,11 +27,11 @@ const index = (req, res) => {
 const show = (req, res) => {
     db.Todo.findById(req.params.id, (err, foundTodo) => {
         if (err) console.log('Error at todo#show:', err);
-        if (!foundTodo) res.status(404).json({
+        if (!foundTodo) return res.status(404).json({
             message: 'No todo with this id exists',
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             todo: foundTodo,
         });
     });
@@ -41,16 +42,12 @@ const show = (req, res) => {
 const create = (req, res) => {
     try {
         db.Todo.create(
-            {
-                ...req.body,
-                user: req.userId,
-                // tourDate: req.params.dateId,
-            },
+            req.body,
             async (err, createdTodo) => {
                 if (err) console.log('Error at todo#create:', err);
 
                 const date = await db.TourDate.findById(req.body.tourDate);
-                const user = await db.User.findById(req.userId);
+                const user = await db.User.findById(req.body.user);
 
                 date.todos.push(createdTodo);
                 user.todos.push(createdTodo);
@@ -58,7 +55,7 @@ const create = (req, res) => {
                 date.save();
                 user.save();
 
-                res.status(200).json({
+                return res.status(200).json({
                     createdTodo: createdTodo,
                 });
             });
@@ -79,7 +76,7 @@ const update = (req, res) => {
             { new: true },
             (err, updatedTodo) => {
                 if (err) console.log('Error at todo#update:', err);
-                if (!updatedTodo) res.status(404).json({
+                if (!updatedTodo) return res.status(404).json({
                     'message': 'Cannot update todo that does not exist.',
                 });
 
@@ -99,7 +96,7 @@ const destroy = (req, res) => {
     try {
         db.Todo.findByIdAndDelete(req.params.id, async (err, deletedTodo) => {
             if (err) console.log('Error at todo#destroy:', err);
-            if (!deletedTodo) res.status(404).json({
+            if (!deletedTodo) return res.status(404).json({
                 message: 'Could not find this todo.',
             });
 
