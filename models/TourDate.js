@@ -6,7 +6,6 @@ const TourDateSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    // only stores string of the ticketmast id.
     venue: {
         type: String,
         required: true,

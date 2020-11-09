@@ -3,16 +3,20 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
-    db.Tour.find(req.query, (err, foundTours) => {
-        if (err) console.log('Error in tour#index:', err);
-        if (!foundTours) return res.status(200).json({
-            "message": "You have not created a tour yet."
-        });
+    db.Tour.find(req.query)
+        .populate({
+            path: 'tourDates artist'
+        })
+        .exec((err, foundTours) => {
+            if (err) console.log('Error in tour#index:', err);
+            if (!foundTours) return res.status(200).json({
+                "message": "You have not created a tour yet."
+            });
 
-        res.status(200).json({
-            'tours': foundTours
+            res.status(200).json({
+                'tours': foundTours
+            });
         });
-    });
 }
 
 
@@ -20,15 +24,17 @@ const index = (req, res) => {
 const show = (req, res) => {
     db.Tour.findById(req.params.id)
         .populate({
-            path: 'tourDates',
+            path: 'tourDates artist',
         })
         .exec((err, foundTour) => {
             if (err) console.log('Error in tour#show:', err);
             if (!foundTour) return res.status(200).json({
-                "message": "There is no tour with this id"
+                message: "There is no tour with this id"
             });
 
-            res.status(200).json({ "tours": foundTour });
+            res.status(200).json({
+                tours: foundTour
+            });
         });
 }
 
