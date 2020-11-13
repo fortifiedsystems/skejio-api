@@ -75,6 +75,7 @@ const login = async (req, res) => {
                     expiresIn: '24h',
                 }
             )
+            console.log(signedJwt);
 
             return await res.status(200).json({
                 status: 200,

@@ -18,7 +18,9 @@ const index = (req, res) => {
 
 // GET show route
 const show = (req, res) => {
-    db.User.findById(req.userId, (err, foundUser) => {
+    db.User.findById(req.userId).populate({
+        path: 'manager'
+    }).exec((err, foundUser) => {
         if (err) console.log('Error at users#show');
         if (!foundUser) return res.status(404).json({
             message: 'Could not find this user.',

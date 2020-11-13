@@ -46,8 +46,8 @@ const create = (req, res) => {
                 const date = await db.TourDate.findById(req.body.tourDate);
                 const user = await db.User.findById(req.body.user);
 
-                date.threads.push(createdThread);
-                user.threads.push(createdThread);
+                date.threads.unshift(createdThread);
+                user.threads.unshift(createdThread);
 
                 date.save();
                 user.save();

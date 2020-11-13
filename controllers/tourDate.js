@@ -3,7 +3,6 @@ const db = require('../models');
 
 // GET index
 const index = (req, res) => {
-    console.log(req.query);
     db.TourDate.find(req.query, (err, foundTourDates) => {
         if (err) console.log('Error at tourDate#index:', err);
         if (!foundTourDates) return res.status(404).json({
@@ -23,7 +22,10 @@ const show = (req, res) => {
         .populate({
             path: 'threads todos artist tour',
             populate: {
-                path: 'comments',
+                path: 'comments user',
+                populate: {
+                    path: 'user',
+                }
             }
         })
         .exec((err, foundTourDate) => {
