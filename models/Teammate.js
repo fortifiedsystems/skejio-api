@@ -6,20 +6,17 @@ const TeammateSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    isAgent: {
-        type: Boolean,
-        default: false,
-    },
-    type: {
-        type: String,
-        default: 'Teammate',
-    },
     manager: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Manager',
+        default: null,
     },
+    agent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Agent',
+        default: null,
+    }
 });
 
 const Teammate = User.discriminator('Teammate', TeammateSchema);
-
 module.exports = Teammate;

@@ -6,10 +6,6 @@ const ArtistSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    type: {
-        type: String,
-        default: 'Artist',
-    },
     artistName: String,
     managerRate: {
         type: Number,
@@ -26,6 +22,7 @@ const ArtistSchema = new mongoose.Schema({
     manager: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Manager',
+        default: null,
     },
     tours: [{
         type: mongoose.Schema.Types.ObjectId,

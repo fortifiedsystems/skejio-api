@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 
-const ManagerSchema = new mongoose.Schema({
+const AgentSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: true,
     },
-    company: {
+    agency: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Company',
+        ref: 'Agency',
         default: null,
     },
     artists: [{
@@ -19,8 +19,7 @@ const ManagerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Teammate',
     }],
-});
+})
 
-const Manager = User.discriminator('Manager', ManagerSchema);
-module.exports = Manager;
-
+const Agent = User.discriminator('Agent', AgentSchema);
+module.exports = Agent;
