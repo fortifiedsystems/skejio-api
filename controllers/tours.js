@@ -1,5 +1,30 @@
 const db = require('../models');
 
+const index = async (req, res) => {
+    try {
+        const user = await db.User.findById(req.userId);
+        if (user.__t === 'Artist') {
+            // when it comes time to add tourdates, populate this.
+            db.Tour.find({ artist: req.userId }, (err, foundTours) => {
+                if (err) console.log('Error at Tours#index');
+                if (!foundTours.length) return res.status(404).json({
+                    msg: 'Found no tours for this artist.',
+                });
+
+                return res.status(200).json({
+                    tours: foundTours,
+                })
+            });
+        } else if (user.__t === 'Manager' || user.__t === 'Agent') {
+            return res.status(404).json({
+                msg: 'Use show route',
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 /**
  * @NOTE For the front end: 
  * if the user is a manager or agent, form will need a drop down
@@ -7,12 +32,17 @@ const db = require('../models');
  * if the user is an artist, form only need a name field.
  * if the user is a teammate, They shouldn't even be able 
  * to access the form.
+ * 
+ * if the account creating the tour is not connected to 
+ * the artist in the request, they will not be allowed to create
+ * the tour.
  * @param {*} req 
  * @param {*} res 
  */
 const create = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
+
         if (user.__t === 'Artist') {
             req.body.artist = req.userId;
         } else if (user.__t === 'Teammate') {
@@ -52,5 +82,6 @@ const create = async (req, res) => {
 }
 
 module.exports = {
+    index,
     create,
 }
