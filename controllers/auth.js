@@ -8,7 +8,7 @@ const errors = require('../utils/errors');
 
 
 
-// POST register
+// ANCHOR POST register
 const register = async (req, res) => {
     try {
         const foundUser = await db.User.findOne({ email: req.body.email });
@@ -37,7 +37,7 @@ const register = async (req, res) => {
 
         const createdUser = await account.create({ ...req.body, password: hash });
 
-        // TEAMMATE VALIDATION.
+        // TEAMMATE ACCOUNT VALIDATION.
         if (createdUser.__t === 'Teammate') {
             if (createdUser.manager) {
                 const superior = await db.User.findById(createdUser.manager);
@@ -63,7 +63,7 @@ const register = async (req, res) => {
             }
         }
 
-        // ARTIST VALIDATION
+        // ARTIST ACCOUNT VALIDATION
         if (createdUser.__t === 'Artist') {
             if (createdUser.manager) {
                 const manager = await db.User.findById(createdUser.manager);
@@ -106,7 +106,8 @@ const register = async (req, res) => {
 
 
 
-// POST login
+
+// ANCHOR POST login
 const login = async (req, res) => {
     try {
         const foundUser = await db.User.findOne({ email: req.body.email });
@@ -119,7 +120,6 @@ const login = async (req, res) => {
             const signedJwt = jwt.sign(
                 {
                     _id: foundUser._id,
-                    userType: foundUser.type,
                 },
                 "super_secret_key",
                 {
