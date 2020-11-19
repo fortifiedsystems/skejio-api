@@ -3,10 +3,6 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
 .env
-paths.txt
-seed.js
-skejioData.json
-apiTests.txt
 
 ### Node ###
 # Logs
