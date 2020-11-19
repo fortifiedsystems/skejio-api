@@ -59,7 +59,7 @@ const create = async (req, res) => {
         req.body.agents = [];
         req.body.agents.push(req.userId);
 
-        db.Company.create(req.body, (err, newAgency) => {
+        db.Agency.create(req.body, (err, newAgency) => {
             if (err) console.log(`Error at Agency#create: ${err}`);
             if (!newAgency) return res.status(400).json({
                 msg: 'Bad Request. Try again.',
@@ -118,7 +118,7 @@ const destroy = (req, res) => {
             });
 
             return res.status(201).json({
-                deletedCompany: deletedCompany,
+                deletedAgency: deletedAgency,
             });
         });
 }
