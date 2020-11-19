@@ -74,8 +74,7 @@ const login = async (req, res) => {
                 {
                     expiresIn: '24h',
                 }
-            )
-            console.log(signedJwt);
+            );
 
             return await res.status(200).json({
                 status: 200,
@@ -87,7 +86,7 @@ const login = async (req, res) => {
             return res.status(400).json({
                 status: 400,
                 message: INVALID_LOGIN,
-            })
+            });
         }
     } catch (error) {
         console.log(error);
