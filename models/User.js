@@ -21,6 +21,8 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        maxlength: 12,
+        minlength: 3,
     },
     password: {
         type: String,
@@ -32,8 +34,9 @@ const UserSchema = new mongoose.Schema({
         required: true,
     },
     profileImg: {
-        type: String,
-        default: '',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+        default: null,
     },
     threads: [{
         type: mongoose.Schema.Types.ObjectId,

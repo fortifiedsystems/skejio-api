@@ -23,6 +23,7 @@ module.exports = {
     Agent: require('./Agent'),
     Company: require('./Company'),
     Agency: require('./Agency'),
+    Image: require('./Image'),
     Tour: require('./Tour'),
     TourDate: require('./TourDate'),
     Thread: require('./Thread'),
