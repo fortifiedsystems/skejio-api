@@ -11,6 +11,7 @@ app.use(cors());
 
 app.use('/api/v1/auth', routes.auth);
 app.use('/api/v1/companies', routes.companies);
+app.use('/api/v1/agencies', routes.agencies);
 app.use('/api/v1/user', routes.user);
 
 // connection
