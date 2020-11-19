@@ -7,6 +7,35 @@ const CompanySchema = new Schema({
         required: true,
         unique: true,
     },
+    stNum: {
+        type: String,
+        default: null,
+    },
+    stName: {
+        type: String,
+        default: null,
+    },
+    address2: {
+        type: String,
+        default: null,
+    },
+    city: {
+        type: String,
+        default: null,
+    },
+    state: {
+        type: String,
+        default: null,
+    },
+    zip: {
+        type: String,
+        default: null,
+    },
+    logo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Image',
+        default: null,
+    },
     managers: [{
         type: Schema.Types.ObjectId,
         ref: 'Manager',
