@@ -37,9 +37,11 @@ const register = async (req, res) => {
 
         const createdUser = await account.create({ ...req.body, password: hash });
 
+        // TEAMMATE VALIDATION.
         if (createdUser.__t === 'Teammate') {
             if (createdUser.manager) {
                 const superior = await db.User.findById(createdUser.manager);
+
                 if (superior.__t === 'Artist') {
                     return res.status(403).json({
                         msg: 'Captain must be an agent or Manager',
@@ -61,29 +63,29 @@ const register = async (req, res) => {
             }
         }
 
+        // ARTIST VALIDATION
         if (createdUser.__t === 'Artist') {
-            let superior;
             if (createdUser.manager) {
-                superior = await db.User.findById(createdUser.manager);
-                if (superior.__t !== 'Manager') {
+                const manager = await db.User.findById(createdUser.manager);
+                if (manager.__t !== 'Manager') {
                     return res.status(403).json({
                         msg: 'Your manager must be signed up as a manager on Skej.io.',
                     })
                 } else {
-                    superior.teammates.push(createdUser._id);
-                    superior.save();
+                    manager.artists.push(createdUser._id);
+                    manager.save();
                 }
             }
 
             if (createdUser.agent) {
-                superior = await db.User.findById(createdUser.agent);
-                if (superior.__t !== 'Agent') {
+                const agent = await db.User.findById(createdUser.agent);
+                if (agent.__t !== 'Agent') {
                     return res.status(403).json({
                         msg: 'Your Agent must be signed up as an agent on Skej.io',
                     })
                 } else {
-                    superior.teammates.push(createdUser._id);
-                    superior.save();
+                    agent.artists.push(createdUser._id);
+                    agent.save();
                 }
             }
         }
