@@ -5,5 +5,5 @@ module.exports = {
     threads: require('./threads'),
     comments: require('./comments'),
     todos: require('./todos'),
-    users: require('./users'),
+    user: require('./user'),
 }
