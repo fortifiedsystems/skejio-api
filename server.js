@@ -10,11 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/v1/auth', routes.auth);
-app.use('/api/v1/tours', routes.tours);
-app.use('/api/v1/dates', routes.tourDate);
-app.use('/api/v1/threads', routes.threads);
-app.use('/api/v1/comments', routes.comments);
-app.use('/api/v1/todos', routes.todos);
+app.use('/api/v1/companies', routes.companies);
 app.use('/api/v1/user', routes.user);
 
 // connection
