@@ -39,7 +39,12 @@ const AgencySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Image',
         default: null,
-    }
+    },
+    admin: {
+        type: Schema.Types.ObjectId,
+        ref: 'Agent',
+        default: null,
+    },
 });
 
 /**

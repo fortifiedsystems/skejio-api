@@ -31,15 +31,20 @@ const CompanySchema = new Schema({
         type: String,
         default: null,
     },
+    managers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Manager',
+    }],
     logo: {
         type: Schema.Types.ObjectId,
         ref: 'Image',
         default: null,
     },
-    managers: [{
+    admin: {
         type: Schema.Types.ObjectId,
         ref: 'Manager',
-    }],
+        default: null,
+    },
 })
 
 /**
