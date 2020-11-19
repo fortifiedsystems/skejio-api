@@ -10,9 +10,30 @@ const TourDateSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    loadIn: {
+        type: Date,
+        default: null,
+    },
+    doors: {
+        type: Date,
+        default: null,
+    },
+    showStart: {
+        type: Date,
+        default: null,
+    },
+    showEnd: {
+        type: Date,
+        default: null,
+    },
+    hospitality: {
+        type: String,
+        default: 'No hospitality info provided.'
+    },
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
+        required: true,
     },
     fee: {
         type: Number,
@@ -66,6 +87,7 @@ const TourDateSchema = new mongoose.Schema({
     tour: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tour',
+        default: null,
     },
 }, {
     timestamps: true,
