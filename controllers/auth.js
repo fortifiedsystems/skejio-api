@@ -143,7 +143,7 @@ const login = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             status: 500,
-            message: errors.TRY_AGAIN,
+            message: errors.TRY_AGAIN + error,
         });
     }
 }
