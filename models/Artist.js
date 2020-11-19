@@ -24,6 +24,11 @@ const ArtistSchema = new mongoose.Schema({
         ref: 'Manager',
         default: null,
     },
+    agent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Agent',
+        default: null,
+    },
     tours: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tour',

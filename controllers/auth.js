@@ -4,11 +4,7 @@ const jwt = require('jsonwebtoken');
 
 // Internal Modules
 const db = require('../models');
-
-// Constants
-const UNIQUE_ERR = 'Account with this email or username is already registered.'
-const INVALID_LOGIN = 'Email or password is incorrect';
-const TRY_AGAIN = 'Something went wrong. Please try again.';
+const errors = require('../utils/errors');
 
 
 
@@ -19,7 +15,7 @@ const register = async (req, res) => {
 
         if (foundUser) {
             return res.send({
-                message: UNIQUE_ERR,
+                message: errors.UNIQUE_ERR,
             });
         }
 
@@ -33,21 +29,74 @@ const register = async (req, res) => {
             account = db.Artist;
         } else if (req.body.accountType === 'Manager') {
             account = db.Manager;
+        } else if (req.body.accountType === 'Agent') {
+            account = db.Agent;
         } else if (req.body.accountType === 'Teammate') {
             account = db.Teammate;
         }
 
         const createdUser = await account.create({ ...req.body, password: hash });
 
+        if (createdUser.__t === 'Teammate') {
+            if (createdUser.manager) {
+                const superior = await db.User.findById(createdUser.manager);
+                if (superior.__t === 'Artist') {
+                    return res.status(403).json({
+                        msg: 'Captain must be an agent or Manager',
+                    });
+                } else {
+                    superior.teammates.push(createdUser._id);
+                    superior.save();
+                }
+            } else if (createdUser.agent) {
+                const superior = await db.User.findById(createdUser.agent);
+                if (superior.__t === 'Artist') {
+                    return res.status(403).json({
+                        msg: 'Captain must be an agent or manager',
+                    });
+                } else {
+                    superior.teammates.push(createdUser._id);
+                    superior.save();
+                }
+            }
+        }
+
+        if (createdUser.__t === 'Artist') {
+            let superior;
+            if (createdUser.manager) {
+                superior = await db.User.findById(createdUser.manager);
+                if (superior.__t !== 'Manager') {
+                    return res.status(403).json({
+                        msg: 'Your manager must be signed up as a manager on Skej.io.',
+                    })
+                } else {
+                    superior.teammates.push(createdUser._id);
+                    superior.save();
+                }
+            }
+
+            if (createdUser.agent) {
+                superior = await db.User.findById(createdUser.agent);
+                if (superior.__t !== 'Agent') {
+                    return res.status(403).json({
+                        msg: 'Your Agent must be signed up as an agent on Skej.io',
+                    })
+                } else {
+                    superior.teammates.push(createdUser._id);
+                    superior.save();
+                }
+            }
+        }
+
         return res.status(201).json({
             status: 201,
-            message: 'success',
+            message: 'Successfully created new account.',
             createdUser
         });
     } catch (err) {
         return res.status(500).json({
             status: 500,
-            message: `${TRY_AGAIN}: ${err}`,
+            message: `${errors.TRY_AGAIN}: ${err}`,
         });
     }
 }
@@ -85,14 +134,14 @@ const login = async (req, res) => {
         } else {
             return res.status(400).json({
                 status: 400,
-                message: INVALID_LOGIN,
+                message: errors.INVALID_LOGIN,
             });
         }
     } catch (error) {
         console.log(error);
         return res.status(500).json({
             status: 500,
-            message: "Something went wrong. Please try again",
+            message: errors.TRY_AGAIN,
         });
     }
 }

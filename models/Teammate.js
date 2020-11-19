@@ -8,13 +8,11 @@ const TeammateSchema = new mongoose.Schema({
     },
     manager: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Manager',
-        default: null,
+        ref: 'User',
     },
     agent: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Agent',
-        default: null,
+        ref: 'User',
     }
 });
 
