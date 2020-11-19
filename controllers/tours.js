@@ -27,6 +27,14 @@ const index = async (req, res) => {
 
 
 
+const show = async (req, res) => {
+    try {
+        db.Tour.findById
+    } catch (error) {
+
+    }
+}
+
 /**
  * @NOTE For the front end: 
  * if the user is a manager or agent, form will need a drop down
