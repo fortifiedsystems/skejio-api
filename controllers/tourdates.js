@@ -195,8 +195,65 @@ const create = async (req, res) => {
     }
 }
 
+
+
+
+const update = async (req, res) => {
+    try {
+        const user = await db.User.findById(req.userId);
+        const tourdate = await db.TourDate.findById(req.params.id);
+        let authorized = false;
+
+        if (user.__t === 'Artist') {
+            if (tourdate.artist.equals(user._id)) {
+                authorized = true;
+            }
+        } else {
+            let artist = await db.User.findById(tourdate.artist);
+
+            if (user.__t === 'Teammate') {
+                if (user.manager) {
+                    if (user.manager.equals(artist.manager)) {
+                        authorized = true;
+                    }
+                } else if (user.agent) {
+                    if (user.agent.equals(artist.agent)) {
+                        authorized = true;
+                    }
+                }
+            } else {
+                if (user.artists.includes(artist._id)) {
+                    authorized = true;
+                }
+            }
+        }
+
+        if (!authorized) return res.status(403).json({
+            msg: errors.UNAUTHORIZED,
+        });
+
+        db.TourDate.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, savedTourdate) => {
+                if (err) console.log('Error at tourdates#update');
+                if (!savedTourdate) return res.status(404).json({
+                    msg: 'Not found.',
+                });
+
+                return res.status(200).json({
+                    savedTourdate: savedTourdate,
+                })
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
+    update,
 }
