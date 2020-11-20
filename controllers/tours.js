@@ -71,16 +71,18 @@ const show = async (req, res) => {
             msg: errors.UNAUTHORIZED,
         })
 
-        db.Tour.findById(req.params.id, (err, foundTour) => {
-            if (err) console.log('Error at tours#show');
-            if (!foundTour) return res.status(404).json({
-                msg: 'Could not find any tours.',
-            });
+        db.Tour.findById(req.params.id)
+            .populate({ path: 'tourdates' })
+            .exec((err, foundTour) => {
+                if (err) console.log('Error at tours#show');
+                if (!foundTour) return res.status(404).json({
+                    msg: 'Could not find any tours.',
+                });
 
-            return res.status(200).json({
-                foundTour: foundTour,
+                return res.status(200).json({
+                    foundTour: foundTour,
+                });
             });
-        });
     } catch (error) {
         console.log(error);
     }
