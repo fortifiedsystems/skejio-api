@@ -9,6 +9,9 @@ const UNIQUE_ERR = 'Account with this email or username is already registered.'
 const INVALID_LOGIN = 'Email or password is incorrect';
 const TRY_AGAIN = 'Something went wrong. Please try again.';
 
+// Tour Errors
+const UNAUTHORIZED = 'You are not authorized to take this action.';
+
 module.exports = {
     NULL_COMPANIES,
     NULL_COMPANY,
@@ -17,4 +20,5 @@ module.exports = {
     INVALID_LOGIN,
     TRY_AGAIN,
     CO_ACCESS_DENIED,
+    UNAUTHORIZED,
 }

@@ -1,4 +1,6 @@
 const db = require('../models');
+const errors = require('../utils/errors');
+const { checkPrivilage, adjustParams } = require('../utils/utilities');
 
 
 
@@ -28,7 +30,7 @@ const index = async (req, res) => {
         } else if (user.__t === 'Manager' || user.__t === 'Agent') {
             if (!user.artists.includes(req.query.artist)) {
                 return res.status(403).json({
-                    msg: 'You are not authorized to view this artists tourdates.'
+                    msg: errors.UNAUTHORIZED,
                 });
             }
 
@@ -73,7 +75,7 @@ const show = async (req, res) => {
                     });
                 } else {
                     return res.status(403).json({
-                        msg: 'You do not have access to view this tour.',
+                        msg: errors.UNAUTHORIZED,
                     });
                 }
             } else if (user.__t === 'Manager' || user.__t === 'Agent') {
@@ -83,7 +85,7 @@ const show = async (req, res) => {
                     });
                 } else {
                     return res.status(403).json({
-                        msg: 'You do not have access to this artists tours.',
+                        msg: errors.UNAUTHORIZED,
                     });
                 }
             }
@@ -110,20 +112,11 @@ const show = async (req, res) => {
 const create = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
+        const authorized = adjustParams(req, user);
 
-        if (user.__t === 'Artist') {
-            req.body.artist = req.userId;
-        } else if (user.__t === 'Teammate') {
-            return res.status(403).json({
-                msg: 'Teammates cannot create tours.',
-            });
-        } else {
-            if (!user.artists.includes(req.body.artist)) {
-                return res.status(403).json({
-                    msg: 'Not authorized to add tours for this artist.'
-                });
-            }
-        }
+        if (!authorized) return res.status(403).json({
+            msg: errors.UNAUTHORIZED,
+        });
 
         db.Tour.create(req.body, async (err, newTour) => {
             if (err) console.log(`Error at Tour#create ${err}`);
@@ -150,34 +143,38 @@ const create = async (req, res) => {
 }
 
 
+// const checkPrivilage = (req, user, model) => {
+//     if (user.__t === 'Teammate') {
+//         return false;
+//     } else if (user.__t === 'Artist') {
+//         if (req.userId != model.artist) {
+//             return false;
+//         }
+//     } else if (user.__t === 'Manager' || user.__t === 'Agent') {
+//         if (!user.artists.includes(model.artist)) {
+//             return false;
+//         }
+//     }
+
+//     return true;
+// }
+
+
 const update = async (req, res) => {
-    const user = await db.User.findById(req.userId);
-    const tour = await db.Tour.findById(req.params.id);
-
-    if (user.__t === 'Teammate') {
-        return res.status(403).json({
-            msg: 'Teammates cannot edit tour details.'
-        });
-    } else if (user.__t === 'Manager' || user.__t === 'Agent') {
-        if (!user.artists.includes(tour.artist)) {
-            return res.status(403).json({
-                msg: 'You are not authorized to edit this tour.',
-            });
-        }
-    } else if (user.__t === 'Artist') {
-        if (req.userId != tour.artist) {
-            return res.status(403).json({
-                msg: 'You are not authorized to edit this tour.',
-            });
-        }
-    }
-
     try {
+        const user = await db.User.findById(req.userId);
+        const tour = await db.Tour.findById(req.params.id);
+        const authorized = checkPrivilage(req, user, tour);
+
+        if (!authorized) return res.status(403).json({
+            msg: errors.UNAUTHORIZED,
+        });
+
         await db.Tour.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true },
-            async (err, savedTour) => {
+            (err, savedTour) => {
 
                 if (err) console.log('Error at Tour#update');
                 if (!savedTour) return res.status(404).json({
@@ -200,29 +197,16 @@ const destroy = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.params.id);
+        const authorized = checkPrivilage(req, user, tour);
 
-        if (user.__t === 'Teammate') {
-            return res.status(403).json({
-                msg: 'Teammates cannot delete Tours.',
-            });
-        } else if (user.__t === 'Manager' || user.__t === 'Agent') {
-            if (!user.artists.includes(tour.artist)) {
-                return res.status(403).json({
-                    msg: 'You are not authorized to delete this tour.'
-                });
-            }
-        } else if (user.__t === 'Artist') {
-            if (req.userId != tour.artist) {
-                return res.status(403).json({
-                    msg: 'You are not authorized to delete this tour.',
-                });
-            }
-        }
+        if (!authorized) return res.status(403).json({
+            msg: errors.UNAUTHORIZED,
+        });
 
         await db.Tour.findByIdAndDelete(req.params.id, async (err, deletedTour) => {
             if (err) console.log('Error at Tour#delete');
             if (!deletedTour) return res.status(404).json({
-                msg: 'Did not find a tour with this Id.',
+                msg: 'Not found.',
             });
 
             const artist = await db.Artist.findById(deletedTour.artist);
