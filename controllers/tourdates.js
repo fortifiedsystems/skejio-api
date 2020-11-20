@@ -2,7 +2,11 @@ const db = require('../models');
 const errors = require('../utils/errors');
 const { checkPrivilage, adjustParams } = require('../utils/utilities');
 
-
+/**
+ * See note on tour index route. Same applies.
+ * @param {*} req 
+ * @param {*} res 
+ */
 const index = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
@@ -73,8 +77,61 @@ const index = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-
 }
+
+
+const show = async (req, res) => {
+    try {
+        const user = await db.User.findById(req.userId);
+        const tourdate = await db.TourDate.findById(req.params.id);
+        let authorized = false;
+
+
+        // Authorize account to view this tourdate.
+        if (user.__t === 'Artist') {
+            if (tourdate.artist.equals(user._id)) {
+                authorized = true;
+            }
+        } else if (user.__t === 'Teammate') {
+            let artist = await db.User.findById(tourdate.artist);
+
+            if (user.manager) {
+                if (user.manager.equals(artist.manager)) {
+                    authorized = true;
+                }
+            } else if (user.agent) {
+                if (user.agent.equals(artist.agent)) {
+                    authorized = true;
+                }
+            }
+        } else {
+            if (user.artists.includes(tourdate.artist)) {
+                authorized = true;
+            }
+        }
+
+        if (!authorized) return res.status(403).json({
+            msg: errors.UNAUTHORIZED,
+        });
+
+
+        // pull back tourdate.
+        db.TourDate.findById(req.params.id, (err, foundTourdate) => {
+            if (err) console.log('Error tourdates#show');
+            if (!foundTourdate) return res.status(404).json({
+                msg: 'Not found',
+            });
+
+            return res.status(200).json({
+                foundTourdate: foundTourdate,
+            });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 /**
  * NOTE: if an artist is creating the tour date, they do not need to send their id back with the request
@@ -140,5 +197,6 @@ const create = async (req, res) => {
 
 module.exports = {
     index,
+    show,
     create,
 }
