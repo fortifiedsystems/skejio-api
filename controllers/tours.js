@@ -50,6 +50,12 @@ const index = async (req, res) => {
 
 
 
+
+/**
+ * @NOTE: Shows a single tour date only.
+ * @param {*} req 
+ * @param {*} res 
+ */
 const show = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
@@ -143,8 +149,58 @@ const create = async (req, res) => {
     }
 }
 
+
+const update = async (req, res) => {
+    const user = await db.User.findById(req.userId);
+    const tour = await db.Tour.findById(req.params.id);
+
+    if (user.__t === 'Teammate') {
+        return res.status(403).json({
+            msg: 'Teammates cannot edit tour details.'
+        });
+    } else if (user.__t === 'Manager' || user.__t === 'Agent') {
+        if (!user.artists.includes(tour.artist)) {
+            return res.status(403).json({
+                msg: 'You are not authorized to edit this tour.',
+            });
+        }
+    } else if (user.__t === 'Artist') {
+        if (req.userId != tour.artist) {
+            return res.status(403).json({
+                msg: 'You are not authorized to edit this tour.',
+            });
+        }
+    }
+
+    try {
+        await db.Tour.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            async (err, savedTour) => {
+
+                if (err) console.log('Error at Tour#update');
+                if (!savedTour) return res.status(404).json({
+                    msg: 'Cannot update tour that does not exist. :-(',
+                });
+
+                return res.status(200).json({
+                    savedTour: savedTour
+                });
+            }
+        );
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+
+
 module.exports = {
     index,
     show,
     create,
+    update,
 }
