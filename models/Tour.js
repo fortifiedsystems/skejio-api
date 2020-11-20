@@ -6,13 +6,14 @@ const TourSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
-    tourDates: [{
+    tourdates: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'TourDate',
+        ref: 'Tourdate',
     }],
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
+        required: true,
     },
     complete: {
         type: Boolean,

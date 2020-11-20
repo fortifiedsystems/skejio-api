@@ -25,7 +25,7 @@ module.exports = {
     Agency: require('./Agency'),
     Image: require('./Image'),
     Tour: require('./Tour'),
-    TourDate: require('./TourDate'),
+    Tourdate: require('./Tourdate'),
     Thread: require('./Thread'),
     Comment: require('./Comment'),
     Todo: require('./Todo'),

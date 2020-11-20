@@ -49,7 +49,7 @@ const UserSchema = new mongoose.Schema({
     todos: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo',
-    }]
+    }],
 }, {
     timestamps: true
 }, {

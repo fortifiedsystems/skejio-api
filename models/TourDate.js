@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validate = require('../utils/constants');
 
-const TourDateSchema = new mongoose.Schema({
+const TourdateSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: null,
@@ -45,7 +45,11 @@ const TourDateSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    contract: String,
+    contract: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+        default: null,
+    },
     contractSigned: {
         type: Boolean,
         default: false,
@@ -101,6 +105,6 @@ const TourDateSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-const TourDate = mongoose.model('TourDate', TourDateSchema);
+const Tourdate = mongoose.model('Tourdate', TourdateSchema);
 
-module.exports = TourDate;
+module.exports = Tourdate;

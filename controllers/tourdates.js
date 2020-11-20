@@ -1,6 +1,5 @@
 const db = require('../models');
 const errors = require('../utils/errors');
-const { checkPrivilage, adjustParams } = require('../utils/utilities');
 
 /**
  * See note on tour index route. Same applies.
@@ -12,7 +11,7 @@ const index = async (req, res) => {
         const user = await db.User.findById(req.userId);
 
         if (user.__t === 'Artist') {
-            db.TourDate.find({ artist: req.userId })
+            db.Tourdate.find({ artist: req.userId })
                 .populate({
                     path: 'tour',
                 }).exec((err, foundTourdates) => {
@@ -30,7 +29,7 @@ const index = async (req, res) => {
                 msg: errors.UNAUTHORIZED,
             });
 
-            db.TourDate.find(req.query)
+            db.Tourdate.find(req.query)
                 .populate({
                     path: 'tour'
                 }).exec((err, foundTourdates) => {
@@ -60,7 +59,7 @@ const index = async (req, res) => {
                 msg: errors.UNAUTHORIZED,
             })
 
-            db.TourDate.find(req.query)
+            db.Tourdate.find(req.query)
                 .populate({
                     path: 'tour'
                 }).exec((err, foundTourdates) => {
@@ -86,7 +85,7 @@ const index = async (req, res) => {
 const show = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
-        const tourdate = await db.TourDate.findById(req.params.id);
+        const tourdate = await db.Tourdate.findById(req.params.id);
         let authorized = false;
 
 
@@ -119,7 +118,7 @@ const show = async (req, res) => {
 
 
         // pull back tourdate.
-        db.TourDate.findById(req.params.id, (err, foundTourdate) => {
+        db.Tourdate.findById(req.params.id, (err, foundTourdate) => {
             if (err) console.log('Error tourdates#show');
             if (!foundTourdate) return res.status(404).json({
                 msg: 'Not found',
@@ -182,7 +181,7 @@ const create = async (req, res) => {
             req.body.artist = req.userId;
         }
 
-        db.TourDate.create(req.body, (err, newTourdate) => {
+        db.Tourdate.create(req.body, (err, newTourdate) => {
             if (err) console.log('Error at tourdate#create');
             if (!newTourdate) return res.status(400).json({
                 msg: 'Bad request. Try again. :)',
@@ -206,7 +205,7 @@ const create = async (req, res) => {
 const update = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
-        const tourdate = await db.TourDate.findById(req.params.id);
+        const tourdate = await db.Tourdate.findById(req.params.id);
         let authorized = false;
 
         if (user.__t === 'Artist') {
@@ -237,7 +236,7 @@ const update = async (req, res) => {
             msg: errors.UNAUTHORIZED,
         });
 
-        db.TourDate.findByIdAndUpdate(
+        db.Tourdate.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true },
@@ -261,7 +260,7 @@ const update = async (req, res) => {
 
 const destroy = async (req, res) => {
     const user = await db.User.findById(req.userId);
-    const tourdate = await db.TourDate.findById(req.params.id);
+    const tourdate = await db.Tourdate.findById(req.params.id);
     let authorized = false;
 
     if (user.__t === 'Artist') {
@@ -292,7 +291,7 @@ const destroy = async (req, res) => {
         msg: errors.UNAUTHORIZED,
     });
 
-    db.TourDate.findByIdAndDelete(req.params.id, async (err, deletedTourdate) => {
+    db.Tourdate.findByIdAndDelete(req.params.id, async (err, deletedTourdate) => {
         if (err) console.log('Error at tourdates#delete');
         if (!deletedTourdate) return res.status(404).json({
             msg: 'Not found',
@@ -303,8 +302,8 @@ const destroy = async (req, res) => {
         // deletedTourdate._id as their tourdate.
         // remove this tour date from the tour it is a part of.
         const tour = await db.Tour.findById(deletedTourdate.tour);
-        const index = tour.tourDates.indexOf(deletedTourdate._id);
-        tour.tourDates.splice(index, 1);
+        const index = tour.tourdates.indexOf(deletedTourdate._id);
+        tour.tourdates.splice(index, 1);
         tour.save();
 
         return res.status(200).json({

@@ -5,13 +5,16 @@ const TodoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    tourDate: {
+    tourdate: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'TourDate',
+        ref: 'Tourdate',
+        required: true,
     },
     content: {
         type: String,
         required: true,
+        maxlength: 200,
+        minlength: 1,
     },
     dueDate: {
         type: Date,

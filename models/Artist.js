@@ -6,7 +6,10 @@ const ArtistSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    artistName: String,
+    artistName: {
+        type: String,
+        default: null,
+    },
     managerRate: {
         type: Number,
         default: 0,

@@ -4,10 +4,12 @@ const ThreadSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true,
     },
-    tourDate: {
+    tourdate: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'TourDate',
+        ref: 'Tourdate',
+        required: true,
     },
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +18,8 @@ const ThreadSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true,
-        maxlength: 300,
+        maxlength: 1000,
+        minlength: 1,
     },
 }, {
     timestamps: true,
