@@ -80,6 +80,9 @@ const index = async (req, res) => {
 }
 
 
+
+
+
 const show = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
@@ -130,6 +133,8 @@ const show = async (req, res) => {
         console.log(error);
     }
 }
+
+
 
 
 
@@ -251,9 +256,67 @@ const update = async (req, res) => {
     }
 }
 
+
+
+
+const destroy = async (req, res) => {
+    const user = await db.User.findById(req.userId);
+    const tourdate = await db.TourDate.findById(req.params.id);
+    let authorized = false;
+
+    if (user.__t === 'Artist') {
+        if (tourdate.artist.equals(user._id)) {
+            authorized = true;
+        }
+    } else {
+        let artist = await db.User.findById(tourdate.artist);
+
+        if (user.__t === 'Teammate') {
+            if (user.manager) {
+                if (user.manager.equals(artist.manager)) {
+                    authorized = true;
+                }
+            } else if (user.agent) {
+                if (user.agent.equals(artist.agent)) {
+                    authorized = true;
+                }
+            }
+        } else {
+            if (user.artists.includes(artist._id)) {
+                authorized = true;
+            }
+        }
+    }
+
+    if (!authorized) return res.status(403).json({
+        msg: errors.UNAUTHORIZED,
+    });
+
+    db.TourDate.findByIdAndDelete(req.params.id, async (err, deletedTourdate) => {
+        if (err) console.log('Error at tourdates#delete');
+        if (!deletedTourdate) return res.status(404).json({
+            msg: 'Not found',
+        });
+
+        // NOTE when threads and todos CRUD is completed, 
+        // make sure to delete all threads with
+        // deletedTourdate._id as their tourdate.
+        // remove this tour date from the tour it is a part of.
+        const tour = await db.Tour.findById(deletedTourdate.tour);
+        const index = tour.tourDates.indexOf(deletedTourdate._id);
+        tour.tourDates.splice(index, 1);
+        tour.save();
+
+        return res.status(200).json({
+            deletedTourdate: deletedTourdate,
+        });
+    });
+}
+
 module.exports = {
     index,
     show,
     create,
     update,
+    destroy,
 }
