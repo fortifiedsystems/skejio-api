@@ -4,7 +4,7 @@ const index = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         if (user.__t === 'Artist') {
-            // when it comes time to add tourdates, populate this.
+            // NOTE: when it comes time to add tourdates, populate this.
             db.Tour.find({ artist: req.userId }, (err, foundTours) => {
                 if (err) console.log('Error at Tours#index');
                 if (!foundTours.length) return res.status(404).json({
@@ -13,12 +13,25 @@ const index = async (req, res) => {
 
                 return res.status(200).json({
                     tours: foundTours,
-                })
+                });
             });
         } else if (user.__t === 'Manager' || user.__t === 'Agent') {
-            return res.status(404).json({
-                msg: 'Use show route',
-            })
+            if (!user.artists.includes(req.query.artist)) {
+                return res.status(403).json({
+                    msg: 'You are not authorized to view this artists tourdates.'
+                });
+            }
+
+            db.Tour.find(req.query, (err, foundTours) => {
+                if (err) console.log('Error at Tours#index');
+                if (!foundTours.length) return res.status(404).json({
+                    msg: 'Found no tours for this artist.',
+                });
+
+                return res.status(200).json({
+                    tours: foundTours,
+                });
+            });
         }
     } catch (error) {
         console.log(error);
@@ -29,9 +42,38 @@ const index = async (req, res) => {
 
 const show = async (req, res) => {
     try {
-        db.Tour.findById
-    } catch (error) {
+        const user = await db.User.findById(req.userId);
 
+        db.Tour.findById(req.params.id, (err, foundTour) => {
+            if (err) console.log('Error at tours#show');
+            if (!foundTour) return res.status(404).json({
+                msg: 'Could not find any tours.',
+            });
+
+            if (user.__t === 'Artist') {
+                if (foundTour.artist == req.userId) {
+                    return res.status(200).json({
+                        foundTour: foundTour,
+                    });
+                } else {
+                    return res.status(403).json({
+                        msg: 'You do not have access to view this tour.',
+                    });
+                }
+            } else if (user.__t === 'Manager' || user.__t === 'Agent') {
+                if (user.artists.includes(foundTour.artist)) {
+                    return res.status(200).json({
+                        foundTour: foundTour,
+                    });
+                } else {
+                    return res.status(403).json({
+                        msg: 'You do not have access to this artists tours.',
+                    });
+                }
+            }
+        });
+    } catch (error) {
+        console.log(error);
     }
 }
 
@@ -58,7 +100,7 @@ const create = async (req, res) => {
         } else if (user.__t === 'Teammate') {
             return res.status(403).json({
                 msg: 'Teammates cannot create tours.',
-            })
+            });
         } else {
             if (!user.artists.includes(req.body.artist)) {
                 return res.status(403).json({
@@ -93,5 +135,6 @@ const create = async (req, res) => {
 
 module.exports = {
     index,
+    show,
     create,
 }
