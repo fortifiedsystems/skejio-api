@@ -1,5 +1,15 @@
 const db = require('../models');
 
+
+
+/**
+ * @NOTE index will be called differently on the front end
+ * model depending on what type of account is calling it.
+ * if an artist account is calling it, they will call it without a query.
+ * otherwise, they will call it with a query specifying the artist.
+ * @param {*} req 
+ * @param {*} res 
+ */
 const index = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
