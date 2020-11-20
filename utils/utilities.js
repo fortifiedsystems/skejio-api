@@ -39,17 +39,13 @@ const checkPrivilage = (req, user, model) => {
 }
 
 const adjustParams = (req, user) => {
-    if (user.__t === 'Artist') {
-        req.body.artist = req.userId;
-        return true;
-    } else if (user.__t === 'Teammate') {
-        return false;
-    } else {
+    if (user.__t === 'Artist') return true;
+    if (user.__t === 'Teammate') return false;
+    if (user.__t === 'Manager' || user.__t === 'Agent') {
         if (!user.artists.includes(req.body.artist)) {
             return false;
         }
     }
-
     return true;
 }
 

@@ -24,7 +24,7 @@ const index = async (req, res) => {
                 });
 
                 return res.status(200).json({
-                    tours: foundTours,
+                    foundTours: foundTours,
                 });
             });
         } else if (user.__t === 'Manager' || user.__t === 'Agent') {
@@ -41,7 +41,7 @@ const index = async (req, res) => {
                 });
 
                 return res.status(200).json({
-                    tours: foundTours,
+                    foundTours: foundTours,
                 });
             });
         }
@@ -61,6 +61,12 @@ const index = async (req, res) => {
 const show = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
+        const tour = await db.Tour.findById(req.params.id);
+        const authorized = checkPrivilage(req, user, tour);
+
+        if (!authorized) return res.status(403).json({
+            msg: errors.UNAUTHORIZED,
+        })
 
         db.Tour.findById(req.params.id, (err, foundTour) => {
             if (err) console.log('Error at tours#show');
@@ -68,27 +74,9 @@ const show = async (req, res) => {
                 msg: 'Could not find any tours.',
             });
 
-            if (user.__t === 'Artist') {
-                if (foundTour.artist == req.userId) {
-                    return res.status(200).json({
-                        foundTour: foundTour,
-                    });
-                } else {
-                    return res.status(403).json({
-                        msg: errors.UNAUTHORIZED,
-                    });
-                }
-            } else if (user.__t === 'Manager' || user.__t === 'Agent') {
-                if (user.artists.includes(foundTour.artist)) {
-                    return res.status(200).json({
-                        foundTour: foundTour,
-                    });
-                } else {
-                    return res.status(403).json({
-                        msg: errors.UNAUTHORIZED,
-                    });
-                }
-            }
+            return res.status(200).json({
+                foundTour: foundTour,
+            });
         });
     } catch (error) {
         console.log(error);
@@ -118,6 +106,10 @@ const create = async (req, res) => {
             msg: errors.UNAUTHORIZED,
         });
 
+        if (user.__t === 'Artist') {
+            req.body.artist = req.userId;
+        }
+
         db.Tour.create(req.body, async (err, newTour) => {
             if (err) console.log(`Error at Tour#create ${err}`);
             if (!newTour) return res.status(400).json({
@@ -143,21 +135,6 @@ const create = async (req, res) => {
 }
 
 
-// const checkPrivilage = (req, user, model) => {
-//     if (user.__t === 'Teammate') {
-//         return false;
-//     } else if (user.__t === 'Artist') {
-//         if (req.userId != model.artist) {
-//             return false;
-//         }
-//     } else if (user.__t === 'Manager' || user.__t === 'Agent') {
-//         if (!user.artists.includes(model.artist)) {
-//             return false;
-//         }
-//     }
-
-//     return true;
-// }
 
 
 const update = async (req, res) => {
