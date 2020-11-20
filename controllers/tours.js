@@ -17,16 +17,19 @@ const index = async (req, res) => {
         const user = await db.User.findById(req.userId);
         if (user.__t === 'Artist') {
             // NOTE: when it comes time to add tourdates, populate this.
-            db.Tour.find({ artist: req.userId }, (err, foundTours) => {
-                if (err) console.log('Error at Tours#index');
-                if (!foundTours.length) return res.status(404).json({
-                    msg: 'Found no tours for this artist.',
-                });
+            db.Tour.find({ artist: req.userId })
+                .populate({
+                    path: 'tourdates',
+                }).exec((err, foundTours) => {
+                    if (err) console.log('Error at Tours#index');
+                    if (!foundTours.length) return res.status(404).json({
+                        msg: 'Found no tours for this artist.',
+                    });
 
-                return res.status(200).json({
-                    foundTours: foundTours,
+                    return res.status(200).json({
+                        foundTours: foundTours,
+                    });
                 });
-            });
         } else if (user.__t === 'Manager' || user.__t === 'Agent') {
             if (!user.artists.includes(req.query.artist)) {
                 return res.status(403).json({
@@ -155,7 +158,7 @@ const update = async (req, res) => {
 
                 if (err) console.log('Error at Tour#update');
                 if (!savedTour) return res.status(404).json({
-                    msg: 'Cannot update tour that does not exist. :-(',
+                    msg: 'Tour not found',
                 });
 
                 return res.status(200).json({
@@ -183,7 +186,7 @@ const destroy = async (req, res) => {
         await db.Tour.findByIdAndDelete(req.params.id, async (err, deletedTour) => {
             if (err) console.log('Error at Tour#delete');
             if (!deletedTour) return res.status(404).json({
-                msg: 'Not found.',
+                msg: 'Tour not found.',
             });
 
             const artist = await db.Artist.findById(deletedTour.artist);

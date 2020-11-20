@@ -4,10 +4,13 @@ const validate = require('../utils/constants');
 const TourDateSchema = new mongoose.Schema({
     date: {
         type: Date,
+        default: null,
         required: true,
     },
+    // NOTE: Will hold a ticketMaster id. 
     venue: {
         type: String,
+        default: null,
         required: true,
     },
     loadIn: {
@@ -28,12 +31,7 @@ const TourDateSchema = new mongoose.Schema({
     },
     hospitality: {
         type: String,
-        default: 'No hospitality info provided.'
-    },
-    artist: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Artist',
-        required: true,
+        default: null
     },
     fee: {
         type: Number,
@@ -58,7 +56,7 @@ const TourDateSchema = new mongoose.Schema({
     },
     promoterName: {
         type: String,
-        default: '',
+        default: null,
     },
     promoterEmail: {
         type: String,
@@ -76,6 +74,21 @@ const TourDateSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    poster: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+        default: null,
+    },
+    artist: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Artist',
+        required: true,
+    },
+    tour: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tour',
+        default: null,
+    },
     threads: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Thread',
@@ -84,11 +97,6 @@ const TourDateSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Todo',
     }],
-    tour: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tour',
-        default: null,
-    },
 }, {
     timestamps: true,
 });

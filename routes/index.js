@@ -4,4 +4,5 @@ module.exports = {
     companies: require('./companies'),
     agencies: require('./agencies'),
     tours: require('./tours'),
+    tourdates: require('./tourdates'),
 }
