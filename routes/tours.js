@@ -7,5 +7,6 @@ router.get('/', authRequired, ctrl.tours.index);
 router.get('/:id', authRequired, ctrl.tours.show);
 router.post('/', authRequired, ctrl.tours.create);
 router.put('/:id', authRequired, ctrl.tours.update);
+router.delete('/:id', authRequired, ctrl.tours.destroy);
 
 module.exports = router;

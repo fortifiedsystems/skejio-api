@@ -196,6 +196,51 @@ const update = async (req, res) => {
 
 
 
+const destroy = async (req, res) => {
+    try {
+        const user = await db.User.findById(req.userId);
+        const tour = await db.Tour.findById(req.params.id);
+
+        if (user.__t === 'Teammate') {
+            return res.status(403).json({
+                msg: 'Teammates cannot delete Tours.',
+            });
+        } else if (user.__t === 'Manager' || user.__t === 'Agent') {
+            if (!user.artists.includes(tour.artist)) {
+                return res.status(403).json({
+                    msg: 'You are not authorized to delete this tour.'
+                });
+            }
+        } else if (user.__t === 'Artist') {
+            if (req.userId != tour.artist) {
+                return res.status(403).json({
+                    msg: 'You are not authorized to delete this tour.',
+                });
+            }
+        }
+
+        await db.Tour.findByIdAndDelete(req.params.id, async (err, deletedTour) => {
+            if (err) console.log('Error at Tour#delete');
+            if (!deletedTour) return res.status(404).json({
+                msg: 'Did not find a tour with this Id.',
+            });
+
+            const artist = await db.Artist.findById(deletedTour.artist);
+            const index = artist.tours.indexOf(deletedTour._id);
+            artist.tours.splice(index, 1);
+            artist.save();
+
+            return res.status(200).json({
+                deletedTour: deletedTour,
+            });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
 
 
 module.exports = {
@@ -203,4 +248,5 @@ module.exports = {
     show,
     create,
     update,
+    destroy,
 }
