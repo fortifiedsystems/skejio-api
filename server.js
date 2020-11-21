@@ -14,6 +14,7 @@ app.use('/api/v1/companies', routes.companies);
 app.use('/api/v1/agencies', routes.agencies);
 app.use('/api/v1/tours', routes.tours);
 app.use('/api/v1/tourdates', routes.tourdates);
+app.use('/api/v1/todos', routes.todos);
 app.use('/api/v1/user', routes.user);
 
 // connection

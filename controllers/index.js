@@ -5,4 +5,5 @@ module.exports = {
     agencies: require('./agencies'),
     tours: require('./tours'),
     tourdates: require('./tourdates'),
+    todos: require('./todos'),
 }

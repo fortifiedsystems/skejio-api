@@ -38,11 +38,11 @@ const register = async (req, res) => {
         const createdUser = await account.create({ ...req.body, password: hash });
 
         // TEAMMATE ACCOUNT VALIDATION.
-        if (createdUser.__t === 'Teammate') {
+        if (createdUser.accountType === 'Teammate') {
             if (createdUser.manager) {
                 const superior = await db.User.findById(createdUser.manager);
 
-                if (superior.__t === 'Artist') {
+                if (superior.accountType === 'Artist') {
                     return res.status(403).json({
                         msg: 'Captain must be an agent or Manager',
                     });
@@ -52,7 +52,7 @@ const register = async (req, res) => {
                 }
             } else if (createdUser.agent) {
                 const superior = await db.User.findById(createdUser.agent);
-                if (superior.__t === 'Artist') {
+                if (superior.accountType === 'Artist') {
                     return res.status(403).json({
                         msg: 'Captain must be an agent or manager',
                     });
@@ -64,10 +64,10 @@ const register = async (req, res) => {
         }
 
         // ARTIST ACCOUNT VALIDATION
-        if (createdUser.__t === 'Artist') {
+        if (createdUser.accountType === 'Artist') {
             if (createdUser.manager) {
                 const manager = await db.User.findById(createdUser.manager);
-                if (manager.__t !== 'Manager') {
+                if (manager.accountType !== 'Manager') {
                     return res.status(403).json({
                         msg: 'Your manager must be signed up as a manager on Skej.io.',
                     })
@@ -79,7 +79,7 @@ const register = async (req, res) => {
 
             if (createdUser.agent) {
                 const agent = await db.User.findById(createdUser.agent);
-                if (agent.__t !== 'Agent') {
+                if (agent.accountType !== 'Agent') {
                     return res.status(403).json({
                         msg: 'Your Agent must be signed up as an agent on Skej.io',
                     })
