@@ -1,6 +1,6 @@
 const db = require('../models');
 const errors = require('../utils/errors');
-const { checkPrivilage, adjustParams } = require('../utils/utilities');
+const { canCreate, canRead, canUD, } = require('../utils/utilities');
 
 
 
@@ -65,7 +65,7 @@ const show = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.params.id);
-        const authorized = checkPrivilage(req, user, tour);
+        const authorized = canRead(req, user, tour);
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
@@ -105,7 +105,7 @@ const show = async (req, res) => {
 const create = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
-        const authorized = adjustParams(req, user);
+        const authorized = await canCreate(req, user, 'Tour');
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
@@ -146,7 +146,7 @@ const update = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.params.id);
-        const authorized = checkPrivilage(req, user, tour);
+        const authorized = canUD(req, user, tour);
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
@@ -179,7 +179,7 @@ const destroy = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.params.id);
-        const authorized = checkPrivilage(req, user, tour);
+        const authorized = canUD(req, user, tour);
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
