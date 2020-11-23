@@ -15,7 +15,11 @@ const TeammateSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         default: null,
-    }
+    },
+    artists: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Artist',
+    }]
 });
 
 const Teammate = User.discriminator('Teammate', TeammateSchema);

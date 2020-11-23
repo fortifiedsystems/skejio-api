@@ -21,6 +21,10 @@ const ThreadSchema = new mongoose.Schema({
         maxlength: 1000,
         minlength: 1,
     },
+    artist: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Artist',
+    }
 }, {
     timestamps: true,
 });

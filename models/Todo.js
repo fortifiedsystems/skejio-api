@@ -24,6 +24,10 @@ const TodoSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    artist: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Artist',
+    }
 }, {
     timestamps: true,
 })

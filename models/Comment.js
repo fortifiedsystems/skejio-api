@@ -15,6 +15,10 @@ const CommentSchema = new mongoose.Schema({
         type: String,
         minlength: 1,
         required: true,
+    },
+    artist: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Artist',
     }
 }, {
     timestamps: true,
