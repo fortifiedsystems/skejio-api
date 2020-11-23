@@ -33,13 +33,13 @@ const ArtistSchema = new mongoose.Schema({
         default: null,
     },
     mgmt: {
-        Type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Mgmt',
         default: null,
     },
     agency: {
-        Type: mongoose.Schema.Types.ObjectId,
-        ref: 'agency',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Agent',
         default: null,
     },
     tours: [{

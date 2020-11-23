@@ -10,7 +10,7 @@ const MgmtSchema = new Schema({
     admin: {
         type: Schema.Types.ObjectId,
         ref: 'Manager',
-        default: null,
+        required: true,
     },
 });
 

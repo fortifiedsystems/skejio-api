@@ -31,15 +31,15 @@ const CompanySchema = new mongoose.Schema({
         default: null,
     },
     artists: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Artists',
     }],
     teammates: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Teammates',
     }],
     logo: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Image',
         default: null,
     },

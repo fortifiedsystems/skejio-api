@@ -10,7 +10,7 @@ const AgencySchema = new Schema({
     admin: {
         type: Schema.Types.ObjectId,
         ref: 'Agent',
-        default: null,
+        required: true,
     },
 });
 
