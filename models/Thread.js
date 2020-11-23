@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ThreadSchema = new mongoose.Schema({
-    user: {
+    author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -24,10 +24,6 @@ const ThreadSchema = new mongoose.Schema({
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
-    },
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
     },
 }, {
     timestamps: true,
