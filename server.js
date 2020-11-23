@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/v1/auth', routes.auth);
-app.use('/api/v1/companies', routes.companies);
+app.use('/api/v1/mgmt', routes.mgmt);
 app.use('/api/v1/agencies', routes.agencies);
 app.use('/api/v1/tours', routes.tours);
 app.use('/api/v1/tourdates', routes.tourdates);

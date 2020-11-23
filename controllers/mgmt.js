@@ -59,17 +59,17 @@ const create = async (req, res) => {
         req.body.managers = [];
         req.body.managers.push(req.userId);
 
-        db.Company.create(req.body, (err, newCompany) => {
-            if (err) console.log(`Error at Company#create: ${err}`);
-            if (!newCompany) return res.status(400).json({
+        db.Mgmt.create(req.body, (err, newMgmt) => {
+            if (err) console.log(`Error at Mgmt#create: ${err}`);
+            if (!newMgmt) return res.status(400).json({
                 msg: 'Bad Request. Try again.',
             });
 
-            user.company = newCompany._id;
+            user.company = newMgmt._id;
             user.save();
 
             return res.status(201).json({
-                newCompany: newCompany,
+                newMgmt: newMgmt,
             });
         });
     } catch (error) {

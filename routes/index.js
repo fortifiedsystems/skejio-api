@@ -1,7 +1,7 @@
 module.exports = {
     auth: require('./auth'),
     user: require('./user'),
-    companies: require('./companies'),
+    mgmt: require('./mgmt'),
     agencies: require('./agencies'),
     tours: require('./tours'),
     tourdates: require('./tourdates'),
