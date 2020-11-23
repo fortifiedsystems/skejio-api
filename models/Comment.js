@@ -6,7 +6,7 @@ const CommentSchema = new mongoose.Schema({
         ref: 'Thread',
         required: true,
     },
-    user: {
+    author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const CompanySchema = new Schema({
+const CompanySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -31,18 +30,17 @@ const CompanySchema = new Schema({
         type: String,
         default: null,
     },
-    managers: [{
+    artists: [{
         type: Schema.Types.ObjectId,
-        ref: 'Manager',
+        ref: 'Artists',
+    }],
+    teammates: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Teammates',
     }],
     logo: {
         type: Schema.Types.ObjectId,
         ref: 'Image',
-        default: null,
-    },
-    admin: {
-        type: Schema.Types.ObjectId,
-        ref: 'Manager',
         default: null,
     },
 })
@@ -73,4 +71,5 @@ CompanySchema.methods.getAddress = function () {
 }
 
 const Company = mongoose.model('Company', CompanySchema);
+
 module.exports = Company;

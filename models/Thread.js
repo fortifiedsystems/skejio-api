@@ -24,7 +24,11 @@ const ThreadSchema = new mongoose.Schema({
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
-    }
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
 }, {
     timestamps: true,
 });

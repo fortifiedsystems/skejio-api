@@ -2,17 +2,17 @@ const mongoose = require('mongoose');
 const Company = require('./Company');
 const Schema = mongoose.Schema;
 
-const AgencySchema = new Schema({
-    agents: [{
+const MgmtSchema = new Schema({
+    managers: [{
         type: Schema.Types.ObjectId,
-        ref: 'Agent',
+        ref: 'Manager',
     }],
     admin: {
         type: Schema.Types.ObjectId,
-        ref: 'Agent',
+        ref: 'Manager',
         default: null,
     },
 });
 
-const Agency = Company.discriminator('Agency', AgencySchema);
-module.exports = Agency;
+const Mgmt = Company.discriminator('Mgmt', MgmtSchema);
+module.exports = Mgmt;

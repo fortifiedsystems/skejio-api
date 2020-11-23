@@ -32,6 +32,16 @@ const ArtistSchema = new mongoose.Schema({
         ref: 'Agent',
         default: null,
     },
+    mgmt: {
+        Type: mongoose.Schema.Types.ObjectId,
+        ref: 'Mgmt',
+        default: null,
+    },
+    agency: {
+        Type: mongoose.Schema.Types.ObjectId,
+        ref: 'agency',
+        default: null,
+    },
     tours: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tour',
@@ -39,5 +49,4 @@ const ArtistSchema = new mongoose.Schema({
 });
 
 const Artist = User.discriminator('Artist', ArtistSchema);
-
 module.exports = Artist;
