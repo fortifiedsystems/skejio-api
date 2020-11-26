@@ -111,10 +111,10 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const foundUser = await db.User.findOne({ email: req.body.email });
-        if (!foundUser) return res.send({ message: INVALID_LOGIN });
+        if (!foundUser) return res.send({ message: 'INVALID LOGIN' });
 
         const match = await bcrypt.compare(req.body.password, foundUser.password);
-        if (!match) return res.send({ message: INVALID_LOGIN });
+        if (!match) return res.send({ message: 'INVALID LOGIN' });
 
         if (match) {
             const signedJwt = jwt.sign(
