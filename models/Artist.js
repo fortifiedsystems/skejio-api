@@ -42,9 +42,21 @@ const ArtistSchema = new mongoose.Schema({
         ref: 'Agent',
         default: null,
     },
+    riders: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+    }],
+    stageplots: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+    }],
     tours: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tour',
+    }],
+    tourdates: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tourdate',
     }],
 });
 

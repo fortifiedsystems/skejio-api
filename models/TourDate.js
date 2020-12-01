@@ -7,8 +7,56 @@ const TourdateSchema = new mongoose.Schema({
         default: null,
         required: true,
     },
-    // NOTE: Will hold a ticketMaster id. 
-    venue: {
+    venueId: {
+        type: String,
+        default: null,
+        required: true,
+    },
+    city: {
+        type: String,
+        default: null,
+        required: true,
+    },
+    state: {
+        type: String,
+        default: null,
+    },
+    country: {
+        type: String,
+        default: null,
+        required: true,
+    },
+    address: {
+        type: String,
+        default: null,
+    },
+    address2: {
+        type: String,
+        default: null,
+    },
+    zip: {
+        type: String,
+        default: null,
+        required: true,
+    },
+    venueLink: {
+        type: String,
+        default: null,
+    },
+    locale: {
+        type: String,
+        default: null,
+    },
+    venueImage: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+        default: null,
+    },
+    _tmLink: {
+        type: String,
+        required: true,
+    },
+    timezone: {
         type: String,
         default: null,
         required: true,
