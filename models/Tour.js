@@ -23,6 +23,11 @@ const TourSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    poster: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Image',
+        default: null,
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
