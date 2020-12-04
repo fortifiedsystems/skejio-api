@@ -182,12 +182,14 @@ const create = async (req, res) => {
         }
 
         db.Tourdate.create(req.body, (err, newTourdate) => {
-            if (err) console.log('Error at tourdate#create');
+            if (err) console.log('Error at tourdate#create:', err);
             if (!newTourdate) return res.status(400).json({
                 msg: 'Bad request. Try again. :)',
             });
 
+            user.tourdates.push(newTourdate._id);
             tour.tourdates.push(newTourdate._id);
+            user.save();
             tour.save();
 
             return res.status(201).json({
@@ -241,7 +243,7 @@ const update = async (req, res) => {
             req.body,
             { new: true },
             (err, savedTourdate) => {
-                if (err) console.log('Error at tourdates#update');
+                if (err) console.log('Error at tourdates#update', err);
                 if (!savedTourdate) return res.status(404).json({
                     msg: 'Not found.',
                 });
@@ -302,9 +304,14 @@ const destroy = async (req, res) => {
         // deletedTourdate._id as their tourdate.
         // remove this tour date from the tour it is a part of.
         const tour = await db.Tour.findById(deletedTourdate.tour);
-        const index = tour.tourdates.indexOf(deletedTourdate._id);
+        let index = tour.tourdates.indexOf(deletedTourdate._id);
         tour.tourdates.splice(index, 1);
         tour.save();
+
+        const artist = await db.Artist.findById(deletedTourdate.artist);
+        index = artist.tourdates.indexOf(deletedTourdate._id);
+        artist.tourdates.splice(index, 1);
+        artist.save();
 
         return res.status(200).json({
             deletedTourdate: deletedTourdate,

@@ -12,6 +12,10 @@ const TourdateSchema = new mongoose.Schema({
         default: null,
         required: true,
     },
+    name: {
+        type: String,
+        required: true,
+    },
     city: {
         type: String,
         default: null,
@@ -59,7 +63,6 @@ const TourdateSchema = new mongoose.Schema({
     timezone: {
         type: String,
         default: null,
-        required: true,
     },
     loadIn: {
         type: Date,
@@ -112,11 +115,11 @@ const TourdateSchema = new mongoose.Schema({
     },
     promoterEmail: {
         type: String,
-        match: validate.EMAIL,
+        default: null,
     },
     promoterPhone: {
         type: String,
-        match: validate.PHONE,
+        default: null,
     },
     complete: {
         type: Boolean,
