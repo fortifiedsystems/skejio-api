@@ -40,7 +40,6 @@ const show = (req, res) => {
 }
 
 const create = (req, res) => {
-    // Need authorization for this one.
     try {
         db.Todo.create(req.body, async (err, createdTodo) => {
             if (err) console.log(err);
