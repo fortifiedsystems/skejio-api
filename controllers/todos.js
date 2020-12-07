@@ -65,9 +65,54 @@ const create = (req, res) => {
     }
 }
 
+const update = (req, res) => {
+    try {
+        db.Todo.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedTodo) => {
+            if (err) console.log(err);
+            if (!updatedTodo) return res.status(404).json({
+                msg: 'Could not find this todo',
+            });
+
+            return res.status(200).json({
+                updatedTodo: updatedTodo,
+            });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const destroy = (req, res) => {
+    try {
+        db.Todo.findByIdAndDelete(req.params.id, async (err, deletedTodo) => {
+            if (err) console.log(err);
+            if (!deletedTodo) return res.status(404).json({
+                msg: 'Could not find todo.',
+            });
+
+            const user = await db.User.findById(deletedTodo.user);
+            let index = user.todos.indexOf(deletedTodo._id);
+            user.todos.splice(index, 1);
+            user.save();
+
+            const tourdate = await db.Tourdate.findById(deletedTodo.tourdate);
+            index = tourdate.todos.indexOf(deletedTodo._id);
+            tourdate.todos.splice(index, 1);
+            tourdate.save();
+
+            return res.status(200).json({
+                deletedTodo: deletedTodo,
+            })
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
-
+    update,
+    destroy,
 }
