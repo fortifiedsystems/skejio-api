@@ -34,8 +34,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
     },
     profileImg: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Image',
+        type: String,
         default: null,
     },
     threads: [{

@@ -9,6 +9,16 @@ const ImageSchema = new Schema({
         ref: 'User',
         required: true,
     },
+    tour: {
+        type: Schema.Types.ObjectId,
+        ref: 'Tour',
+        default: null,
+    },
+    tourdate: {
+        type: Schema.Types.ObjectId,
+        ref: 'Tourdate',
+        default: null,
+    },
     img: {
         data: Buffer,
         contentType: String,

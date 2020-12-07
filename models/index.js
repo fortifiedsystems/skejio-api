@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const connectionString =
-    process.env.MONGODB_URI || "mongodb://localhost:27017/skejio";
 const configOptions = {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -10,7 +8,7 @@ const configOptions = {
 };
 
 mongoose
-    .connect(process.env.MONGODB_URI || connectionString, configOptions)
+    .connect(process.env.MONGODB_URI, configOptions)
     .then(() => console.log("MongoDB successfully connected..."))
     .catch((err) => console.log((`MongoDB connection error: ${err}`)));
 

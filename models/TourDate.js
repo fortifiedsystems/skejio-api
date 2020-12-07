@@ -97,8 +97,7 @@ const TourdateSchema = new mongoose.Schema({
         default: false,
     },
     contract: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Image',
+        type: String,
         default: null,
     },
     contractSigned: {
@@ -130,8 +129,7 @@ const TourdateSchema = new mongoose.Schema({
         default: false,
     },
     poster: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Image',
+        type: String,
         default: null,
     },
     artist: {
