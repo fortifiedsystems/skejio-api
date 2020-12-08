@@ -120,16 +120,22 @@ const show = async (req, res) => {
 
 
         // pull back tourdate.
-        db.Tourdate.findById(req.params.id, (err, foundTourdate) => {
-            if (err) console.log('Error tourdates#show');
-            if (!foundTourdate) return res.status(404).json({
-                msg: 'Not found',
-            });
+        db.Tourdate.findById(req.params.id)
+            .populate({
+                path: 'threads',
+                populate: {
+                    path: 'comments',
+                }
+            }).exec((err, foundTourdate) => {
+                if (err) console.log('Error tourdates#show');
+                if (!foundTourdate) return res.status(404).json({
+                    msg: 'Not found',
+                });
 
-            return res.status(200).json({
-                foundTourdate: foundTourdate,
+                return res.status(200).json({
+                    foundTourdate: foundTourdate,
+                });
             });
-        });
     } catch (error) {
         console.log(error);
     }
