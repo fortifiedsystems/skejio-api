@@ -18,6 +18,7 @@ app.use('/api/v1/mgmt', routes.mgmt);
 app.use('/api/v1/agencies', routes.agencies);
 app.use('/api/v1/tours', routes.tours);
 app.use('/api/v1/images', routes.images);
+app.use('/api/v1/threads', routes.threads);
 app.use('/api/v1/tourdates', routes.tourdates);
 app.use('/api/v1/todos', routes.todos);
 app.use('/api/v1/user', routes.user);
