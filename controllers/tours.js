@@ -72,8 +72,14 @@ const show = async (req, res) => {
         })
 
         db.Tour.findById(req.params.id)
-            .populate({ path: 'tourdates' })
-            .exec((err, foundTour) => {
+            .populate({
+                path: 'tourdates',
+                options: {
+                    sort: {
+                        date: 'asc'
+                    }
+                }
+            }).exec((err, foundTour) => {
                 if (err) console.log('Error at tours#show');
                 if (!foundTour) return res.status(404).json({
                     msg: 'Could not find any tours.',

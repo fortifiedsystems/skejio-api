@@ -14,6 +14,8 @@ const index = async (req, res) => {
             db.Tourdate.find({ artist: req.userId })
                 .populate({
                     path: 'tour',
+                }).sort({
+                    date: 'asc',
                 }).exec((err, foundTourdates) => {
                     if (err) console.log('Error at tourdates#index');
                     if (!foundTourdates.length) return res.status(404).json({

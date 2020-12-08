@@ -5,6 +5,8 @@ const index = (req, res) => {
         db.Todo.find({ user: req.userId })
             .populate({
                 path: 'user artist createdBy tourdate'
+            }).sort({
+                dueDate: 'asc',
             }).exec((err, foundTodos) => {
                 if (err) console.log(err);
                 if (!foundTodos) res.status(404).json({
@@ -55,6 +57,7 @@ const create = (req, res) => {
             user.save();
             tourdate.save();
 
+            console.log('Updated');
             return res.status(201).json({
                 createdTodo: createdTodo,
             });
@@ -66,6 +69,10 @@ const create = (req, res) => {
 
 const update = (req, res) => {
     try {
+        if (req.userId !== req.body.createdBy._id) return res.status(403).json({
+            msg: 'You are not authorized to edit this todo item. Contact the author.'
+        });
+
         db.Todo.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedTodo) => {
             if (err) console.log(err);
             if (!updatedTodo) return res.status(404).json({
