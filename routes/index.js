@@ -2,6 +2,7 @@ module.exports = {
     auth: require('./auth'),
     user: require('./user'),
     mgmt: require('./mgmt'),
+    comments: require('./comments'),
     images: require('./images'),
     agencies: require('./agencies'),
     threads: require('./threads'),

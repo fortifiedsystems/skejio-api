@@ -16,6 +16,7 @@ app.use(cors());
 app.use('/api/v1/auth', routes.auth);
 app.use('/api/v1/mgmt', routes.mgmt);
 app.use('/api/v1/agencies', routes.agencies);
+app.use('/api/v1/comments', routes.comments);
 app.use('/api/v1/tours', routes.tours);
 app.use('/api/v1/images', routes.images);
 app.use('/api/v1/threads', routes.threads);
