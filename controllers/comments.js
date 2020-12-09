@@ -5,18 +5,43 @@ const db = require('../models');
  * @param {*} req 
  * @param {*} res 
  */
+const index = (req, res) => {
+    try {
+        db.Comment.find(req.query)
+            .populate({
+                path: 'author',
+            }).sort({
+                createdAt: 'asc',
+            }).exec((err, foundComments) => {
+                if (err) console.log(err);
+                if (!foundComments) return res.status(404).json({
+                    msg: 'Could not find any comments',
+                });
+
+                return res.status(200).json({
+                    foundComments: foundComments,
+                });
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const show = (req, res) => {
     try {
-        db.Comment.find(req.params.threadId, (err, foundComments) => {
-            if (err) console.log(err);
-            if (!foundComments) return res.status(404).json({
-                msg: 'Could not find any comments',
-            });
+        db.Comment.findById(req.params.id)
+            .populate({
+                path: 'author'
+            }).exec((err, foundComment) => {
+                if (err) console.log(err);
+                if (!foundComment) return res.status(404).json({
+                    msg: 'Could not find comment',
+                });
 
-            return res.status(200).json({
-                foundComments: foundComments,
+                return res.status(200).json({
+                    foundComment: foundComment,
+                });
             });
-        });
     } catch (error) {
         console.log(error);
     }
@@ -25,13 +50,14 @@ const show = (req, res) => {
 const create = (req, res) => {
     try {
         db.Comment.create(req.body, async (err, createdComment) => {
+            console.log(createdComment);
             if (err) console.log(err);
 
-            const user = db.User.findById(createdComment.user);
+            const user = await db.User.findById(createdComment.author);
             user.comments.push(createdComment._id);
             user.save();
 
-            const thread = db.Thread.findById(createdComment.thread);
+            const thread = await db.Thread.findById(createdComment.thread);
             thread.comments.push(createdComment._id);
             thread.save();
 
@@ -73,12 +99,14 @@ const destroy = (req, res) => {
                 msg: 'Could not find comment',
             });
 
-            const thread = db.Thread.findById(deletedComment.thread);
+            console.log(deletedComment);
+
+            const thread = await db.Thread.findById(deletedComment.thread);
             let index = thread.comments.indexOf(deletedComment._id);
             thread.comments.splice(index, 1);
             thread.save();
 
-            const user = db.User.findById(deletedComment.author);
+            const user = await db.User.findById(deletedComment.author);
             index = user.comments.indexOf(deletedComment._id);
             user.comments.splice(index, 1);
             user.save();
@@ -93,6 +121,7 @@ const destroy = (req, res) => {
 }
 
 module.exports = {
+    index,
     show,
     create,
     update,

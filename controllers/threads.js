@@ -4,12 +4,12 @@ const index = (req, res) => {
     try {
         db.Thread.find(req.query)
             .populate({
-                path: 'author',
+                path: 'author comments',
                 options: {
                     sort: {
                         createdAt: 'asc',
                     }
-                }
+                },
             }).exec((err, foundThreads) => {
                 if (err) console.log(err);
                 if (!foundThreads) return res.status(404).json({
@@ -105,6 +105,9 @@ const destroy = async (req, res) => {
                 msg: 'Thread not found',
             });
 
+            // delete is a problem because i can't get rid of all of the comments inside each user.
+            // try a clean function that cleans out comments belonging to threads that don't exist everytime the use logs in.
+
             const user = await db.User.findById(deletedThread.author);
             let index = user.threads.indexOf(deletedThread._id);
             user.threads.splice(index, 1);
@@ -114,6 +117,8 @@ const destroy = async (req, res) => {
             index = tourdate.threads.indexOf(deletedThread._id);
             tourdate.threads.splice(index, 1);
             tourdate.save();
+
+            await db.Comment.deleteMany({ thread: deletedThread._id });
 
             return res.status(200).json({
                 deletedThread: deletedThread,
