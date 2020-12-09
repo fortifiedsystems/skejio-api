@@ -124,7 +124,7 @@ const show = async (req, res) => {
             .populate({
                 path: 'threads',
                 populate: {
-                    path: 'comments',
+                    path: 'comments author',
                 }
             }).exec((err, foundTourdate) => {
                 if (err) console.log('Error tourdates#show');

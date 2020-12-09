@@ -2,16 +2,24 @@ const db = require('../models');
 
 const index = (req, res) => {
     try {
-        db.Thread.find(req.query, (err, foundThreads) => {
-            if (err) console.log(err);
-            if (!foundThreads) return res.status(404).json({
-                msg: 'Did not find any threads',
-            });
+        db.Thread.find(req.query)
+            .populate({
+                path: 'author',
+                options: {
+                    sort: {
+                        createdAt: 'asc',
+                    }
+                }
+            }).exec((err, foundThreads) => {
+                if (err) console.log(err);
+                if (!foundThreads) return res.status(404).json({
+                    msg: 'Did not find any threads',
+                });
 
-            return res.status(200).json({
-                foundThreads: foundThreads,
+                return res.status(200).json({
+                    foundThreads: foundThreads,
+                });
             });
-        });
     } catch (error) {
         console.log(error);
     }
