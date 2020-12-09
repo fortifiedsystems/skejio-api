@@ -70,27 +70,6 @@ const create = (req, res) => {
     }
 }
 
-const update = (req, res) => {
-    try {
-        db.Comment.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true },
-            (err, updatedComment) => {
-                if (err) console.log(err);
-                if (!updatedComment) return res.status(404).json({
-                    msg: 'Could not find comment',
-                });
-
-                return res.status(200).json({
-                    updatedComment: updatedComment,
-                });
-            });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 const destroy = (req, res) => {
     try {
         db.Comment.findByIdAndDelete(req.params.id, async (err, deletedComment) => {
@@ -124,6 +103,5 @@ module.exports = {
     index,
     show,
     create,
-    update,
     destroy,
 }
