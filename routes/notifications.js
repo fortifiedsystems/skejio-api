@@ -3,6 +3,6 @@ const router = express.Router();
 const authRequired = require('../middleware/authRequired');
 const ctrl = require('../controllers');
 
-router.create('/', authRequired, ctrl.notifications.create);
+router.post('/', authRequired, ctrl.notifications.create);
 
 module.exports = router;
