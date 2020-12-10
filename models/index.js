@@ -22,6 +22,7 @@ module.exports = {
     Company: require('./Company'),
     Agency: require('./Agency'),
     Mgmt: require('./Mgmt'),
+    Notification: require('./Notification'),
     Image: require('./Image'),
     Tour: require('./Tour'),
     Tourdate: require('./Tourdate'),

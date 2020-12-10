@@ -3,9 +3,14 @@ const db = require('../models');
 
 // GET index route
 const index = (req, res) => {
-    db.User.find(req.query, (err, foundUsers) => {
-        if (err) console.log('Error at users#index');
-        if (!foundUsers.length) return res.status(404).json({
+    db.User.find({
+        artistName: {
+            $regex: req.query.artistName,
+            $options: 'i'
+        }
+    }, (err, foundUsers) => {
+        if (err) console.log('Error at users#index', err);
+        if (!foundUsers) return res.status(404).json({
             message: 'No users exist.',
         });
 

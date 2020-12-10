@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const { cloudinary } = require('./utils/cloudinary');
 
 require('dotenv').config();
 

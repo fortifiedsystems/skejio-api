@@ -46,15 +46,6 @@ const canCreate = async (req, user, modelRef) => {
     return true;
 }
 
-const sendTimeOnly = str => {
-    let time = str.split('T')[1];
-    let div = time.split(':');
-    let hour = div[0];
-    let minute = div[1];
-    return `${hour}:${minute}`
-
-}
-
 module.exports = {
     canRead,
     canUD,
