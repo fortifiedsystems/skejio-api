@@ -48,8 +48,30 @@ const create = (req, res) => {
     }
 }
 
+const update = (req, res) => {
+    try {
+        db.Notification.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, updatedNotification) => {
+                if (err) console.log(err);
+                if (!updatedNotification) return res.status(404).json({
+                    msg: 'Could not find this notification',
+                });
+
+                res.status(200).json({
+                    updatedNotification: updatedNotification,
+                })
+            })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
+    update,
 }

@@ -15,13 +15,25 @@ const NotificationSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    confirmable: {
+    invite: {
         type: Boolean,
-        default: null,
+        default: false,
     },
-    confirmed: {
+    tourdate: {
         type: Boolean,
-        default: null,
+        default: false,
+    },
+    newThread: {
+        type: Boolean,
+        default: false,
+    },
+    newComment: {
+        type: Boolean,
+        default: false,
+    },
+    newTodo: {
+        type: Boolean,
+        default: false,
     },
     checked: {
         type: Boolean,
