@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
+.env
+testing.json
+
 ### Node ###
 # Logs
 logs
@@ -111,6 +114,7 @@ dist
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
+.vscode
 .vscode-test
 
 # End of https://www.toptal.com/developers/gitignore/api/node
