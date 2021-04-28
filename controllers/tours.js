@@ -1,6 +1,6 @@
 const db = require('../models');
 const errors = require('../utils/errors');
-const { canCreate, canRead, canEditOrDelete } = require('../utils/utilities');
+const { canCreate, canRead, canEditOrDelete } = require('../utils/authorization');
 
 
 
