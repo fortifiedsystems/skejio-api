@@ -1,5 +1,7 @@
 const db = require('../models');
 const errors = require('../utils/errors');
+const { canRead, canCreate, canEditOrDelete } = require('../utils/authorization');
+const { getVenueById } = require('../utils/txm');
 
 /**
  * See note on tour index route. Same applies.
@@ -155,31 +157,19 @@ const create = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.body.tour);
+        const venue = await getVenueById(req.body.venueId);
+        console.log(venue);
         const authorized = canCreate(req, user, 'Tourdate');
-        // let artist;
-        // let authorized = false;
 
-        // if (user.__t === 'Artist') {
-        //     authorized = true;
-        // } else {
-        //     artist = await db.User.findById(req.body.artist);
-
-        //     if (user.__t === 'Teammate') {
-        //         if (user.manager) {
-        //             if (user.manager.equals(artist.manager)) {
-        //                 authorized = true;
-        //             }
-        //         } else if (user.agent) {
-        //             if (user.agent.equals(artist.agent)) {
-        //                 authorized = true;
-        //             }
-        //         }
-        //     } else {
-        //         if (user.artists.includes(artist._id)) {
-        //             authorized = true;
-        //         }
-        //     }
-        // }
+        req.body.name = venue.name;
+        req.body.city = venue.city.name;
+        req.body.state = venue.state.name;
+        req.body.country = venue.country.name;
+        req.body.timezone = venue.timezone;
+        req.body._tmLink = venue.url;
+        req.body.address = venue.address.line1;
+        req.body.address2 = venue.address.line2 ? venue.address.line2 : null;
+        req.body.zip = venue.postalCode;
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
