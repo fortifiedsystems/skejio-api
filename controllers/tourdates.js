@@ -155,30 +155,31 @@ const create = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.body.tour);
-        let artist;
-        let authorized = false;
+        const authorized = canCreate(req, user, 'Tourdate');
+        // let artist;
+        // let authorized = false;
 
-        if (user.__t === 'Artist') {
-            authorized = true;
-        } else {
-            artist = await db.User.findById(req.body.artist);
+        // if (user.__t === 'Artist') {
+        //     authorized = true;
+        // } else {
+        //     artist = await db.User.findById(req.body.artist);
 
-            if (user.__t === 'Teammate') {
-                if (user.manager) {
-                    if (user.manager.equals(artist.manager)) {
-                        authorized = true;
-                    }
-                } else if (user.agent) {
-                    if (user.agent.equals(artist.agent)) {
-                        authorized = true;
-                    }
-                }
-            } else {
-                if (user.artists.includes(artist._id)) {
-                    authorized = true;
-                }
-            }
-        }
+        //     if (user.__t === 'Teammate') {
+        //         if (user.manager) {
+        //             if (user.manager.equals(artist.manager)) {
+        //                 authorized = true;
+        //             }
+        //         } else if (user.agent) {
+        //             if (user.agent.equals(artist.agent)) {
+        //                 authorized = true;
+        //             }
+        //         }
+        //     } else {
+        //         if (user.artists.includes(artist._id)) {
+        //             authorized = true;
+        //         }
+        //     }
+        // }
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
