@@ -85,6 +85,10 @@ const canCreate = async (req, user, modelRef) => {
             ) {
                 return false;
             }
+        } else if (modelRef === 'Thread') {
+            if (!user.artists.includes(req.body.artist)) {
+                return false;
+            }
         }
     } else if (user.__t === 'Manager' || user.__t === 'Agent') {
         if (!user.artists.includes(req.body.artist)) {

@@ -3,6 +3,8 @@ const errors = require('../utils/errors');
 const { canCreate, canEditOrDelete } = require('../utils/authorization');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
 
+
+
 /**
  * See note on tour index route. Same applies.
  * @param {*} req 
@@ -28,8 +30,12 @@ const index = async (req, res) => {
                         foundTourdates: foundTourdates,
                     });
                 });
-        } else if (user.__t === 'Manager' || user.__t === 'Agent') {
-            if (!user.artists.includes(req.query.artist)) return res.status(403).json({
+        } else if (
+            user.__t === 'Manager' ||
+            user.__t === 'Agent' ||
+            user.__t === 'Teammate'
+        ) {
+            if (!user.artists.includes(req.query.artist) || !user.isAdmin) return res.status(403).json({
                 msg: errors.UNAUTHORIZED,
             });
 
@@ -81,8 +87,6 @@ const index = async (req, res) => {
         console.log(error);
     }
 }
-
-
 
 
 
@@ -145,8 +149,6 @@ const show = async (req, res) => {
 
 
 
-
-
 /**
  * NOTE: if an artist is creating the tour date, they do not need to send their id back with the request
  * otherwise, an artist id must be provided.
@@ -193,7 +195,6 @@ const create = async (req, res) => {
 
 
 
-
 const update = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
@@ -222,7 +223,6 @@ const update = async (req, res) => {
         console.log(error);
     }
 }
-
 
 
 
@@ -260,6 +260,8 @@ const destroy = async (req, res) => {
         });
     });
 }
+
+
 
 module.exports = {
     index,
