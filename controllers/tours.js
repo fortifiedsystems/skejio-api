@@ -1,6 +1,7 @@
 const db = require('../models');
 const errors = require('../utils/errors');
-const { canCreate, canRead, canUD, } = require('../utils/utilities');
+const { canCreate, canRead, canEditOrDelete } = require('../utils/utilities');
+
 
 
 
@@ -94,6 +95,9 @@ const show = async (req, res) => {
     }
 }
 
+
+
+
 /**
  * @NOTE For the front end: 
  * if the user is a manager or agent, form will need a drop down
@@ -121,25 +125,27 @@ const create = async (req, res) => {
             req.body.artist = req.userId;
         }
 
-        db.Tour.create(req.body, async (err, newTour) => {
-            if (err) console.log(`Error at Tour#create ${err}`);
-            if (!newTour) return res.status(400).json({
-                msg: 'Bad request. Try again. :)',
-            });
+        db.Tour.create(
+            req.body,
+            async (err, newTour) => {
+                if (err) console.log(`Error at Tour#create ${err}`);
+                if (!newTour) return res.status(400).json({
+                    msg: 'Bad request. Try again. :)',
+                });
 
-            if (user.__t === 'Artist') {
-                user.tours.push(newTour._id);
-                user.save();
-            } else {
-                const artist = await db.Artist.findById(req.body.artist);
-                artist.tours.push(newTour._id);
-                artist.save();
-            }
+                if (user.__t === 'Artist') {
+                    user.tours.push(newTour._id);
+                    user.save();
+                } else {
+                    const artist = await db.Artist.findById(req.body.artist);
+                    artist.tours.push(newTour._id);
+                    artist.save();
+                }
 
-            return res.status(201).json({
-                newTour: newTour,
+                return res.status(201).json({
+                    newTour: newTour,
+                });
             });
-        });
     } catch (error) {
         console.log(error);
     }
@@ -152,7 +158,7 @@ const update = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.params.id);
-        const authorized = canUD(req, user, tour);
+        const authorized = canEditOrDelete(req, user, tour);
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
@@ -181,31 +187,42 @@ const update = async (req, res) => {
 
 
 
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @function destroy()
+ * @description Deletes the tourdate specified in the body of the request.
+ * also deletes the tour from the artists tours array.
+ * @returns the deleted tourdate.
+ */
 const destroy = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tour = await db.Tour.findById(req.params.id);
-        const authorized = canUD(req, user, tour);
+        const authorized = canEditOrDelete(req, user, tour);
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,
         });
 
-        await db.Tour.findByIdAndDelete(req.params.id, async (err, deletedTour) => {
-            if (err) console.log('Error at Tour#delete');
-            if (!deletedTour) return res.status(404).json({
-                msg: 'Tour not found.',
-            });
+        await db.Tour.findByIdAndDelete(
+            req.params.id,
+            async (err, deletedTour) => {
+                if (err) console.log('Error at Tour#delete');
+                if (!deletedTour) return res.status(404).json({
+                    msg: 'Tour not found.',
+                });
 
-            const artist = await db.Artist.findById(deletedTour.artist);
-            const index = artist.tours.indexOf(deletedTour._id);
-            artist.tours.splice(index, 1);
-            artist.save();
+                const artist = await db.Artist.findById(deletedTour.artist);
+                const index = artist.tours.indexOf(deletedTour._id);
+                artist.tours.splice(index, 1);
+                artist.save();
 
-            return res.status(200).json({
-                deletedTour: deletedTour,
+                return res.status(200).json({
+                    deletedTour: deletedTour,
+                });
             });
-        });
     } catch (error) {
         console.log(error);
     }

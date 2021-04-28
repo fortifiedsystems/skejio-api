@@ -1,6 +1,6 @@
 const db = require('../models');
 
-const canUD = (req, user, model) => {
+const canEditOrDelete = (req, user, model) => {
     if (user.__t === 'Teammate') {
         return false;
     } else if (user.__t === 'Artist') {
@@ -14,6 +14,7 @@ const canUD = (req, user, model) => {
     }
     return true;
 }
+
 
 
 const canRead = (req, user, model) => {
@@ -32,6 +33,7 @@ const canRead = (req, user, model) => {
 }
 
 
+
 const canCreate = async (req, user, modelRef) => {
     if (user.__t === 'Teammate') {
         if (modelRef === 'Tour' || modelRef === 'Tourdate') {
@@ -48,6 +50,6 @@ const canCreate = async (req, user, modelRef) => {
 
 module.exports = {
     canRead,
-    canUD,
+    canEditOrDelete,
     canCreate,
 }
