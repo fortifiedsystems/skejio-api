@@ -1,6 +1,6 @@
 const db = require('../models');
 const errors = require('../utils/errors');
-const { canRead, canCreate, canEditOrDelete } = require('../utils/authorization');
+const { canCreate, canEditOrDelete } = require('../utils/authorization');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
 
 /**
@@ -198,31 +198,7 @@ const update = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
         const tourdate = await db.Tourdate.findById(req.params.id);
-        let authorized = false;
-
-        if (user.__t === 'Artist') {
-            if (tourdate.artist.equals(user._id)) {
-                authorized = true;
-            }
-        } else {
-            let artist = await db.User.findById(tourdate.artist);
-
-            if (user.__t === 'Teammate') {
-                if (user.manager) {
-                    if (user.manager.equals(artist.manager)) {
-                        authorized = true;
-                    }
-                } else if (user.agent) {
-                    if (user.agent.equals(artist.agent)) {
-                        authorized = true;
-                    }
-                }
-            } else {
-                if (user.artists.includes(artist._id)) {
-                    authorized = true;
-                }
-            }
-        }
+        let authorized = canEditOrDelete(req, user, tourdate);
 
         if (!authorized) return res.status(403).json({
             msg: errors.UNAUTHORIZED,

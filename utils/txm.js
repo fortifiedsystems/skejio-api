@@ -27,6 +27,15 @@ const getVenueById = async (id) => {
     }
 }
 
+
+
+/**
+ * @function attachVenueInfoToBody()
+ * @description populates body with venue information from ticketmaster.
+ * @param {Object} req request object
+ * @param {Object} venue venueObject
+ * @returns nothing
+ */
 const attachVenueInfoToBody = (req, venue) => {
     req.body.name = venue.name;
     req.body.city = venue.city.name;
@@ -38,6 +47,8 @@ const attachVenueInfoToBody = (req, venue) => {
     req.body.address2 = venue.address.line2 ? venue.address.line2 : null;
     req.body.zip = venue.postalCode;
 }
+
+
 
 module.exports = {
     getVenueById,
