@@ -3,6 +3,8 @@ const errors = require('../utils/errors');
 const { canCreate, canEditOrDelete } = require('../utils/authorization');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
 
+
+
 /**
  * See note on tour index route. Same applies.
  * @param {*} req 
@@ -84,8 +86,6 @@ const index = async (req, res) => {
 
 
 
-
-
 const show = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
@@ -145,8 +145,6 @@ const show = async (req, res) => {
 
 
 
-
-
 /**
  * NOTE: if an artist is creating the tour date, they do not need to send their id back with the request
  * otherwise, an artist id must be provided.
@@ -193,7 +191,6 @@ const create = async (req, res) => {
 
 
 
-
 const update = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
@@ -222,7 +219,6 @@ const update = async (req, res) => {
         console.log(error);
     }
 }
-
 
 
 
@@ -260,6 +256,8 @@ const destroy = async (req, res) => {
         });
     });
 }
+
+
 
 module.exports = {
     index,
