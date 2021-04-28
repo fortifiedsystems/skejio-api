@@ -27,8 +27,19 @@ const getVenueById = async (id) => {
     }
 }
 
-
+const attachVenueInfoToBody = (req, venue) => {
+    req.body.name = venue.name;
+    req.body.city = venue.city.name;
+    req.body.state = venue.state.name;
+    req.body.country = venue.country.name;
+    req.body.timezone = venue.timezone;
+    req.body._tmLink = venue.url;
+    req.body.address = venue.address.line1;
+    req.body.address2 = venue.address.line2 ? venue.address.line2 : null;
+    req.body.zip = venue.postalCode;
+}
 
 module.exports = {
     getVenueById,
+    attachVenueInfoToBody,
 }
