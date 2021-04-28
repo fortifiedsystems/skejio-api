@@ -229,31 +229,7 @@ const update = async (req, res) => {
 const destroy = async (req, res) => {
     const user = await db.User.findById(req.userId);
     const tourdate = await db.Tourdate.findById(req.params.id);
-    let authorized = false;
-
-    if (user.__t === 'Artist') {
-        if (tourdate.artist.equals(user._id)) {
-            authorized = true;
-        }
-    } else {
-        let artist = await db.User.findById(tourdate.artist);
-
-        if (user.__t === 'Teammate') {
-            if (user.manager) {
-                if (user.manager.equals(artist.manager)) {
-                    authorized = true;
-                }
-            } else if (user.agent) {
-                if (user.agent.equals(artist.agent)) {
-                    authorized = true;
-                }
-            }
-        } else {
-            if (user.artists.includes(artist._id)) {
-                authorized = true;
-            }
-        }
-    }
+    let authorized = canEditOrDelete(req, user, tourdate);
 
     if (!authorized) return res.status(403).json({
         msg: errors.UNAUTHORIZED,
