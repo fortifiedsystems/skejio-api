@@ -30,8 +30,12 @@ const index = async (req, res) => {
                         foundTourdates: foundTourdates,
                     });
                 });
-        } else if (user.__t === 'Manager' || user.__t === 'Agent') {
-            if (!user.artists.includes(req.query.artist)) return res.status(403).json({
+        } else if (
+            user.__t === 'Manager' ||
+            user.__t === 'Agent' ||
+            user.__t === 'Teammate'
+        ) {
+            if (!user.artists.includes(req.query.artist) || !user.isAdmin) return res.status(403).json({
                 msg: errors.UNAUTHORIZED,
             });
 
