@@ -9,9 +9,9 @@ const ReportSchema = new mongoose.Schema({
     // Could be 'percentage', 'guarantee', 'guarantee vs', 'bar cut', 'other'
     deal: {
         type: String,
-        default: null
+        required: true
     },
-    // Could be 'ticketed', 'free', 'coverCharge'
+    // Could be 'ticketed', 'free', 'cover'
     eventType: {
         type: String,
         default: null
@@ -22,11 +22,11 @@ const ReportSchema = new mongoose.Schema({
     },
     tixSold: {
         type: Number,
-        default: null,
+        default: 0,
     },
     tixPrice: {
         type: Number,
-        default: null,
+        default: 0,
     },
     venueCut: {
         type: Number,
@@ -40,10 +40,6 @@ const ReportSchema = new mongoose.Schema({
         type: Number,
         default: null,
     },
-    attendancePaid: {
-        type: Number,
-        default: null,
-    },
     guests: {
         type: Number,
         default: null,
@@ -54,16 +50,66 @@ const ReportSchema = new mongoose.Schema({
     },
     totalMerchSales: {
         type: Number,
+        default: 0,
+    },
+    venueRateOnMerch: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 1,
+    },
+    venueCutOfMerch: {
+        type: Number,
+        default: 0,
+    },
+    amountPaidByVenue: {
+        type: Number,
         default: null,
+    },
+    barTotal: {
+        type: Number,
+        default: 0,
+    },
+    guarantee: {
+        type: Number,
+        default: null,
+    },
+    percent: {
+        type: Number,
+        default: 0.0,
+        min: 0,
+        max: 1,
+    },
+    vsPercent: {
+        type: Number,
+        default: 0.0,
+        min: 0,
+        max: 1,
+    },
+    breakPoint: {
+        type: Number,
+        default: null,
+    },
+    totalMoniesGenerated: {
+        type: Number,
+        default: 0,
+    },
+    comissions: {
+        type: Number,
+        default: 0,
     },
     gross: {
         type: Number,
-        default: null,
+        default: null
     },
     net: {
         type: Number,
         default: null,
     },
+    notes: {
+        type: String,
+        required: true,
+    }
 }, {
     timestamps: true,
 });
