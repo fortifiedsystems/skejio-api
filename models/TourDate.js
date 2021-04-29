@@ -132,6 +132,10 @@ const TourdateSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    reportFiled: {
+        type: Boolean,
+        default: false
+    },
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
@@ -153,6 +157,11 @@ const TourdateSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+    },
+    report: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Report',
+        default: null,
     },
 }, {
     timestamps: true,
