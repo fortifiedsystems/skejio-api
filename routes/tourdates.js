@@ -6,6 +6,7 @@ const authRequired = require('../middleware/authRequired');
 router.get('/', authRequired, ctrl.tourdates.index);
 router.get('/:id', authRequired, ctrl.tourdates.show);
 router.post('/', authRequired, ctrl.tourdates.create);
+router.post('/report/:id', authRequired, ctrl.tourdates.fileReport);
 router.put('/:id', authRequired, ctrl.tourdates.update);
 router.delete('/:id', authRequired, ctrl.tourdates.destroy);
 

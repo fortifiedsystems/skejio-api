@@ -2,6 +2,7 @@ const db = require('../models');
 const errors = require('../utils/errors');
 const { canCreate, canEditOrDelete } = require('../utils/authorization');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
+const { getTotalMoniesGenerated, getShowGross, getShowNet, getTotalAttendance } = require('../utils/helpers');
 
 
 
@@ -195,6 +196,50 @@ const create = async (req, res) => {
 
 
 
+// TODO: gotta check the shit out of this math cuz it is squirly af.
+const fileReport = async (req, res) => {
+    try {
+        const user = await db.User.findById(req.userId);
+        const tourdate = await db.Tourdate.findById(req.params.id);
+        const artist = await db.Artist.findById(tourdate.artist);
+        const authorized = canEditOrDelete(req, user, tourdate);
+        req.body.tourdate = req.params.id;
+
+        if (!authorized) return res.status(403).json({
+            msg: errors.UNAUTHORIZED,
+        });
+
+        if (tourdate.reportFiled) return res.status(403).json({
+            msg: errors.REPORT_ALREADY_FILED,
+        })
+
+        getTotalMoniesGenerated(req);
+        getTotalAttendance(req);
+        getShowGross(req);
+        getShowNet(req, artist);
+
+        db.Report.create(req.body, (err, newReport) => {
+            if (err) console.log('Error at tourdate#fileReport:', err);
+            if (!newReport) return res.status(400).json({
+                msg: 'Could not create the report. Try again.'
+            });
+
+            tourdate.report = newReport._id;
+            tourdate.reportFiled = true;
+            tourdate.save();
+
+            return res.status(201).json({
+                reportFiled: newReport,
+            });
+        });
+    } catch (error) {
+        console.log('ERROR:', error);
+    }
+}
+
+
+
+
 const update = async (req, res) => {
     try {
         const user = await db.User.findById(req.userId);
@@ -267,6 +312,7 @@ module.exports = {
     index,
     show,
     create,
+    fileReport,
     update,
     destroy,
 }

@@ -13,10 +13,14 @@ const ArtistSchema = new mongoose.Schema({
     managerRate: {
         type: Number,
         default: 0,
+        max: 1,
+        min: 0,
     },
     agentRate: {
         type: Number,
         default: 0,
+        max: 1,
+        min: 0,
     },
     paidToDate: {
         type: Number,
