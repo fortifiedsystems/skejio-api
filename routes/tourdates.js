@@ -9,4 +9,9 @@ router.post('/', authRequired, ctrl.tourdates.create);
 router.put('/:id', authRequired, ctrl.tourdates.update);
 router.delete('/:id', authRequired, ctrl.tourdates.destroy);
 
+// router.get('/reports', authRequired, ctrl.reports.index);
+// router.get('/:id/report/', authRequired, ctrl.reports.show);
+// router.post('/:id/report', authRequired, ctrl.reports.create);
+// router.put('/:id/report/')
+
 module.exports = router;
