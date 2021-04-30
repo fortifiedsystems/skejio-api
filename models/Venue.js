@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const VenueSchema = new Schema({
+    venueId: {
+        type: String,
+        required: true,
+    },
     name: {
         type: String,
         required: true,
@@ -50,10 +54,11 @@ const VenueSchema = new Schema({
         type: Number,
         default: null
     },
-    tourdates: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Tourdate'
-    }],
+    // NOTE: maybe at this at some point. too complicated for mvp.
+    // tourdates: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Tourdate'
+    // }],
 }, {
     timestamps: true
 });
