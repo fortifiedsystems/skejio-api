@@ -63,5 +63,7 @@ const create = async (req, res) => {
 module.exports = {
     index,
     show,
-    create
+    create,
+    // update,
+    // destroy
 }
