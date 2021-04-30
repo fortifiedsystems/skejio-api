@@ -11,4 +11,5 @@ module.exports = {
     tourdates: require('./tourdates'),
     todos: require('./todos'),
     venues: require('./venues'),
+    merch: require('./merch'),
 }
