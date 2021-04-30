@@ -62,6 +62,10 @@ const ArtistSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tourdate',
     }],
+    inventory: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MerchItem'
+    }]
 });
 
 const Artist = User.discriminator('Artist', ArtistSchema);

@@ -31,4 +31,5 @@ module.exports = {
     Todo: require('./Todo'),
     Report: require('./Report'),
     Venue: require('./Venue'),
+    MerchItem: require('./MerchItem'),
 }
