@@ -7,10 +7,18 @@ const getTotalMoniesGenerated = (req) => {
     req.body.totalMoniesGenerated = total;
 }
 
-
-const getTotalAttendance = (req) => {
-    req.body.totalAttended = req.body.guests + req.body.tixSold;
+const getPotentialAttendance = (req) => {
+    const rb = req.body;
+    rb.potentialAttendance = rb.comps + rb.tixSold;
 }
+
+
+const getActualAttendance = (req) => {
+    const rb = req.body;
+    rb.actualAttendance = rb.compsAttended + rb.paidAttendance;
+}
+
+
 
 const getShowGross = (req) => {
     if (req.body.deal === 'guarantee' || req.body.deal === 'guarantee vs') {
@@ -53,7 +61,8 @@ const getShowNet = (
 
 module.exports = {
     getTotalMoniesGenerated,
-    getTotalAttendance,
+    getPotentialAttendance,
+    getActualAttendance,
     getShowGross,
     getShowNet,
 }

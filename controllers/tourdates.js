@@ -2,7 +2,7 @@ const db = require('../models');
 const errors = require('../utils/errors');
 const { canCreate, canEditOrDelete } = require('../utils/authorization');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
-const { getTotalMoniesGenerated, getShowGross, getShowNet, getTotalAttendance } = require('../utils/helpers');
+const { getTotalMoniesGenerated, getShowGross, getShowNet, getPotentialAttendance, getActualAttendance } = require('../utils/helpers');
 
 
 
@@ -214,7 +214,8 @@ const fileReport = async (req, res) => {
         })
 
         getTotalMoniesGenerated(req);
-        getTotalAttendance(req);
+        getPotentialAttendance(req);
+        getActualAttendance(req);
         getShowGross(req);
         getShowNet(req, artist);
 
