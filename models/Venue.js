@@ -11,23 +11,23 @@ const VenueSchema = new Schema({
         required: true,
     },
     city: {
-        type: String,
+        type: Object,
         required: true,
     },
     state: {
-        type: String,
+        type: Object,
         required: true,
     },
     country: {
-        type: String,
+        type: Object,
         required: true,
     },
     address: {
-        type: String,
+        type: Object,
         required: true,
     },
     address2: {
-        type: String,
+        type: Object,
         default: null,
     },
     zip: {

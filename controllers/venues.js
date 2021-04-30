@@ -2,7 +2,7 @@ const db = require('../models');
 const errors = require('../utils/errors');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
 
-const create = (req, res) => {
+const create = async (req, res) => {
     const tourdate = await getVenueById(req.body.venueId);
     const rb = req.body;
     const {
@@ -12,7 +12,7 @@ const create = (req, res) => {
         country,
         address,
         address2,
-        zip,
+        postalCode,
         venueLink,
         locale,
         venueImage,
@@ -26,7 +26,7 @@ const create = (req, res) => {
     rb.country = country;
     rb.address = address;
     rb.address2 = address2 || null;
-    rb.zip = zip;
+    rb.zip = postalCode;
     rb.venueLink = venueLink || null;
     rb.locale = locale || null;
     rb.venueImage = venueImage || null;
