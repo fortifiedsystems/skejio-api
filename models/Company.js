@@ -51,14 +51,14 @@ const CompanySchema = new mongoose.Schema({
  * there is a full address. Returns message otherwise.
  */
 CompanySchema.methods.getAddress = function () {
-    const fullAddress = this.stNum && this.stName && this.address2 && this.city && this.stateCode && this.zip;
+    const fullAddress = this.stNum && this.stName && this.address && this.address2 && this.city && this.stateCode && this.zip;
     const noAdd2 = this.stNum && this.stName && this.city && this.stateCode && this.zip;
     const INVALID_ADDRESS = 'Full address not provided. Please request from company.';
 
     if (fullAddress) {
         return `${this.name}
         ${this.stNum} ${this.stName}
-        ${this.address2}
+        ${this.address} ${this.address2}
         ${this.city}, ${this.stateCode} ${this.zip}`;
     } else if (noAdd2) {
         return `${this.name}
