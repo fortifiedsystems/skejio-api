@@ -1,5 +1,25 @@
 const db = require('../models');
 
+const index = async (req, res) => {
+    try {
+        db.MerchItem.find(
+            { artist: req.userId },
+            (err, foundItems) => {
+                if (err) console.log('error at merch#index', err);
+                if (!foundItems.length) return res.status(404).json({
+                    msg: 'Could not find any merch items'
+                })
+
+                return res.status(200).json({
+                    merch: foundItems
+                });
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 const create = async (req, res) => {
     const artist = await db.Artist.findById(req.userId);
 
@@ -24,5 +44,6 @@ const create = async (req, res) => {
 }
 
 module.exports = {
+    index,
     create
 }
