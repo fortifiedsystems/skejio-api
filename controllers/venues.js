@@ -2,6 +2,42 @@ const db = require('../models');
 const errors = require('../utils/errors');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
 
+const index = async (req, res) => {
+    try {
+        db.Venue.find({}, (err, allVenues) => {
+            if (err) console.log('error at venues#index', err);
+            if (!allVenues.length) return res.status(404).json({
+                msg: 'No venues registered',
+            });
+
+            return res.status(200).json({
+                venues: allVenues
+            });
+        })
+    } catch (error) {
+        console.log('ERROR:', error);
+    }
+}
+
+
+const show = async (req, res) => {
+    try {
+        db.Venue.findById(req.params.id, (err, foundVenue) => {
+            if (err) console.log('error at venues#show:', err);
+            if (!foundVenue) return res.status(404).json({
+                msg: 'Could not find a venue with this id.'
+            });
+
+            return res.status(200).json({
+                venue: foundVenue,
+            });
+        })
+    } catch (error) {
+        console.log('ERROR:', error);
+    }
+}
+
+
 const create = async (req, res) => {
     const tourdate = await getVenueById(req.body.venueId);
     const rb = req.body;
@@ -56,5 +92,7 @@ const create = async (req, res) => {
 }
 
 module.exports = {
+    index,
+    show,
     create,
 }
