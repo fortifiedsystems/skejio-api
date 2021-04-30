@@ -34,6 +34,10 @@ const MerchItemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    profit: {
+        type: Number,
+        required: true,
+    },
     image: {
         type: String,
         default: null,
