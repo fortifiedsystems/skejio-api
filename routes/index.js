@@ -10,5 +10,5 @@ module.exports = {
     tours: require('./tours'),
     tourdates: require('./tourdates'),
     todos: require('./todos'),
-    venues: require('./venues'),
+    venues: require('./venues')
 }
