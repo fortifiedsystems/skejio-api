@@ -29,5 +29,6 @@ module.exports = {
     Thread: require('./Thread'),
     Comment: require('./Comment'),
     Todo: require('./Todo'),
-    Report: require('./Report')
+    Report: require('./Report'),
+    Venue: require('./Venue'),
 }

@@ -23,6 +23,7 @@ app.use('/api/v1/threads', routes.threads);
 app.use('/api/v1/tourdates', routes.tourdates);
 app.use('/api/v1/todos', routes.todos);
 app.use('/api/v1/user', routes.user);
+app.use('/api/v1/venues', routes.venues);
 
 // connection
 app.listen(PORT, () => {
