@@ -46,16 +46,19 @@ const getActualAttendance = (req) => {
  * @param {Object} req request object
  */
 const getShowGross = (req) => {
-    if (req.body.deal === 'guarantee' || req.body.deal === 'guarantee vs') {
+    if (
+        req.body.deal === 'guarantee' ||
+        req.body.deal === 'guarantee vs'
+    ) {
         req.body.gross = req.body.guarantee
         req.body.amountPaidByVenue = req.body.guarantee
         return;
     } else if (req.body.deal === 'cover') {
         req.body.gross = req.body.tixSold * req.body.tixPrice;
         return;
+    } else {
+        req.body.gross = 0;
     }
-
-    req.body.gross = 0;
 }
 
 
@@ -67,17 +70,19 @@ const getShowGross = (req) => {
  * @param {Object} req request object
  * @param {Object} artist artist document
  */
-const getShowNet = (
-    req,
-    artist,
-) => {
+const getShowNet = (req, artist) => {
     req.body.venueCutOfMerch =
-        req.body.totalMerchSales * req.body.venueRateOnMerch;
+        req.body.totalMerchSales
+        * req.body.venueRateOnMerch;
 
-    req.body.venueCut = req.body.venueCutOfMerch + (req.body.totalMoniesGenerated - req.body.amountPaidByVenue) + req.body.barTotal;
+    req.body.venueCut = req.body.venueCutOfMerch
+        + (req.body.totalMoniesGenerated
+            - req.body.amountPaidByVenue)
+        + req.body.barTotal;
 
     req.body.owedToAgent =
-        req.body.amountPaidByVenue * artist.agentRate;
+        req.body.amountPaidByVenue
+        * artist.agentRate;
 
     req.body.owedToManager =
         (req.body.amountPaidByVenue +
@@ -85,9 +90,13 @@ const getShowNet = (
                 req.body.venueCutOfMerch)) *
         artist.managerRate;
 
-    req.body.commissions = req.body.venueCutOfMerch + req.body.owedToAgent + req.body.owedToManager;
+    req.body.commissions = req.body.venueCutOfMerch
+        + req.body.owedToAgent
+        + req.body.owedToManager;
 
-    req.body.net = (req.body.amountPaidByVenue + req.body.totalMerchSales) - req.body.commissions
+    req.body.net = (req.body.amountPaidByVenue
+        + req.body.totalMerchSales)
+        - req.body.commissions
 }
 
 
