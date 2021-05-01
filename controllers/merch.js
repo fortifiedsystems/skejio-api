@@ -60,10 +60,34 @@ const create = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    try {
+        // const item = await db.MerchItem.findById(req.params.id);
+
+        db.MerchItem.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, updatedItem) => {
+                if (err) console.log('Error at merch#update:\n', error);
+                if (!updatedItem) return res.status(404).json({
+                    msg: 'Could not find item with this id'
+                });
+
+                return res.status(200).json({
+                    updatedItem: updatedItem,
+                })
+            }
+        )
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
-    // update,
+    update,
     // destroy
 }
