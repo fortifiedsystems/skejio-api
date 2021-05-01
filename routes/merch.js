@@ -7,6 +7,6 @@ router.get('/', authRequired, ctrl.merch.index);
 router.get('/:id', authRequired, ctrl.merch.show);
 router.post('/', authRequired, ctrl.merch.create);
 router.put('/:id', authRequired, ctrl.merch.update);
-// router.delete('/:id', authRequired, ctrl.merch.destroy);
+router.delete('/:id', authRequired, ctrl.merch.destroy);
 
 module.exports = router;

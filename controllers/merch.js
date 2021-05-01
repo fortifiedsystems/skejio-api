@@ -84,10 +84,32 @@ const update = async (req, res) => {
     }
 }
 
+const destroy = async (req, res) => {
+    try {
+        db.MerchItem.findByIdAndDelete(req.params.id, async (err, deletedItem) => {
+            if (err) console.log('Error at merch#delete:\n', error);
+            if (!deletedItem) return res.status(404).json({
+                msg: 'Could not find item with this id',
+            });
+
+            const artist = await db.Artist.findById(deletedItem.artist);
+            let index = artist.inventory.indexOf(deletedItem._id);
+            artist.inventory.splice(index, 1);
+            artist.save();
+
+            return res.status(200).json({
+                deletedItem: deletedItem,
+            })
+        })
+    } catch (error) {
+
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
     update,
-    // destroy
+    destroy
 }
