@@ -45,6 +45,10 @@ const MerchItemSchema = new mongoose.Schema({
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist'
+    },
+    deleted: {
+        type: Boolean,
+        default: false,
     }
 }, {
     timestamps: true,

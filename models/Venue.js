@@ -54,6 +54,10 @@ const VenueSchema = new Schema({
         type: Number,
         default: null
     },
+    deleted: {
+        type: Boolean,
+        default: false,
+    }
     // NOTE: maybe at this at some point. too complicated for mvp.
     // tourdates: [{
     //     type: Schema.Types.ObjectId,

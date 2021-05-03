@@ -163,6 +163,10 @@ const TourdateSchema = new mongoose.Schema({
         ref: 'Report',
         default: null,
     },
+    deleted: {
+        type: Boolean,
+        default: false,
+    }
 }, {
     timestamps: true,
 });

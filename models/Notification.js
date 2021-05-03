@@ -35,7 +35,7 @@ const NotificationSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    checked: {
+    read: {
         type: Boolean,
         default: false,
     },
