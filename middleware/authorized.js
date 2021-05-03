@@ -44,7 +44,34 @@ module.exports = async (req, res, next) => {
             }
         }
     } else if (baseUrl === '/api/v1/comments') {
-        // insert comment authorization.
+        if (method === 'PUT' || method === 'DELETE') {
+            if (path === '/:id') {
+                const comment = await db.Comment.findById(req.params.id);
+
+                if (req.userId != comment.author) {
+                    return res.status(403).json({
+                        msg: 'Only the author of this comment can delete it.'
+                    });
+                }
+            }
+        } else if (method === 'POST') {
+            const thread = await db.Thread.findById(req.body.thread);
+            const tourdate = await db.Tourdate.findById(thread.tourdate);
+
+            if (user.__t === 'Artist') {
+                if (tourdate.artist != req.userId) {
+                    return res.status(403).json({
+                        msg: 'You are not authorized to comment on this thread.'
+                    });
+                }
+            } else {
+                if (!user.artists.includes(tourdate.artist)) {
+                    return res.status(403).json({
+                        msg: 'You are not authorized to comment on this thread.',
+                    })
+                }
+            }
+        }
     } else if (baseUrl === '/api/v1/threads') {
         // insert thread authorization.
     } else if (baseUrl === '/api/v1/tourdates') {
