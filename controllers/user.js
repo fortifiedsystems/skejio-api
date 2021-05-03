@@ -1,8 +1,9 @@
 const db = require('../models');
+const AUTHORIZE = require('../middleware/authorized');
 
 
 // GET index route
-const index = (req, res) => {
+const index = (AUTHORIZE, (req, res) => {
     db.User.find({
         artistName: {
             $regex: req.query.artistName,
@@ -18,11 +19,11 @@ const index = (req, res) => {
             users: foundUsers,
         });
     });
-}
+});
 
 
 // GET show route
-const show = (req, res) => {
+const show = (AUTHORIZE, (req, res) => {
     console.log('req object:', req);
     db.User.findById(req.userId).populate({
         path: 'manager agent artists tours tourdates notifications',
@@ -39,11 +40,11 @@ const show = (req, res) => {
             user: foundUser,
         });
     });
-}
+});
 
 
 // PUT update route
-const update = (req, res) => {
+const update = (AUTHORIZE, (req, res) => {
     db.User.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -58,11 +59,11 @@ const update = (req, res) => {
                 updatedUser: updatedUser,
             });
         });
-}
+});
 
 
 // DELETE destroy route
-const destroy = async (req, res) => {
+const destroy = (AUTHORIZE, async (req, res) => {
     try {
         const user = await db.User.findById(req.params.id);
 
@@ -89,7 +90,7 @@ const destroy = async (req, res) => {
             message: 'Something went wrong. Try again.',
         });
     }
-}
+})
 
 
 
