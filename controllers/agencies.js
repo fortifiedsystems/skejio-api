@@ -123,10 +123,32 @@ const destroy = (req, res) => {
         });
 }
 
+const markAsDeleted = (req, res) => {
+    try {
+        db.Agency.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, deletedAgency) => {
+                if (err) console.log('Error at agency#markDeleted:', err);
+                if (!deletedAgency) return res.status(404).json({
+                    msg: 'No agency with this id found',
+                })
+
+                return res.status(200).json({
+                    deletedAgency: deletedAgency
+                });
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
     update,
     destroy,
+    markAsDeleted,
 }
