@@ -71,6 +71,27 @@ const create = (req, res) => {
     }
 }
 
+const edit = (req, res) => {
+    try {
+        db.Comment.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            async (err, editedComment) => {
+                if (err) console.log('error at comment#edit:', err);
+                if (!editedComment) return res.status(404).json({
+                    msg: 'No comment with this id found.'
+                });
+
+                return res.status(200).json({
+                    editedComment: editedComment,
+                })
+            })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const destroy = (req, res) => {
     try {
         db.Comment.findByIdAndDelete(req.params.id, async (err, deletedComment) => {
@@ -123,6 +144,7 @@ module.exports = {
     index,
     show,
     create,
+    edit,
     destroy,
     markAsDeleted,
 }
