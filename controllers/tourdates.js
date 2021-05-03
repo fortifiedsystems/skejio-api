@@ -96,6 +96,19 @@ const index = async (req, res) => {
 }
 
 
+// const getAllArtistTourdates = async (req, res) => {
+//     const artist = await db.User.findById(req.userId);
+
+
+//     try {
+
+//     } catch (error) {
+
+//     }
+// }
+
+
+
 
 // NOTE: retrieve all the managed tourdates under manger.
 // Should only be called by a manager or agent.

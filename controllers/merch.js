@@ -20,6 +20,7 @@ const index = async (req, res) => {
 }
 
 const show = async (req, res) => {
+    console.log(req);
     try {
         db.MerchItem.findById(req.params.id, (err, item) => {
             if (err) console.log('error at merch#show', err);
@@ -102,7 +103,7 @@ const destroy = async (req, res) => {
             })
         })
     } catch (error) {
-
+        console.log(error);
     }
 }
 

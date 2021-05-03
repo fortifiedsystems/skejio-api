@@ -23,6 +23,7 @@ const index = (req, res) => {
 
 // GET show route
 const show = (req, res) => {
+    console.log('req object:', req);
     db.User.findById(req.userId).populate({
         path: 'manager agent artists tours tourdates notifications',
         populate: {
