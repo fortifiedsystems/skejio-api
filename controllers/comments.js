@@ -99,9 +99,31 @@ const destroy = (req, res) => {
     }
 }
 
+const markAsDeleted = (req, res) => {
+    try {
+        db.Agency.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, deletedComment) => {
+                if (err) console.log('Error at comment#markDeleted:', err);
+                if (!deletedComment) return res.status(404).json({
+                    msg: 'No comment with this id found',
+                })
+
+                return res.status(200).json({
+                    deletedComment: deletedComment
+                });
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
     destroy,
+    markAsDeleted,
 }
