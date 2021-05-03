@@ -104,8 +104,27 @@ module.exports = async (req, res, next) => {
                         msg: errors.UNAUTHORIZED,
                     });
                 }
+            } else {
+                if (!user.artists.includes(tourdate.artist)) {
+                    return res.status(403).json({
+                        msg: errors.UNAUTHORIZED,
+                    });
+                }
             }
-
+        } else if (method === 'POST') {
+            if (user.__t === 'Artist') {
+                if (req.body.artist != req.userId) {
+                    return res.status(403).json({
+                        msg: errors.UNAUTHORIZED,
+                    })
+                }
+            } else {
+                if (!user.artists.includes(req.body.artist)) {
+                    return res.status(403).json({
+                        msg: errors.UNAUTHORIZED,
+                    });
+                }
+            }
         }
     } else if (baseUrl === '/api/v1/tours') {
         if (path === '/') {
@@ -198,7 +217,7 @@ module.exports = async (req, res, next) => {
             }
         }
     } else if (baseUrl === '/api/v1/todos') {
-        // insert todos authorization
+        console.log('no middleware for todos yet.')
     } else if (baseUrl === '/api/v1/mgmt') {
         if (path === '/') {
             if (method === 'POST') {
