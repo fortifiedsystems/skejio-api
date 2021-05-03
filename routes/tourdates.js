@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const ctrl = require('../controllers');
-const authRequired = require('../middleware/authRequired');
 
-router.get('/', authRequired, ctrl.tourdates.index);
-router.get('/all-managed-tourdates', authRequired, ctrl.tourdates.getAllManagedTourdates);
-router.get('/:id', authRequired, ctrl.tourdates.show);
-router.post('/', authRequired, ctrl.tourdates.create);
-router.post('/report/:id', authRequired, ctrl.tourdates.fileReport);
-router.put('/:id', authRequired, ctrl.tourdates.update);
-router.delete('/:id', authRequired, ctrl.tourdates.destroy);
+router.get('/', ctrl.tourdates.index);
+router.get('/all-managed-tourdates', ctrl.tourdates.getAllManagedTourdates);
+router.get('/:id', ctrl.tourdates.show);
+router.post('/', ctrl.tourdates.create);
+router.post('/report/:id', ctrl.tourdates.fileReport);
+router.put('/:id', ctrl.tourdates.update);
+router.delete('/:id', ctrl.tourdates.destroy);
 
 module.exports = router;

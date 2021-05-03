@@ -73,7 +73,6 @@ module.exports = async (req, res, next) => {
             }
         }
     } else if (baseUrl === '/api/v1/threads') {
-
         if (method === 'PUT' || method === 'DELETE') {
             const thread = await db.Thread.findById(req.params.id);
             if (req.userId != thread.author) {
@@ -97,7 +96,17 @@ module.exports = async (req, res, next) => {
             }
         }
     } else if (baseUrl === '/api/v1/tourdates') {
-        const tourdate = await db.Tourdate.findById(req.params.id);
+        if (method === 'PUT' || method === 'DELETE') {
+            const tourdate = await db.Tourdate.findById(req.params.id);
+            if (user.__t === 'Artist') {
+                if (req.userId != tourdate.artist) {
+                    return res.status(403).json({
+                        msg: errors.UNAUTHORIZED,
+                    });
+                }
+            }
+
+        }
     } else if (baseUrl === '/api/v1/tours') {
         if (path === '/') {
             if (method === 'POST') {
