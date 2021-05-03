@@ -73,11 +73,9 @@ module.exports = async (req, res, next) => {
             }
         }
     } else if (baseUrl === '/api/v1/threads') {
-        // this won't work.
 
         if (method === 'PUT' || method === 'DELETE') {
             const thread = await db.Thread.findById(req.params.id);
-            const tourdate = await db.Tourdate.findById(thread.tourdate);
             if (req.userId != thread.author) {
                 return res.status(403).json({
                     msg: errors.UNAUTHORIZED,
@@ -85,13 +83,13 @@ module.exports = async (req, res, next) => {
             }
         } else if (method === 'POST') {
             if (user.__t === 'Artist') {
-                if (tourdate.artist != req.userId) {
+                if (req.body.artist != req.userId) {
                     return res.status(403).json({
                         msg: errors.UNAUTHORIZED,
                     });
                 }
             } else {
-                if (!user.artists.includes(tourdate.artist)) {
+                if (!user.artists.includes(req.body.artist)) {
                     return res.status(403).json({
                         msg: errors.UNAUTHORIZED,
                     });
