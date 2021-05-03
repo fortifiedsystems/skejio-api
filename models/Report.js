@@ -11,7 +11,7 @@ const ReportSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // Could be 'ticketed', 'free', 'cover'
+    // Could be 'ticketed', 'door charge', 'free'
     eventType: {
         type: String,
         default: null
@@ -40,13 +40,25 @@ const ReportSchema = new mongoose.Schema({
         type: Number,
         default: null,
     },
-    guests: {
+    comps: {
         type: Number,
         default: null,
     },
-    totalAttended: {
+    compsAttended: {
         type: Number,
         default: null,
+    },
+    paidAttendance: {
+        type: Number,
+        default: null,
+    },
+    potentialAttendance: {
+        type: Number,
+        default: null,
+    },
+    actualAttendance: {
+        type: Number,
+        default: null
     },
     totalMerchSales: {
         type: Number,
@@ -109,6 +121,10 @@ const ReportSchema = new mongoose.Schema({
     notes: {
         type: String,
         required: true,
+    },
+    deleted: {
+        type: Boolean,
+        default: false,
     }
 }, {
     timestamps: true,

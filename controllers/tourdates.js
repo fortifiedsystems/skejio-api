@@ -2,7 +2,13 @@ const db = require('../models');
 const errors = require('../utils/errors');
 const { canCreate, canEditOrDelete } = require('../utils/authorization');
 const { getVenueById, attachVenueInfoToBody } = require('../utils/txm');
-const { getTotalMoniesGenerated, getShowGross, getShowNet, getTotalAttendance } = require('../utils/helpers');
+const {
+    getTotalMoniesGenerated,
+    getShowGross,
+    getShowNet,
+    getPotentialAttendance,
+    getActualAttendance
+} = require('../utils/reportHelpers');
 
 
 
@@ -90,6 +96,42 @@ const index = async (req, res) => {
 }
 
 
+// const getAllArtistTourdates = async (req, res) => {
+//     const artist = await db.User.findById(req.userId);
+
+
+//     try {
+
+//     } catch (error) {
+
+//     }
+// }
+
+
+
+
+// NOTE: retrieve all the managed tourdates under manger.
+// Should only be called by a manager or agent.
+const getAllManagedTourdates = async (req, res) => {
+    try {
+        await db.Tourdate.find(
+            { manager: req.userId },
+            (err, allTourdates) => {
+                if (err) console.log('Error at tourdates#getAllManagedTourdates:', err);
+                if (!allTourdates.length) return res.status(404).json({
+                    msg: 'No tourdates found',
+                });
+
+                return res.status(200).json({
+                    allTourdates: allTourdates,
+                });
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 const show = async (req, res) => {
     try {
@@ -129,7 +171,7 @@ const show = async (req, res) => {
         // pull back tourdate.
         db.Tourdate.findById(req.params.id)
             .populate({
-                path: 'threads',
+                path: 'threads report',
                 populate: {
                     path: 'comments author',
                 }
@@ -151,10 +193,9 @@ const show = async (req, res) => {
 
 
 /**
- * NOTE: if an artist is creating the tour date, they do not need to send their id back with the request
- * otherwise, an artist id must be provided.
- * @param {*} req 
- * @param {*} res 
+ * NOTE: if an artist is creating the tour date, 
+ * they do not need to send their id back with the 
+ * request. Otherwise, an artist id must be provided.
  */
 const create = async (req, res) => {
     try {
@@ -214,7 +255,8 @@ const fileReport = async (req, res) => {
         })
 
         getTotalMoniesGenerated(req);
-        getTotalAttendance(req);
+        getPotentialAttendance(req);
+        getActualAttendance(req);
         getShowGross(req);
         getShowNet(req, artist);
 
@@ -236,7 +278,6 @@ const fileReport = async (req, res) => {
         console.log('ERROR:', error);
     }
 }
-
 
 
 
@@ -310,6 +351,7 @@ const destroy = async (req, res) => {
 
 module.exports = {
     index,
+    getAllManagedTourdates,
     show,
     create,
     fileReport,

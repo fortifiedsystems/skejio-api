@@ -48,9 +48,10 @@ const show = (req, res) => {
 }
 
 const create = (req, res) => {
+    req.body.author = req.userId;
+
     try {
         db.Comment.create(req.body, async (err, createdComment) => {
-            console.log(createdComment);
             if (err) console.log(err);
 
             const user = await db.User.findById(createdComment.author);
@@ -70,6 +71,27 @@ const create = (req, res) => {
     }
 }
 
+const edit = (req, res) => {
+    try {
+        db.Comment.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            async (err, editedComment) => {
+                if (err) console.log('error at comment#edit:', err);
+                if (!editedComment) return res.status(404).json({
+                    msg: 'No comment with this id found.'
+                });
+
+                return res.status(200).json({
+                    editedComment: editedComment,
+                })
+            })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const destroy = (req, res) => {
     try {
         db.Comment.findByIdAndDelete(req.params.id, async (err, deletedComment) => {
@@ -77,8 +99,6 @@ const destroy = (req, res) => {
             if (!deletedComment) return res.status(404).json({
                 msg: 'Could not find comment',
             });
-
-            console.log(deletedComment);
 
             const thread = await db.Thread.findById(deletedComment.thread);
             let index = thread.comments.indexOf(deletedComment._id);
@@ -99,9 +119,32 @@ const destroy = (req, res) => {
     }
 }
 
+const markAsDeleted = (req, res) => {
+    try {
+        db.Comment.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, deletedComment) => {
+                if (err) console.log('Error at comment#markDeleted:', err);
+                if (!deletedComment) return res.status(404).json({
+                    msg: 'No comment with this id found',
+                })
+
+                return res.status(200).json({
+                    deletedComment: deletedComment
+                });
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     index,
     show,
     create,
+    edit,
     destroy,
+    markAsDeleted,
 }

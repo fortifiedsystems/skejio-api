@@ -25,6 +25,10 @@ const ThreadSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artist',
     },
+    deleted: {
+        type: Boolean,
+        default: false,
+    }
 }, {
     timestamps: true,
 });

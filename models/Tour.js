@@ -32,6 +32,10 @@ const TourSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    deleted: {
+        type: Boolean,
+        default: false,
+    }
 }, {
     timestamps: true,
 });
