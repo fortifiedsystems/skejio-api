@@ -1,5 +1,14 @@
 const db = require('../models');
 
+
+
+/**
+ * @function isAuthor()
+ * @description Checks if user requesting is also the author of the comment.
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 const isAuthor = async (req, res, next) => {
     const comment = await db.Comment.findById(req.params.id);
 
@@ -12,6 +21,15 @@ const isAuthor = async (req, res, next) => {
     next();
 }
 
+
+
+/**
+ * @function canCreateComment()
+ * @description Checks if user requesting is allowed to comment on given thread.
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ */
 const canCreateComment = async (req, res, next) => {
     const user = await db.User.findById(req.userId);
     const thread = await db.Thread.findById(req.body.thread);
