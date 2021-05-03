@@ -48,9 +48,10 @@ const show = (req, res) => {
 }
 
 const create = (req, res) => {
+    req.body.author = req.userId;
+
     try {
         db.Comment.create(req.body, async (err, createdComment) => {
-            console.log(createdComment);
             if (err) console.log(err);
 
             const user = await db.User.findById(createdComment.author);
@@ -100,8 +101,9 @@ const destroy = (req, res) => {
 }
 
 const markAsDeleted = (req, res) => {
+    console.log(req.params.id);
     try {
-        db.Agency.findByIdAndUpdate(
+        db.Comment.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true },
