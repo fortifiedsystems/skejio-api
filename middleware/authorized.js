@@ -50,7 +50,7 @@ module.exports = async (req, res, next) => {
 
                 if (req.userId != comment.author) {
                     return res.status(403).json({
-                        msg: 'Only the author of this comment can delete it.'
+                        msg: errors.UNAUTHORIZED,
                     });
                 }
             }
@@ -61,21 +61,45 @@ module.exports = async (req, res, next) => {
             if (user.__t === 'Artist') {
                 if (tourdate.artist != req.userId) {
                     return res.status(403).json({
-                        msg: 'You are not authorized to comment on this thread.'
+                        msg: errors.UNAUTHORIZED,
                     });
                 }
             } else {
                 if (!user.artists.includes(tourdate.artist)) {
                     return res.status(403).json({
-                        msg: 'You are not authorized to comment on this thread.',
+                        msg: errors.UNAUTHORIZED,
                     })
                 }
             }
         }
     } else if (baseUrl === '/api/v1/threads') {
-        // insert thread authorization.
+        // this won't work.
+
+        if (method === 'PUT' || method === 'DELETE') {
+            const thread = await db.Thread.findById(req.params.id);
+            const tourdate = await db.Tourdate.findById(thread.tourdate);
+            if (req.userId != thread.author) {
+                return res.status(403).json({
+                    msg: errors.UNAUTHORIZED,
+                });
+            }
+        } else if (method === 'POST') {
+            if (user.__t === 'Artist') {
+                if (tourdate.artist != req.userId) {
+                    return res.status(403).json({
+                        msg: errors.UNAUTHORIZED,
+                    });
+                }
+            } else {
+                if (!user.artists.includes(tourdate.artist)) {
+                    return res.status(403).json({
+                        msg: errors.UNAUTHORIZED,
+                    });
+                }
+            }
+        }
     } else if (baseUrl === '/api/v1/tourdates') {
-        // insert tourdate authorization
+        const tourdate = await db.Tourdate.findById(req.params.id);
     } else if (baseUrl === '/api/v1/tours') {
         if (path === '/') {
             if (method === 'POST') {
