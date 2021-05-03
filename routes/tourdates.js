@@ -4,6 +4,7 @@ const ctrl = require('../controllers');
 const authRequired = require('../middleware/authRequired');
 
 router.get('/', authRequired, ctrl.tourdates.index);
+router.get('/all-managed-tourdates', authRequired, ctrl.tourdates.getAllManagedTourdates);
 router.get('/:id', authRequired, ctrl.tourdates.show);
 router.post('/', authRequired, ctrl.tourdates.create);
 router.post('/report/:id', authRequired, ctrl.tourdates.fileReport);
