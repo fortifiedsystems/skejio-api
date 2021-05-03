@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const authRequired = require('../middleware/authRequired');
-const isAuthor = require('../middleware/isAuthor');
+const mw = require('../middleware').comments;
 const ctrl = require('../controllers');
 
-const middleWare = [authRequired, isAuthor];
 
 router.get('/', authRequired, ctrl.comments.index);
 router.get('/:id', authRequired, ctrl.comments.show);
-router.post('/', authRequired, ctrl.comments.create);
-router.delete('/:id', authRequired, ctrl.comments.destroy);
-router.put('/delete/:id', middleWare, ctrl.comments.markAsDeleted);
+router.post('/', [authRequired, mw.canCreateComment], ctrl.comments.create);
+router.delete('/:id', [authRequired, mw.isAuthor], ctrl.comments.destroy);
+router.put('/delete/:id', [authRequired, mw.isAuthor], ctrl.comments.markAsDeleted);
 
 module.exports = router;

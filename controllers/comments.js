@@ -79,8 +79,6 @@ const destroy = (req, res) => {
                 msg: 'Could not find comment',
             });
 
-            console.log(deletedComment);
-
             const thread = await db.Thread.findById(deletedComment.thread);
             let index = thread.comments.indexOf(deletedComment._id);
             thread.comments.splice(index, 1);
@@ -101,7 +99,6 @@ const destroy = (req, res) => {
 }
 
 const markAsDeleted = (req, res) => {
-    console.log(req.params.id);
     try {
         db.Comment.findByIdAndUpdate(
             req.params.id,
