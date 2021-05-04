@@ -30,6 +30,10 @@ const CompanySchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    deleted: {
+        type: Boolean,
+        default: false,
+    },
     artists: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Artists',

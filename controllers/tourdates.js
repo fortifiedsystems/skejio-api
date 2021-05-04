@@ -96,6 +96,42 @@ const index = async (req, res) => {
 }
 
 
+// const getAllArtistTourdates = async (req, res) => {
+//     const artist = await db.User.findById(req.userId);
+
+
+//     try {
+
+//     } catch (error) {
+
+//     }
+// }
+
+
+
+
+// NOTE: retrieve all the managed tourdates under manger.
+// Should only be called by a manager or agent.
+const getAllManagedTourdates = async (req, res) => {
+    try {
+        await db.Tourdate.find(
+            { manager: req.userId },
+            (err, allTourdates) => {
+                if (err) console.log('Error at tourdates#getAllManagedTourdates:', err);
+                if (!allTourdates.length) return res.status(404).json({
+                    msg: 'No tourdates found',
+                });
+
+                return res.status(200).json({
+                    allTourdates: allTourdates,
+                });
+            });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 const show = async (req, res) => {
     try {
@@ -315,6 +351,7 @@ const destroy = async (req, res) => {
 
 module.exports = {
     index,
+    getAllManagedTourdates,
     show,
     create,
     fileReport,

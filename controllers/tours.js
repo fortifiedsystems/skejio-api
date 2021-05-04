@@ -113,18 +113,8 @@ const show = async (req, res) => {
  * @param {*} res 
  */
 const create = async (req, res) => {
+    const user = await db.User.findById(req.userId);
     try {
-        const user = await db.User.findById(req.userId);
-        const authorized = await canCreate(req, user, 'Tour');
-
-        if (!authorized) return res.status(403).json({
-            msg: errors.UNAUTHORIZED,
-        });
-
-        if (user.__t === 'Artist') {
-            req.body.artist = req.userId;
-        }
-
         db.Tour.create(
             req.body,
             async (err, newTour) => {

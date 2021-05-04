@@ -16,10 +16,14 @@ const CommentSchema = new mongoose.Schema({
         minlength: 1,
         required: true,
     },
-    artist: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Artist',
+    deleted: {
+        type: Boolean,
+        default: false,
     }
+    // artist: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Artist',
+    // }
 }, {
     timestamps: true,
 });

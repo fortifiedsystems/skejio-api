@@ -52,7 +52,11 @@ const UserSchema = new mongoose.Schema({
     notifications: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Notification',
-    }]
+    }],
+    deleted: {
+        type: Boolean,
+        default: false,
+    },
 }, {
     timestamps: true
 }, {
