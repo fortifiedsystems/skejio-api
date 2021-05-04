@@ -1,4 +1,4 @@
-const { db } = require('../models/User');
+const db = require('../models');
 const errors = require('../utils/errors');
 
 module.exports = async (req, res, next) => {
