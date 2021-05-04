@@ -15,7 +15,7 @@ const index = (AUTHORIZE, (req, res) => {
             message: 'No users exist.',
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             users: foundUsers,
         });
     });
@@ -36,7 +36,7 @@ const show = (AUTHORIZE, (req, res) => {
             message: 'Could not find this user.',
         })
 
-        res.status(200).json({
+        return res.status(200).json({
             user: foundUser,
         });
     });
@@ -44,21 +44,39 @@ const show = (AUTHORIZE, (req, res) => {
 
 
 // PUT update route
-const update = (AUTHORIZE, (req, res) => {
-    db.User.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true },
-        (err, updatedUser) => {
-            if (err) console.log('Error at users#update');
-            if (!updatedUser) return res.status(404).json({
-                message: 'Could not find this user.',
-            });
+const update = (AUTHORIZE, async (req, res) => {
+    const user = await db.User.findById(req.params.id);
+    let userType;
 
-            res.status(200).json({
-                updatedUser: updatedUser,
+    if (user.__t === 'Artist') {
+        userType = db.Artist;
+    } else if (user.__t === 'Manager') {
+        userType = db.Manager;
+    } else if (user.__t === 'Agent') {
+        userType = db.Agent;
+    } else if (user.__t === 'Teammate') {
+        userType = db.Teammate;
+    }
+
+    try {
+        userType.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, updatedUser) => {
+                if (err) console.log('Error at users#update:', error);
+                if (!updatedUser) return res.status(404).json({
+                    message: 'Could not find this user.',
+                });
+
+                return res.status(200).json({
+                    updatedUser: updatedUser,
+                });
             });
-        });
+    } catch (error) {
+        console.log(error);
+    }
+
 });
 
 
@@ -81,7 +99,7 @@ const destroy = (AUTHORIZE, async (req, res) => {
                 message: 'Could not find this user.',
             })
 
-            res.status(200).json({
+            return res.status(200).json({
                 deletedUser: deletedUser,
             });
         });
