@@ -58,7 +58,7 @@ const TourdateSchema = new mongoose.Schema({
     },
     _tmLink: {
         type: String,
-        required: true,
+        default: null,
     },
     timezone: {
         type: String,
