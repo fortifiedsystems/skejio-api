@@ -3,9 +3,7 @@ const db = require('../models');
 const index = (req, res) => {
     try {
         db.Todo.find({ user: req.userId })
-            .populate({
-                path: 'user artist createdBy tourdate'
-            }).sort({
+            .sort({
                 dueDate: 'asc',
             }).exec((err, foundTodos) => {
                 if (err) console.log(err);
@@ -24,9 +22,7 @@ const index = (req, res) => {
 
 const show = (req, res) => {
     try {
-        db.Todo.findById(req.params.id).populate({
-            path: 'user artist createdBy tourdate'
-        }).exec((err, foundTodo) => {
+        db.Todo.findById(req.params.id, (err, foundTodo) => {
             if (err) console.log(err);
             if (!foundTodo) return res.status(404).json({
                 msg: 'Todo with this id not found',
@@ -57,7 +53,6 @@ const create = (req, res) => {
             user.save();
             tourdate.save();
 
-            console.log('Updated');
             return res.status(201).json({
                 createdTodo: createdTodo,
             });

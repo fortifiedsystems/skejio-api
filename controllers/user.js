@@ -120,7 +120,39 @@ const addManager = (IS_ARTIST, async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-})
+});
+
+
+const addAgent = (IS_ARTIST, async (req, res) => {
+    const agent = await db.Agent.findById(req.body.agent);
+
+    if (!agent) return res.status(404).json({
+        msg: 'Agent with this id not found'
+    })
+
+    try {
+        db.Artist.findByIdAndUpdate(
+            req.userId,
+            req.body,
+            { new: true },
+            (err, updatedArtist) => {
+                if (err) console.log('Error at user#addAgent:', err);
+                if (!updatedArtist) return res.status(404).json({
+                    msg: 'Artist with this ID not found.'
+                });
+
+                agent.artists.push(updatedArtist._id);
+                agent.save();
+
+                return res.status(200).json({
+                    msg: `${agent.firstName} ${agent.lastName} was successfully added as the manager for ${updatedArtist.artistName || 'this artist'}.`,
+                    updatedArtist: updatedArtist,
+                });
+            })
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 
 // DELETE destroy route
@@ -162,5 +194,6 @@ module.exports = {
     show,
     update,
     addManager,
+    addAgent,
     destroy,
 }
