@@ -1,5 +1,6 @@
 const db = require('../models');
 const AUTHORIZE = require('../middleware/authorized');
+const IS_ARTIST = require('../middleware/isArtist');
 
 
 // GET index route
@@ -89,6 +90,39 @@ const update = (AUTHORIZE, async (req, res) => {
 });
 
 
+
+const addManager = (IS_ARTIST, async (req, res) => {
+    const manager = await db.Manager.findById(req.body.manager);
+
+    if (!manager) return res.status(404).json({
+        msg: 'Manager with this id not found'
+    });
+
+    try {
+        db.Artist.findByIdAndUpdate(
+            req.userId,
+            req.body,
+            { new: true },
+            (err, updatedArtist) => {
+                if (err) console.log('Error at user#addManager:', err);
+                if (!updatedArtist) return res.status(404).json({
+                    msg: 'Artist with this ID not found.'
+                });
+
+                manager.artists.push(updatedArtist._id);
+                manager.save();
+
+                return res.status(200).json({
+                    msg: `${manager.firstName} ${manager.lastName} was successfully added as the manager for ${updatedArtist.artistName || 'this artist'}.`,
+                    updatedArtist: updatedArtist,
+                });
+            })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+
 // DELETE destroy route
 const destroy = (AUTHORIZE, async (req, res) => {
     try {
@@ -127,5 +161,6 @@ module.exports = {
     index,
     show,
     update,
+    addManager,
     destroy,
 }

@@ -14,6 +14,8 @@ const UNAUTHORIZED = 'You are not authorized to take this action.';
 
 const REPORT_ALREADY_FILED = 'A report has already been filed for this tourdate. You can edit this report on the specific page for this tourdate.';
 
+const ARTISTS_ONLY = 'Only users with account type artist may take this action'
+
 module.exports = {
     NULL_COMPANIES,
     NULL_COMPANY,
@@ -23,5 +25,6 @@ module.exports = {
     TRY_AGAIN,
     CO_ACCESS_DENIED,
     UNAUTHORIZED,
-    REPORT_ALREADY_FILED
+    REPORT_ALREADY_FILED,
+    ARTISTS_ONLY
 }
