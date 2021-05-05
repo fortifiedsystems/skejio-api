@@ -1,64 +1,157 @@
 const db = require('../models');
 const AUTHORIZE = require('../middleware/authorized');
+const IS_ARTIST = require('../middleware/isArtist');
 
 
 // GET index route
 const index = (AUTHORIZE, (req, res) => {
-    db.User.find({
-        artistName: {
-            $regex: req.query.artistName,
-            $options: 'i'
-        }
-    }, (err, foundUsers) => {
-        if (err) console.log('Error at users#index', err);
-        if (!foundUsers) return res.status(404).json({
-            message: 'No users exist.',
-        });
+    try {
+        db.User.find({
+            artistName: {
+                $regex: req.query.artistName,
+                $options: 'i'
+            }
+        }, (err, foundUsers) => {
+            if (err) console.log('Error at users#index', err);
+            if (!foundUsers) return res.status(404).json({
+                message: 'No users exist.',
+            });
 
-        res.status(200).json({
-            users: foundUsers,
+            return res.status(200).json({
+                users: foundUsers,
+            });
         });
-    });
+    } catch (error) {
+        console.log(error);
+    }
+
 });
 
 
 // GET show route
 const show = (AUTHORIZE, (req, res) => {
-    console.log('req object:', req);
-    db.User.findById(req.userId).populate({
-        path: 'manager agent artists tours tourdates notifications',
-        populate: {
-            path: 'tourdates teammates company agency',
-        },
-    }).exec((err, foundUser) => {
-        if (err) console.log('Error at users#show');
-        if (!foundUser) return res.status(404).json({
-            message: 'Could not find this user.',
-        })
+    try {
+        db.User.findById(req.userId).populate({
+            path: 'manager agent artists tours tourdates notifications',
+            populate: {
+                path: 'tourdates teammates company agency',
+            },
+        }).exec((err, foundUser) => {
+            if (err) console.log('Error at users#show');
+            if (!foundUser) return res.status(404).json({
+                message: 'Could not find this user.',
+            })
 
-        res.status(200).json({
-            user: foundUser,
+            return res.status(200).json({
+                user: foundUser,
+            });
         });
-    });
+    } catch (error) {
+        console.log(error);
+    }
+
 });
 
 
 // PUT update route
-const update = (AUTHORIZE, (req, res) => {
-    db.User.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true },
-        (err, updatedUser) => {
-            if (err) console.log('Error at users#update');
-            if (!updatedUser) return res.status(404).json({
-                message: 'Could not find this user.',
-            });
+const update = (AUTHORIZE, async (req, res) => {
+    const user = await db.User.findById(req.params.id);
+    let userType;
 
-            res.status(200).json({
-                updatedUser: updatedUser,
+    if (user.__t === 'Artist') {
+        userType = db.Artist;
+    } else if (user.__t === 'Manager') {
+        userType = db.Manager;
+    } else if (user.__t === 'Agent') {
+        userType = db.Agent;
+    } else if (user.__t === 'Teammate') {
+        userType = db.Teammate;
+    }
+
+    try {
+        userType.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, updatedUser) => {
+                if (err) console.log('Error at users#update:', error);
+                if (!updatedUser) return res.status(404).json({
+                    message: 'Could not find this user.',
+                });
+
+                return res.status(200).json({
+                    updatedUser: updatedUser,
+                });
             });
-        });
+    } catch (error) {
+        console.log(error);
+    }
+
+});
+
+
+
+const addManager = (IS_ARTIST, async (req, res) => {
+    const manager = await db.Manager.findById(req.body.manager);
+
+    if (!manager) return res.status(404).json({
+        msg: 'Manager with this id not found'
+    });
+
+    try {
+        db.Artist.findByIdAndUpdate(
+            req.userId,
+            req.body,
+            { new: true },
+            (err, updatedArtist) => {
+                if (err) console.log('Error at user#addManager:', err);
+                if (!updatedArtist) return res.status(404).json({
+                    msg: 'Artist with this ID not found.'
+                });
+
+                manager.artists.push(updatedArtist._id);
+                manager.save();
+
+                return res.status(200).json({
+                    msg: `${manager.firstName} ${manager.lastName} was successfully added as the manager for ${updatedArtist.artistName || 'this artist'}.`,
+                    updatedArtist: updatedArtist,
+                });
+            })
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+const addAgent = (IS_ARTIST, async (req, res) => {
+    const agent = await db.Agent.findById(req.body.agent);
+
+    if (!agent) return res.status(404).json({
+        msg: 'Agent with this id not found'
+    })
+
+    try {
+        db.Artist.findByIdAndUpdate(
+            req.userId,
+            req.body,
+            { new: true },
+            (err, updatedArtist) => {
+                if (err) console.log('Error at user#addAgent:', err);
+                if (!updatedArtist) return res.status(404).json({
+                    msg: 'Artist with this ID not found.'
+                });
+
+                agent.artists.push(updatedArtist._id);
+                agent.save();
+
+                return res.status(200).json({
+                    msg: `${agent.firstName} ${agent.lastName} was successfully added as the manager for ${updatedArtist.artistName || 'this artist'}.`,
+                    updatedArtist: updatedArtist,
+                });
+            })
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 
@@ -81,7 +174,7 @@ const destroy = (AUTHORIZE, async (req, res) => {
                 message: 'Could not find this user.',
             })
 
-            res.status(200).json({
+            return res.status(200).json({
                 deletedUser: deletedUser,
             });
         });
@@ -90,7 +183,7 @@ const destroy = (AUTHORIZE, async (req, res) => {
             message: 'Something went wrong. Try again.',
         });
     }
-})
+});
 
 
 
@@ -100,5 +193,7 @@ module.exports = {
     index,
     show,
     update,
+    addManager,
+    addAgent,
     destroy,
 }

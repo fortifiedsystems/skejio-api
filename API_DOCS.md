@@ -1,99 +1,70 @@
-* AUTH *
+First create Artist Users
 
-To register:
+Second create Manager User,
+- need artistId
 
-{
-    "firstName": [String],
-    "lastName": [String],
-    "email": [String],
-    "username": [String],
-    "password": [String],
-    "accountType": [String]
+Tour (contains tourdates);
+- name of the tour
+- id of the artist
+
+
+Tourdates can be added to a tour
+- on the front, query the ticketmaster api but send only the venueId back with the request.
+- {
+    "date": "2021-10-10",
+    "venueId": "KovZpZA7AAEA" (from ticket master),
+    "artist": [artistId],
+    "tour": [tourId]
 }
 
-method: POST
-endpoint: /api/v1/register
-
-****************************************************************
-
-To login: 
-
-{
-    email: [String]
-    password: [String]
+Thread 
+- Tourdates have Thread reference which is an array of refs to threads.
+- {
+    "author": [will be the current user],
+    "tourdate": [tourdateId],
+    "content": [content of the comment],
 }
 
-method: POST
-endpoint: /api/v1/login
-
-****************************************************************
-
-Notes:
-1. accountType can be "Manage", "Artist", "Agent", "Teammate"
-2. See regex in utils/constants to get password requirements cuz i can't friggin remember.
-
-
-================================================================
-
-
-* TOURS *
-
-To create a tour, send this in the body:
-
-{
-    "name": [String] name of the tour,
-    "artist": [ArtistId] id of the artist you want to create the tour for
+Comment
+- Threads have comment array which is an array of refs to comments.
+- {
+    "thread": "609018236a490c6a3242c7b7",
+    "content": "Here's a comment",
+    "artist": "5fce655ed0456686b4d4dc2e"
 }
 
-method: POST
-endpoint: api/v1/tours
-
-NOTE: creating a tour will automatically add it to the artists tour array
-
-****************************************************************
-
-To get access to one tour:
-
-method: GET
-endpoint: /api/v1/tours/[artistId]
-
-****************************************************************
-
-To get access to all tours for one artist:
-
-requires a query in the url.
-
-method: GET
-endpoint: /api/v1/tours?artist=[artistId]
-
-****************************************************************
-
-To edit or delete a tour:
-
-method: PUT, DELETE
-endpoint: /api/v1/tours?artist=[tourId]
-
-****************************************************************
+Todos
+- need tourdate to create a todo
+- {
+    "user": [userId],
+    "tourdate": [tourdateId],
+    "content": [written content of the todo],
+    "dueDate": "2020-12-15T17:24:46.526+00:00",
+    "artist": [artistId],
+    "createdBy": [userId]
+}
 
 
+Report
+- You have to have a tourdate
+- and the date attached to that tourdate has to have passed.
+- {
+    "deal": "guarantee", [must be 'guarantee', 'guarantee vs', 'percentage', 'bar cut', 'other']
+    "eventType": "cover", [must be 'ticketed', 'cover charge', 'free']
+    "tixAvail": [amount of tickets available],
+    "tixSold": [amount of tickets sold],
+    "tixPrice": [ticket price],
+    "guarantee": [guarantee amount not required],
+    "comps": [ number of guests],
+    "compsAttended": [number of guests on guest list that actually attended],
+    "paidAttendance": [number of guests who paid AND attended (different from tixSold)],
+    "totalMerchSales": [gross amount made off of sales of artist merchandise (shirts, hats, mugs)],
+    "barTotal": [total made at the bar],
+    "venueRateOnMerch": [the cut that the venue takes of merch sales],
+    "notes": [notes about the show from the artist]
+}
 
-================================================================
-
-
-
-
-
-
-
-<div class="postman-run-button"
-data-postman-action="collection/import"
-data-postman-var-1="1f59c2c4370d5980d713"></div>
-<script type="text/javascript">
-  (function (p,o,s,t,m,a,n) {
-    !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
-    !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
-      (n = o.createElement("script")),
-      (n.id = s+t), (n.async = 1), (n.src = m), n
-    ));
-  }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
-</script>
+Company
+- only manager can create Mgmt
+- only agent can create agency
+- keeps track of artists and employees for both.
