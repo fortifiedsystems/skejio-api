@@ -180,7 +180,7 @@ const show = async (req, res) => {
                 if (!foundTourdate) return res.status(404).json({
                     msg: 'Not found',
                 });
-
+                console.log(foundTourdate);
                 return res.status(200).json({
                     foundTourdate: foundTourdate,
                 });
