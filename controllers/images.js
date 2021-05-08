@@ -1,7 +1,7 @@
 
 const db = require('../models');
 const { cloudinary } = require('../utils/cloudinary');
-const tourdates = require('../models/Tourdate');
+const tourdates = require('../models/TourDate');
 
 const show = (req, res) => {
     try {
