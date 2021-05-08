@@ -11,3 +11,5 @@ server.listen(PORT, (err) => {
   if (err) console.log(err);
   console.log(`\n** Server is listening on port ${PORT}`.blue);
 });
+
+//check to see if automatically deploys with dev branch
