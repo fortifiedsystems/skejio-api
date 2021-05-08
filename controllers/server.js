@@ -3,7 +3,7 @@ exports.getStatus = (req, res) => {
     res.status(200).json({
       status: 200,
       message: `Server is live at ${currentTime}`,
-      owner: 'Screen Indie',
+      owner: 'Skejio',
     })
   }
   
