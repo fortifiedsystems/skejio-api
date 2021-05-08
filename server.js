@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const routes = require('./routes');
-
+const status = require('./routes/status')
 
 const server = express();
 
@@ -25,6 +25,6 @@ server.use('/api/v1/todos', authRequired, routes.todos);
 server.use('/api/v1/user', authRequired, routes.user);
 server.use('/api/v1/venues', authRequired, routes.venues);
 server.use('/api/v1/merch', authRequired, routes.merch);
-
+server.use('/', status) 
 // connection
 module.exports = server
