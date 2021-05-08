@@ -5,7 +5,7 @@ require("colors");
 
 const server = require('./server');
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || '8080';
 
 server.listen(PORT, (err) => {
   if (err) console.log(err);
