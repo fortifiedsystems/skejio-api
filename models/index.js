@@ -26,7 +26,7 @@ module.exports = {
     Notification: require('./Notification'),
     Image: require('./Image'),
     Tour: require('./Tour'),
-    Tourdate: require('./Tourdate'),
+    Tourdate: require('./TourDate'),
     Thread: require('./Thread'),
     Comment: require('./Comment'),
     Todo: require('./Todo'),
