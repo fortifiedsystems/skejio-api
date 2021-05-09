@@ -104,6 +104,14 @@ const TourdateSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    setTime: {
+        type: Date,
+        default: null
+    },
+    soundCheck: {
+        type: Date,
+        default: null,
+    },
     paidInFull: {
         type: Boolean,
         default: false,
