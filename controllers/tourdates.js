@@ -283,13 +283,13 @@ const fileReport = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        const user = await db.User.findById(req.userId);
-        const tourdate = await db.Tourdate.findById(req.params.id);
-        let authorized = canEditOrDelete(req, user, tourdate);
+        // const user = await db.User.findById(req.userId);
+        // const tourdate = await db.Tourdate.findById(req.params.id);
+        // let authorized = canEditOrDelete(req, user, tourdate);
 
-        if (!authorized) return res.status(403).json({
-            msg: errors.UNAUTHORIZED,
-        });
+        // if (!authorized) return res.status(403).json({
+        //     msg: errors.UNAUTHORIZED,
+        // });
 
         db.Tourdate.findByIdAndUpdate(
             req.params.id,
