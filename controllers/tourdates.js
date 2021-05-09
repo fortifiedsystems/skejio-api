@@ -24,7 +24,7 @@ const index = async (req, res) => {
         if (user.__t === 'Artist') {
             db.Tourdate.find({ artist: req.userId })
                 .populate({
-                    path: 'tour',
+                    path: 'tour threads',
                 }).sort({
                     date: 'asc',
                 }).exec((err, foundTourdates) => {
