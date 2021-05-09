@@ -8,7 +8,7 @@ const index = (req, res) => {
     try {
         db.Thread.find(req.query)
             .populate({
-                path: 'comments',
+                path: 'author comments',
                 options: {
                     sort: {
                         createdAt: 'asc',
