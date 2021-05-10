@@ -72,6 +72,7 @@ const update = (AUTHORIZE, async (req, res) => {
         userType.findByIdAndUpdate(
             req.params.id,
             req.body,
+            { new: true },
             (err, updatedUser) => {
                 if (err) console.log('Error at users#update:', error);
                 if (!updatedUser) return res.status(404).json({
