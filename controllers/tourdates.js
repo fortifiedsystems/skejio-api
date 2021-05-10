@@ -171,9 +171,10 @@ const show = async (req, res) => {
         // pull back tourdate.
         db.Tourdate.findById(req.params.id)
             .populate({
-                path: 'threads report',
+                path: 'threads todos',
                 populate: {
-                    path: 'comments author',
+                    path: 'comments',
+                    populate: 'author'
                 }
             }).exec((err, foundTourdate) => {
                 if (err) console.log('Error tourdates#show');
