@@ -19,11 +19,11 @@ const CommentSchema = new mongoose.Schema({
     deleted: {
         type: Boolean,
         default: false,
-    }
-    // artist: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Artist',
-    // }
+    },
+    seenBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 }, {
     timestamps: true,
 });
