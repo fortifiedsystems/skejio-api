@@ -172,6 +172,11 @@ const show = async (req, res) => {
         db.Tourdate.findById(req.params.id)
             .populate({
                 path: 'threads ',
+                options: {
+                    sort: {
+                        createdAt: 'desc'
+                    }
+                },
                 populate: {
                     path: 'author comments',
                     options: {
