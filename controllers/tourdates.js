@@ -174,6 +174,11 @@ const show = async (req, res) => {
                 path: 'threads ',
                 populate: {
                     path: 'author comments',
+                    options: {
+                        sort: {
+                            createdAt: 'desc'
+                        }
+                    },
                     populate: 'author'
                 }
             }).exec((err, foundTourdate) => {
