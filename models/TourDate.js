@@ -65,19 +65,19 @@ const TourdateSchema = new mongoose.Schema({
         default: null,
     },
     loadIn: {
-        type: Date,
+        type: String,
         default: null,
     },
     doors: {
-        type: Date,
+        type: String,
         default: null,
     },
     showStart: {
-        type: Date,
+        type: String,
         default: null,
     },
     showEnd: {
-        type: Date,
+        type: String,
         default: null,
     },
     hospitality: {

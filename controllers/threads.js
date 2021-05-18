@@ -108,6 +108,36 @@ const update = async (req, res) => {
 }
 
 
+const markAsSeen = async (req, res) => {
+    const user = await db.User.findById(req.userId);
+
+    try {
+        db.Thread.findById(req.params.id, async (err, seenThread) => {
+            if (err) console.log('Error at thread#markAsSeen');
+            if (!seenThread) return res.status(403).json({
+                msg: 'Thread not found',
+            });
+
+            if (seenThread.seenBy.includes(user)) {
+                return res.status(200).json({
+                    msg: 'You have already seen this thread.'
+                });
+            }
+
+            seenThread.seenBy.push(user);
+            seenThread.save();
+
+            return res.status(200).json({
+                seenThread: seenThread
+            });
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 const destroy = async (req, res) => {
     try {
