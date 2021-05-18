@@ -109,7 +109,7 @@ const TourdateSchema = new mongoose.Schema({
         default: null
     },
     soundCheck: {
-        type: Date,
+        type: String,
         default: null,
     },
     paidInFull: {
