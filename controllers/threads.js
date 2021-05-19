@@ -118,14 +118,14 @@ const markAsSeen = async (req, res) => {
                 msg: 'Thread not found',
             });
 
-            if (seenThread.seenBy.includes(user)) {
-                return res.status(200).json({
-                    msg: 'You have already seen this thread.'
-                });
+            if (!seenThread.seenBy.includes(req.userId)) {
+                seenThread.seenBy.push(req.userId);
+                seenThread.save();
+            } else {
+                let index = seenThread.seenBy.indexOf(req.userId);
+                seenThread.seenBy.splice(index, 1);
+                seenThread.save();
             }
-
-            seenThread.seenBy.push(user);
-            seenThread.save();
 
             return res.status(200).json({
                 seenThread: seenThread
@@ -183,5 +183,6 @@ module.exports = {
     show,
     create,
     update,
+    markAsSeen,
     destroy,
 }

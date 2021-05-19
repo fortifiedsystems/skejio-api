@@ -300,38 +300,6 @@ const update = async (req, res) => {
     }
 }
 
-const markAsSeen = async (req, res) => {
-    try {
-        db.Tourdate.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true },
-            (err, savedTourdate) => {
-                if (err) console.log('Error at tourdates#markAsSeen');
-                if (!savedTourdate) return res.status(404).json({
-                    msg: 'Could not find this tourdate',
-                });
-
-                if (!savedTourdate.seenBy.includes(req.userId)) {
-                    savedTourdate.seenBy.push(req.userId);
-                    savedTourdate.save();
-                } else {
-                    let index = savedTourdate.seenBy.indexOf(req.userId);
-                    savedTourdate.seenBy.splice(index, 1);
-                    savedTourdate.save();
-                }
-
-
-                return res.status(200).json({
-                    savedTourdate: savedTourdate,
-                });
-            }
-        );
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 
 
 const destroy = async (req, res) => {
