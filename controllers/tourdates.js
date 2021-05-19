@@ -96,19 +96,6 @@ const index = async (req, res) => {
 }
 
 
-// const getAllArtistTourdates = async (req, res) => {
-//     const artist = await db.User.findById(req.userId);
-
-
-//     try {
-
-//     } catch (error) {
-
-//     }
-// }
-
-
-
 
 // NOTE: retrieve all the managed tourdates under manger.
 // Should only be called by a manager or agent.
@@ -294,14 +281,6 @@ const fileReport = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        // const user = await db.User.findById(req.userId);
-        // const tourdate = await db.Tourdate.findById(req.params.id);
-        // let authorized = canEditOrDelete(req, user, tourdate);
-
-        // if (!authorized) return res.status(403).json({
-        //     msg: errors.UNAUTHORIZED,
-        // });
-
         db.Tourdate.findByIdAndUpdate(
             req.params.id,
             req.body,
@@ -316,6 +295,31 @@ const update = async (req, res) => {
                     savedTourdate: savedTourdate,
                 })
             });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const markAsSeen = async (req, res) => {
+    try {
+        db.Tourdate.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            (err, savedTourdate) => {
+                if (err) console.log('Error at tourdates#markAsSeen');
+                if (!savedTourdate) return res.status(404).json({
+                    msg: 'Could not find this tourdate',
+                });
+
+                savedTourdate.seenBy.push(req.userId);
+                savedTourdate.save();
+
+                return res.status(200).json({
+                    savedTourdate: savedTourdate,
+                });
+            }
+        );
     } catch (error) {
         console.log(error);
     }
@@ -367,5 +371,6 @@ module.exports = {
     create,
     fileReport,
     update,
+    markAsSeen,
     destroy,
 }

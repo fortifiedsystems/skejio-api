@@ -8,6 +8,7 @@ router.get('/:id', ctrl.tourdates.show);
 router.post('/', ctrl.tourdates.create);
 router.post('/report/:id', ctrl.tourdates.fileReport);
 router.put('/:id', ctrl.tourdates.update);
+router.put('/:id/seen', ctrl.tourdates.markAsSeen);
 router.delete('/:id', ctrl.tourdates.destroy);
 
 module.exports = router;
