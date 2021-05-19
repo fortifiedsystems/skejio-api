@@ -312,8 +312,15 @@ const markAsSeen = async (req, res) => {
                     msg: 'Could not find this tourdate',
                 });
 
-                savedTourdate.seenBy.push(req.userId);
-                savedTourdate.save();
+                if (!savedTourdate.seenBy.includes(req.userId)) {
+                    savedTourdate.seenBy.push(req.userId);
+                    savedTourdate.save();
+                } else {
+                    let index = savedTourdate.seenBy.indexOf(req.userId);
+                    savedTourdate.seenBy.splice(index, 1);
+                    savedTourdate.save();
+                }
+
 
                 return res.status(200).json({
                     savedTourdate: savedTourdate,
