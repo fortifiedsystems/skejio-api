@@ -69,6 +69,9 @@ const create = async (req, res) => {
             tourdate.threads.push(createdThread);
             tourdate.save();
 
+            createdThread.seenBy.push(req.userId);
+            createdThread.save();
+
             return res.status(201).json({
                 createdThread: createdThread,
             });
@@ -117,6 +120,10 @@ const markAsSeen = async (req, res) => {
             if (!seenThread) return res.status(403).json({
                 msg: 'Thread not found',
             });
+
+            if (seenThread.author == req.userId) {
+                return;
+            }
 
             if (!seenThread.seenBy.includes(req.userId)) {
                 seenThread.seenBy.push(req.userId);

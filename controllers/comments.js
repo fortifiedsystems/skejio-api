@@ -62,6 +62,9 @@ const create = (req, res) => {
             thread.comments.push(createdComment._id);
             thread.save();
 
+            createdComment.seenBy.push(req.userId);
+            createdComment.save();
+
             return res.status(201).json({
                 createdComment: createdComment,
             });
@@ -103,6 +106,12 @@ const markAsSeen = (req, res) => {
                 if (!seenComment) return res.status(404).json({
                     msg: 'No comment with this id found',
                 });
+
+                if (seenComment.author == req.userId) {
+                    returnres.status(403).json({
+                        msg: 'You are the author of this comment, so you do not need to mark it as seen.'
+                    });
+                }
 
                 if (!seenComment.seenBy.includes(req.userId)) {
                     seenComment.seenBy.push(req.userId);
