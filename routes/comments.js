@@ -7,6 +7,7 @@ router.get('/', ctrl.comments.index);
 router.get('/:id', ctrl.comments.show);
 router.post('/', ctrl.comments.create);
 router.put('/:id', ctrl.comments.edit);
+router.put('/:id/seen', ctrl.comments.markAsSeen);
 router.delete('/:id', ctrl.comments.destroy);
 router.put('/delete/:id', ctrl.comments.markAsDeleted);
 

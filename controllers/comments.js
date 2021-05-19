@@ -92,6 +92,37 @@ const edit = (req, res) => {
     }
 }
 
+const markAsSeen = (req, res) => {
+    try {
+        db.Comment.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true },
+            async (err, seenComment) => {
+                if (err) console.log('error at comment#markAsSeen:', err);
+                if (!seenComment) return res.status(404).json({
+                    msg: 'No comment with this id found',
+                });
+
+                if (!seenComment.seenBy.includes(req.userId)) {
+                    seenComment.seenBy.push(req.userId);
+                    seenComment.save();
+                } else {
+                    let index = seenComment.seenBy.indexOf(req.userId);
+                    seenComment.seenBy.splice(index, 1);
+                    seenComment.save();
+                }
+
+                return res.status(200).json({
+                    seenComment: seenComment,
+                });
+            }
+        )
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const destroy = (req, res) => {
     try {
         db.Comment.findByIdAndDelete(req.params.id, async (err, deletedComment) => {
@@ -145,6 +176,7 @@ module.exports = {
     show,
     create,
     edit,
+    markAsSeen,
     destroy,
     markAsDeleted,
 }
