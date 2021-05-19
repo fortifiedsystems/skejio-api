@@ -346,6 +346,5 @@ module.exports = {
     create,
     fileReport,
     update,
-    markAsSeen,
     destroy,
 }
