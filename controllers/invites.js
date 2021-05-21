@@ -1,7 +1,6 @@
 const db = require('../models');
 
 const create = async (req, res) => {
-    const sender = await db.User.findById(req.body.sender);
     const sendee = await db.User.findById(req.body.sendee);
 
     try {
@@ -37,6 +36,7 @@ const acceptInvite = async (req, res) => {
 
                 const sender = await db.User.findById(acceptedInvite.sender);
                 const sendee = await db.User.findById(acceptedInvite.sendee);
+
                 if (sender.__t === 'Artist') {
                     sender.manager = sendee._id;
                     sendee.artists.push(sender._id);
