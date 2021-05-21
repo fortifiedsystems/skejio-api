@@ -86,6 +86,10 @@ const edit = (req, res) => {
                     msg: 'No comment with this id found.'
                 });
 
+                if (editedComment.edited === false) {
+                    editedComment.edited = true;
+                }
+
                 return res.status(200).json({
                     editedComment: editedComment,
                 })

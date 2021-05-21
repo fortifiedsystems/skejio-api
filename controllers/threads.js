@@ -101,6 +101,10 @@ const update = async (req, res) => {
                     msg: 'Could not find thread',
                 });
 
+                if (updatedThread.edited === false) {
+                    updatedThread.edited = true;
+                }
+
                 return res.status(200).json({
                     updatedThread: updatedThread,
                 });

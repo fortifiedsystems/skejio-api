@@ -1,46 +1,19 @@
 const mongoose = require('mongoose');
 
 const NotificationSchema = new mongoose.Schema({
-    message: {
-        type: String,
-        required: true,
-    },
-    sender: {
+    seen: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        default: null,
-    },
-    user: {
+    }],
+    users: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
-    },
-    invite: {
-        type: Boolean,
-        default: false,
-    },
-    tourdate: {
-        type: Boolean,
-        default: false,
-    },
-    newThread: {
-        type: Boolean,
-        default: false,
-    },
-    newComment: {
-        type: Boolean,
-        default: false,
-    },
-    newTodo: {
-        type: Boolean,
-        default: false,
-    },
-    read: {
-        type: Boolean,
-        default: false,
-    },
+    }]
 }, {
     timestamps: true,
+}, {
+    discriminatorKey: 'itemtype',
+    collection: 'items',
 });
 
 const Notification = mongoose.model('Notification', NotificationSchema);
