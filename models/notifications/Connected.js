@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Notification = require('../Notification');
 
 const ConnectedSchema = new mongoose.Schema({
-    content: {
+    message: {
         type: String,
         maxLength: 100,
         minLength: 3,
