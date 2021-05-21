@@ -24,6 +24,7 @@ module.exports = {
     Agency: require('./Agency'),
     Mgmt: require('./Mgmt'),
     Notification: require('./Notification'),
+    Notifs: require('./notifications'),
     Image: require('./Image'),
     Tour: require('./Tour'),
     Tourdate: require('./TourDate'),

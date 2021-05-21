@@ -8,7 +8,11 @@ const NotificationSchema = new mongoose.Schema({
     users: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-    }]
+    }],
+    originator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }
 }, {
     timestamps: true,
 }, {
