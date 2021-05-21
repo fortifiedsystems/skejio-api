@@ -31,8 +31,10 @@ const create = async (req, res) => {
                 console.log(error);
             }
         }
+        // TODO Add more notification types as needed.
         // } else if (type === 'Connected') {
 
+        // }
         // } else if (type === 'Crud') {
 
         // }

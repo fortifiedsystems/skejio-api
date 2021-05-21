@@ -4,6 +4,7 @@ module.exports = {
     mgmt: require('./mgmt'),
     comments: require('./comments'),
     images: require('./images'),
+    invites: require('./invites'),
     notifications: require('./notifications'),
     agencies: require('./agencies'),
     threads: require('./threads'),
