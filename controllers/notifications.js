@@ -1,77 +1,81 @@
 const db = require('../models');
 
-const index = (req, res) => {
-    db.Notification.find({ user: req.userId }, (err, foundNotifications) => {
-        if (err) console.log(err);
-        if (!foundNotifications) return res.status(404).json({
-            msg: 'You have no notifications.'
-        });
+const create = async (req, res) => {
+    let type = req.body.notifType;
+    let sender = await db.User.findById(req.userId);
+    let sendee = await db.User.findById(req.body.sendee);
+    let senderName = `${sender.artistName}`;
 
-        return res.status(200).json({
-            foundNotifications: foundNotifications,
-        });
-    });
-}
+    if (sender.__t === 'Artist') {
+        let senderName = `${sender.artistName}`;
+        if (type === 'Invited') {
+            req.body.sender = req.userId
 
-const show = (req, res) => {
-    try {
-        db.Notification.findById(req.params.id, (err, foundNotification) => {
-            if (err) console.log(err);
-            if (!foundNotification) return res.status(404).json({
-                msg: 'Could not find this notification',
-            });
+            try {
+                db.Notifs.Invited.create(req.body, async (err, notif) => {
+                    if (err) console.log('error at notifications#create#connected:', err);
+                    if (req.body.inviteType === 'Manager') {
+                        notif.message = `${senderName} has invited you to be their manager.`;
+                    } else if (req.body.inviteType === 'Agent') {
+                        notif.message = `${senderName} has invited you to be their agent.`
+                    }
 
-            return res.status(200).json({
-                foundNotification: foundNotification,
-            });
-        });
-    } catch (error) {
-        console.log(error);
-    }
-}
+                    notif.sentTo.push(sendee._id);
+                    sendee.notifications.push(notif);
+                    sendee.save();
 
-const create = (req, res) => {
-    try {
-        db.Notification.create(req.body, async (err, createdNotification) => {
-            if (err) console.log(err);
-
-            const user = await db.User.findById(createdNotification.user);
-            user.notifications.push(createdNotification._id);
-            user.save();
-
-            return res.status(201).json({
-                createdNotification: createdNotification,
-            });
-        });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const update = (req, res) => {
-    try {
-        db.Notification.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true },
-            (err, updatedNotification) => {
-                if (err) console.log(err);
-                if (!updatedNotification) return res.status(404).json({
-                    msg: 'Could not find this notification',
+                    return res.status(201).json({
+                        notif: notif
+                    });
                 });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        // TODO Add more notification types as needed.
+        // } else if (type === 'Connected') {
 
-                res.status(200).json({
-                    updatedNotification: updatedNotification,
-                })
-            })
-    } catch (error) {
-        console.log(error);
+        // }
+        // } else if (type === 'Crud') {
+
+        // }
+    } else if (sender.__t === 'Manager') {
+        let senderName = `${sender.firstName} ${sender.lastName}`;
+        if (type === 'Invited') {
+            req.body.sender = req.userId;
+
+            try {
+                db.Notifs.Invited.create(req.body, async (err, notif) => {
+                    if (err) console.log('error at notifications#create#connected:', err);
+                    if (req.body.inviteType === 'Artist') {
+                        notif.message = `${senderName} has asked to work with you as your manager`;
+                    } else if (req.body.inviteType === 'Agent') {
+                        notif.message = `${senderName} has asked to work with you as your booking agent.`
+                    }
+
+                    notif.sentTo.push(sendee._id);
+                    sendee.notifications.push(notif);
+                    sendee.save();
+
+                    return res.status(201).json({
+                        notif: notif
+                    });
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
+    // TODO Add more notification types as needed.
+    // } else if (type === 'Connected') {
+
+    // }
+    // } else if (type === 'Crud') {
+
+    // }
+
 }
 
 module.exports = {
-    index,
-    show,
     create,
-    update,
 }
