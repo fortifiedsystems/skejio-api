@@ -15,6 +15,8 @@ mongoose
 
 
 module.exports = {
+    Notification: require('./Notification'),
+    InviteNf: require('./notifications/Invites/InviteNf'),
     User: require('./User'),
     Artist: require('./Artist'),
     Manager: require('./Manager'),

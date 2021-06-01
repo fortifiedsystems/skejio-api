@@ -2,10 +2,20 @@ const db = require('../models');
 
 const create = async (req, res) => {
     const sendee = await db.User.findById(req.body.sendee);
+    const sender = await db.User.findById(req.body.sender);
 
     try {
-        db.Invite.create(req.body, (err, invite) => {
+        db.Invite.create(req.body, async (err, invite) => {
             if (err) console.log('error at Invite#create:', err);
+
+            const nf = await db.InviteNf.create({
+                sender: req.body.sender,
+                user: req.body.sendee,
+                message: `${sender.firstName} ${sender.lastName} has invited you to work with them`,
+            });
+
+            sendee.notifications.push(nf._id);
+            sendee.save();
 
             return res.status(201).json({
                 msg: `Invite sent to ${sendee.firstName} ${sendee.lastName}`,
