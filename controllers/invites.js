@@ -36,6 +36,9 @@ const create = async (req, res) => {
     }
 }
 
+
+
+
 const acceptInvite = async (req, res) => {
     try {
         db.Invite.findByIdAndUpdate(
@@ -82,6 +85,9 @@ const acceptInvite = async (req, res) => {
     }
 }
 
+
+
+
 const rejectInvite = (req, res) => {
     try {
         db.Invite.findByIdAndUpdate(
@@ -109,6 +115,9 @@ const rejectInvite = (req, res) => {
         console.log(error);
     }
 }
+
+
+
 
 module.exports = {
     create,
