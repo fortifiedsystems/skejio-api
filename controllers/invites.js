@@ -11,8 +11,17 @@ const create = async (req, res) => {
             const nf = await db.InviteNf.create({
                 sender: req.body.sender,
                 user: req.body.sendee,
-                message: `${sender.firstName} ${sender.lastName} has invited you to work with them`,
+                message: `${sender.firstName} ${sender.lastName} has invited you to work with them.`,
             });
+
+
+            // NOTE Can only contain twenty notifications at a time.
+            if (sendee.notifications.length === 20) {
+                let deleted = sendee.notifications.shift();
+                db.Notification.findByIdAndDelete(deleted._id);
+                // NOTE May not need this but I'm not sure.
+                // sendee.save();
+            }
 
             sendee.notifications.push(nf._id);
             sendee.save();
