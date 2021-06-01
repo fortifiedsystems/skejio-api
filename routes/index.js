@@ -3,6 +3,7 @@ module.exports = {
     user: require('./user'),
     mgmt: require('./mgmt'),
     comments: require('./comments'),
+    notifications: require('./notifications'),
     images: require('./images'),
     invites: require('./invites'),
     agencies: require('./agencies'),

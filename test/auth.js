@@ -35,11 +35,11 @@ describe('User API', function () {
                     res.body.should.be.a('object');
                     res.body.should.have.property('signedJwt');
                     res.body.should.have.property('message');
-                    done();
                 } else {
                     console.log(err)
                 }
             });
+        done();
     });
 
     it('should return the correct user object on registration', function (done) {
@@ -58,10 +58,11 @@ describe('User API', function () {
                     res.should.have.status(201);
                     res.should.be.json;
                     res.body.should.be.a('object');
-                    done();
+
                 } else {
                     console.log(error);
                 }
             });
+        done();
     });
 });
